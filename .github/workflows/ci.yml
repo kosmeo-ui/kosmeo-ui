@@ -53,8 +53,10 @@ jobs:
 
       # The tarball must carry the build; without `files`, .gitignore's dist/
       # rule would keep it out.
+      # Builds first: on a PR that touches no package, "affected" built nothing.
       - name: Check package contents
         run: |
+          npx nx run @kosmeo-ui/react:build
           npm pack --dry-run --json -w @kosmeo-ui/react > pack.json
           node -e '
             const files = require("./pack.json")[0].files.map((f) => f.path);
