@@ -1,0 +1,69 @@
+name: Publish to npm
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+  # For the first release, or to retry one that failed.
+  workflow_dispatch:
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       contains(github.event.pull_request.labels.*.name, 'automated-version-bump'))
+    runs-on: ubuntu-latest
+    permissions:
+      # Tags each published version.
+      contents: write
+      # npm trusted publishing (OIDC) and provenance.
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          fetch-tags: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm 11.5.1 or later; Node 22 ships npm 10.
+      - run: npm install -g npm@11
+
+      - run: npm ci
+
+      - run: npx nx run-many -t build
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Publishes each release project whose package.json version isn't on npm
+      # yet, so a rerun skips what already went out.
+      - name: Publish unreleased versions
+        env:
+          # Unset once trusted publishing is configured: npm then uses OIDC.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # npm refuses provenance for private repositories.
+          PROVENANCE: ${{ github.event.repository.private && '--no-provenance' || '--provenance' }}
+        run: |
+          for name in $(node -p "require('./nx.json').release.projects.join(' ')"); do
+            version=$(npm pkg get version -w "$name" | node -p "Object.values(JSON.parse(require('fs').readFileSync(0)))[0]")
+            if npm view "$name@$version" version >/dev/null 2>&1; then
+              echo "$name@$version is already on npm"
+              continue
+            fi
+            npm publish -w "$name" $PROVENANCE
+            git tag "$name@$version"
+            git push origin "$name@$version"
+          done

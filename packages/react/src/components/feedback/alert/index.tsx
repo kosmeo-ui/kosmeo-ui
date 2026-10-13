@@ -1,6 +1,8 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize, PropsWithVariant } from "../../types";
-import Button from "../../buttons/button";
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
+import Button from "../../buttons/button/index.js";
 import "./styles.css";
 import {
   faCircleCheck,

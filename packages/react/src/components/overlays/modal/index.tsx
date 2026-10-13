@@ -1,7 +1,9 @@
+"use client";
+
 import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
-import useFocusTrap from "../../../hooks/useFocusTrap";
-import Button from "../../buttons/button";
-import Portal from "../portal";
+import useFocusTrap from "../../../hooks/useFocusTrap.js";
+import Button from "../../buttons/button/index.js";
+import Portal from "../portal/index.js";
 import "./styles.css";
 
 export type ModalSize = "sm" | "md" | "lg" | "full";

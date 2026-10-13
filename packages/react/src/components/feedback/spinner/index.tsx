@@ -1,4 +1,6 @@
-import { PropsWithSize, PropsWithVariant } from "../../types";
+"use client";
+
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
 import "./styles.css";
 
 export interface SpinnerProps extends PropsWithSize, PropsWithVariant {}

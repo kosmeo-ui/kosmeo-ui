@@ -1,4 +1,6 @@
-import MandatoryAsterisk from "../../forms/requiredAsterisk";
+"use client";
+
+import MandatoryAsterisk from "../../forms/requiredAsterisk/index.js";
 import "./styles.css";
 
 interface CheckboxProps {

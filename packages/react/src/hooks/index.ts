@@ -1,14 +1,17 @@
-export { default as useInfiniteArchivableCursor } from "./useInfiniteArchivableCursor";
-export { default as useInfinite, type UseInfiniteReturn } from "./useInfinite";
-export { default as useInfiniteCursor } from "./useInfiniteCursor";
-export { default as useScrollIntoView } from "./useScrollIntoView";
-export { default as useDebouncedValue } from "./useDebouncedValue";
-export { default as useOutsideClick } from "./useOutsideClick";
-export { default as useListKeyboard } from "./useListKeyboard";
-export { default as useLocalStorage } from "./useLocalStorage";
-export { default as useFocusTrap } from "./useFocusTrap";
+export { default as useInfiniteArchivableCursor } from "./useInfiniteArchivableCursor.js";
+export {
+  default as useInfinite,
+  type UseInfiniteReturn,
+} from "./useInfinite.js";
+export { default as useInfiniteCursor } from "./useInfiniteCursor.js";
+export { default as useScrollIntoView } from "./useScrollIntoView.js";
+export { default as useDebouncedValue } from "./useDebouncedValue.js";
+export { default as useOutsideClick } from "./useOutsideClick.js";
+export { default as useListKeyboard } from "./useListKeyboard.js";
+export { default as useLocalStorage } from "./useLocalStorage.js";
+export { default as useFocusTrap } from "./useFocusTrap.js";
 export {
   default as useFloatingPosition,
   type FloatingPosition,
   type FloatingSide,
-} from "./useFloatingPosition";
+} from "./useFloatingPosition.js";

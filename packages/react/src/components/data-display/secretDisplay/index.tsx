@@ -1,4 +1,6 @@
-import IconButton from "../../buttons/iconButton";
+"use client";
+
+import IconButton from "../../buttons/iconButton/index.js";
 import { ReactNode, useState } from "react";
 import "./styles.css";
 import {

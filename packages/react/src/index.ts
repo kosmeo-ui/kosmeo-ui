@@ -1,8 +1,8 @@
 // Re-export all components
-export * from "./components";
+export * from "./components/index.js";
 
 // Re-export all hooks
-export * from "./hooks";
+export * from "./hooks/index.js";
 
 // Export shared types
 export type {
@@ -10,4 +10,4 @@ export type {
   Size,
   PropsWithVariant,
   PropsWithSize,
-} from "./components/types";
+} from "./components/types.js";

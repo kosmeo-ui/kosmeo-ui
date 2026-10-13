@@ -1,13 +1,15 @@
+"use client";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { faList } from "@fortawesome/free-solid-svg-icons";
-import Dropdown from "../../../inputs/dropdown";
-import Button from "../../../buttons/button";
-import Input from "../../../inputs/input";
+import Dropdown from "../../../inputs/dropdown/index.js";
+import Button from "../../../buttons/button/index.js";
+import Input from "../../../inputs/input/index.js";
 import "./styles.css";
 import {
   GeneratedListFilter,
   InfiniteScrollMenuGeneratedFilter,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollListFilterProps {
   filter: GeneratedListFilter;
@@ -62,7 +64,7 @@ const ListFilter = (props: InfiniteScrollListFilterProps) => {
       isOpen={isOpen}
       onOpenChange={setIsOpen}
     >
-      <div className="filter-menu">
+      <div className="k-filter-menu">
         <Input
           size="sm"
           value={list}

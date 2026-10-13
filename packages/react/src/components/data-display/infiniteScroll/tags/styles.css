@@ -1,10 +1,10 @@
-.tags-container {
+.k-tags-container {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
 
-.tag-container {
+.k-tag-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,13 +14,13 @@
   padding-left: 0.5rem;
 }
 
-.tag-title {
+.k-tag-title {
   margin: 0;
   margin-top: 0.25rem;
   font-size: 0.75rem;
 }
 
-.tag-actions {
+.k-tag-actions {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -29,18 +29,18 @@
   margin-top: -0.25rem;
 }
 
-.tag-value {
+.k-tag-value {
   margin: 0;
   font-size: 0.875rem;
 }
 
-.lft-buttons {
+.k-lft-buttons {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.lft-modal-body {
+.k-lft-modal-body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -48,16 +48,16 @@
   gap: 0.5rem;
 }
 
-.lft-modal-table-container {
+.k-lft-modal-table-container {
   max-height: 30rem;
   overflow-y: auto;
 }
 
-.lft-modal-table-header {
+.k-lft-modal-table-header {
   width: 5rem;
 }
 
-.lft-modal-table-remove-button {
+.k-lft-modal-table-remove-button {
   display: flex;
   flex-direction: row;
   justify-content: center;

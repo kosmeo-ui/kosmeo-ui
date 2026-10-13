@@ -1,5 +1,7 @@
+"use client";
+
+import Input from "../input/index.js";
 import { ChangeEvent } from "react";
-import Input from "../input";
 import "./styles.css";
 
 export interface ColorPickerProps {

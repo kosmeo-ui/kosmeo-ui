@@ -1,8 +1,10 @@
+"use client";
+
 import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
-import { InfiniteScrollMenuLimitOption } from "../types";
-import IconButton from "../../../buttons/iconButton";
-import Dropdown from "../../../inputs/dropdown";
+import IconButton from "../../../buttons/iconButton/index.js";
+import { InfiniteScrollMenuLimitOption } from "../types.js";
+import Dropdown from "../../../inputs/dropdown/index.js";
 import { useEffect, useState } from "react";
 import "./styles.css";
 
@@ -33,7 +35,7 @@ const Limit = (props: LimitProps) => {
   };
 
   return (
-    <div className="limit-container">
+    <div className="k-limit-container">
       <p>Results Per Page:</p>
       <Dropdown
         label={limitOptions.find((o) => o.selected)?.value || "None"}
@@ -43,7 +45,7 @@ const Limit = (props: LimitProps) => {
         isOpen={isOpen}
         onOpenChange={setIsOpen}
       >
-        <div className="infinte-scroll-dropdown-menu ">
+        <div className="k-infinite-scroll-dropdown-menu ">
           {limitOptions.map((key, index: number) => (
             <IconButton
               variant="light"

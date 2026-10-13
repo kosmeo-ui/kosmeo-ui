@@ -1,14 +1,16 @@
-import useFloatingPosition from "../../../hooks/useFloatingPosition";
-import useDebouncedValue from "../../../hooks/useDebouncedValue";
-import useScrollIntoView from "../../../hooks/useScrollIntoView";
-import useListKeyboard from "../../../hooks/useListKeyboard";
-import useOutsideClick from "../../../hooks/useOutsideClick";
+"use client";
+
+import useFloatingPosition from "../../../hooks/useFloatingPosition.js";
+import useDebouncedValue from "../../../hooks/useDebouncedValue.js";
+import useScrollIntoView from "../../../hooks/useScrollIntoView.js";
+import useListKeyboard from "../../../hooks/useListKeyboard.js";
+import useOutsideClick from "../../../hooks/useOutsideClick.js";
 import { UseQueryResult } from "@tanstack/react-query";
+import Spinner from "../../feedback/spinner/index.js";
 import { useEffect, useState, useRef } from "react";
-import Spinner from "../../feedback/spinner";
-import { PropsWithSize } from "../../types";
-import Portal from "../../overlays/portal";
-import Input from "../input";
+import Portal from "../../overlays/portal/index.js";
+import { PropsWithSize } from "../../types.js";
+import Input from "../input/index.js";
 import "./styles.css";
 
 interface SearchListProps<T> extends PropsWithSize {
@@ -170,7 +172,9 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
       <ul
         ref={listRef}
         className={`k-search-list-dropdown k-search-list-dropdown-portal ${
-          longDropDown ? "large" : "small"
+          longDropDown
+            ? "k-search-list-dropdown-large"
+            : "k-search-list-dropdown-small"
         }`}
         style={{
           position: "fixed",

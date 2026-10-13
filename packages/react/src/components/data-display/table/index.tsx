@@ -1,5 +1,7 @@
-import type { TableColumn, TableRow } from "../dataTable/types";
-import parseDataKey from "../dataTable/utils/parseDataKey";
+"use client";
+
+import type { TableColumn, TableRow } from "../dataTable/types.js";
+import parseDataKey from "../dataTable/utils/parseDataKey.js";
 import { ReactNode } from "react";
 import "./styles.css";
 

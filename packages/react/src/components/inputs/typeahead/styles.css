@@ -32,11 +32,11 @@
     0 0.125rem 0.25rem -0.125rem var(--shadow-color);
 }
 
-.large {
+.k-typeahead-options-list-large {
   max-height: 30rem;
 }
 
-.small {
+.k-typeahead-options-list-small {
   max-height: 12.5rem;
 }
 

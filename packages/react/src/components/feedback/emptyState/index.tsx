@@ -1,9 +1,11 @@
+"use client";
+
 import { ReactNode } from "react";
 import "./styles.css";
 
 export interface EmptyStateProps {
   children: ReactNode;
-  /** "inline" = small grey text suitable inside a list (default). "block" = padded centered. */
+  /** "inline" = small grey text suitable inside a list (default). "block" = padded, centered. */
   layout?: "inline" | "block";
   icon?: ReactNode;
   /** Call-to-action rendered below children. Only used with layout="block". */

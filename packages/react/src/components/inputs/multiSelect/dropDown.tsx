@@ -1,9 +1,11 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "../../buttons/iconButton";
-import Tooltip from "../../feedback/tooltip";
-import { PropsWithSize } from "../../types";
+import IconButton from "../../buttons/iconButton/index.js";
+import Tooltip from "../../feedback/tooltip/index.js";
+import { PropsWithSize } from "../../types.js";
+import Input from "../input/index.js";
 import { useMemo } from "react";
-import Input from "../input";
 import {
   faCheckDouble,
   faXmark,

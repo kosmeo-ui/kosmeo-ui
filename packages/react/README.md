@@ -1,12 +1,12 @@
 # @kosmeo-ui/react
 
-React component library. All CSS
-classes use a `k-` prefix and are themed with CSS variables (light, and dark via
+React component library. All CSS classes use a `k-` prefix and are themed with CSS variables (light, and dark via
 `data-theme="dark"` on `<html>`). `InfiniteScroll` with the `useInfiniteCursor` hook is the
 standard list-page pattern: cursor-paginated fetching, sorting, filters and bulk selection in one
 component.
 
-The component catalog with key props is in [`.claude/skills/ui/SKILL.md`](../../.claude/skills/ui/SKILL.md).
+The component catalog with key props is in
+[`.claude/skills/ui/SKILL.md`](https://github.com/kosmeo-ui/kosmeo-ui/blob/master/.claude/skills/ui/SKILL.md).
 
 ## Install
 
@@ -18,6 +18,9 @@ Peer dependencies: `react` and `react-dom` 19, and `@tanstack/react-query` 5. Th
 library must share one copy of react-query; under Vite, add it to `resolve.dedupe` with React. The
 infinite-list hooks take an `AxiosInstance`, so `axios` is an optional peer — install it if you use
 them.
+
+Components import their own stylesheets, so the app's bundler must handle CSS imports from
+`node_modules` — Vite, Next.js and webpack with `css-loader` all do.
 
 ## Usage
 
@@ -67,6 +70,9 @@ type Size = "sm" | "md" | "lg";
 Theme tokens are defined in `src/styles.css` on `:root` (light) and `[data-theme="dark"]`. Import
 `styles.css` in your app entry point and override the variables to customize the theme.
 
+`styles.css` is a global base, not only tokens: it also resets `html`, `body`, headings, links,
+form-control fonts and scrollbars. Import it once, in the app's entry point.
+
 ## Commands
 
 ```bash
@@ -74,3 +80,7 @@ npm run build    # Compile TypeScript + copy CSS to dist/
 npm run check    # Type-check without emitting
 npm run clean    # Remove dist/
 ```
+
+## License
+
+Apache-2.0

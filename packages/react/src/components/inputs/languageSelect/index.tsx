@@ -1,4 +1,6 @@
-import Select from "../select";
+"use client";
+
+import Select from "../select/index.js";
 
 export interface LanguageOption {
   value: string;

@@ -1,4 +1,6 @@
-import FieldShell from "../../forms/fieldShell";
+"use client";
+
+import FieldShell from "../../forms/fieldShell/index.js";
 import { ChangeEvent } from "react";
 import "./styles.css";
 import {
@@ -6,7 +8,7 @@ import {
   dateTimeLocalToIso,
   toDateInputValue,
   toDateTimeLocalValue,
-} from "./utils";
+} from "./utils.js";
 
 export interface DateInputBaseProps {
   label?: string;

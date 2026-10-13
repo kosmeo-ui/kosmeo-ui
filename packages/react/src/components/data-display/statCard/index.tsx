@@ -1,4 +1,6 @@
-import Card from "../../layout/card";
+"use client";
+
+import Card from "../../layout/card/index.js";
 import { ReactNode } from "react";
 import "./styles.css";
 

@@ -79,8 +79,8 @@ export default EmptyState;
 builds its class list from props.
 
 ```tsx
-import Spinner from "../../feedback/spinner";
-import Centered from "../centered";
+import Spinner from "../../feedback/spinner/index.js";
+import Centered from "../centered/index.js";
 import { ReactNode } from "react";
 import "./styles.css";
 
@@ -166,9 +166,9 @@ to a class. The `custom` variant is the library's one data-driven inline color.
 
 ```tsx
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize, PropsWithVariant } from "../../types";
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { getContrastTextColor } from "./utils";
+import { getContrastTextColor } from "./utils.js";
 import "./styles.css";
 
 export interface BadgeProps extends PropsWithSize, PropsWithVariant {
@@ -257,8 +257,8 @@ export default Badge;
 Built from `Modal` and `Button` rather than new markup; no stylesheet needed.
 
 ```tsx
-import Button from "../../buttons/button";
-import Modal from "../modal";
+import Button from "../../buttons/button/index.js";
+import Modal from "../modal/index.js";
 
 export interface ConfirmationModalProps {
   show: boolean;
@@ -332,7 +332,7 @@ export default useDebouncedValue;
 
 ```ts
 // hooks/index.ts
-export { default as useDebouncedValue } from "./useDebouncedValue";
+export { default as useDebouncedValue } from "./useDebouncedValue.js";
 ```
 
 ## 6. Theme tokens — `src/styles.css` (trimmed)
@@ -376,8 +376,8 @@ packages/react/src/components/<bucket>/myWidget/
 
 ```tsx
 // index.tsx
-import type { PropsWithVariant } from "../../types";
-import Button from "../../buttons/button";
+import type { PropsWithVariant } from "../../types.js";
+import Button from "../../buttons/button/index.js";
 import { ReactNode } from "react";
 import "./styles.css";
 
@@ -438,8 +438,8 @@ block and the props type to the `export type { … }` block. Both blocks are kep
 longest line first, by hand — `sort-imports` only orders imports:
 
 ```ts
-export { default as MyWidget } from "./<bucket>/myWidget";
-export type { MyWidgetProps } from "./<bucket>/myWidget";
+export { default as MyWidget } from "./<bucket>/myWidget/index.js";
+export type { MyWidgetProps } from "./<bucket>/myWidget/index.js";
 ```
 
 Consumers import it from the package root:

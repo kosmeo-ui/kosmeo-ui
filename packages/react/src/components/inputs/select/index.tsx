@@ -1,5 +1,7 @@
-import FieldShell from "../../forms/fieldShell";
-import { PropsWithSize } from "../../types";
+"use client";
+
+import FieldShell from "../../forms/fieldShell/index.js";
+import { PropsWithSize } from "../../types.js";
 import { useLayoutEffect } from "react";
 import "./styles.css";
 

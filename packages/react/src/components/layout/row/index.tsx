@@ -1,4 +1,6 @@
-import { PropsWithSize, FlexAlign, FlexJustify } from "../../types";
+"use client";
+
+import { PropsWithSize, FlexAlign, FlexJustify } from "../../types.js";
 import "./styles.css";
 
 export interface RowProps extends PropsWithSize {

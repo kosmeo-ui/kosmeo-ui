@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, FormEvent, ReactNode } from "react";
 import { toast } from "react-toastify";
 import "./styles.css";

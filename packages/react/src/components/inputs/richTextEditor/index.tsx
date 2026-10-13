@@ -1,11 +1,13 @@
+"use client";
+
 import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
-import MandatoryAsterisk from "../../forms/requiredAsterisk";
-import IconButton from "../../buttons/iconButton";
+import MandatoryAsterisk from "../../forms/requiredAsterisk/index.js";
+import IconButton from "../../buttons/iconButton/index.js";
+import Tooltip from "../../feedback/tooltip/index.js";
 import { Placeholder } from "@tiptap/extensions";
+import { PropsWithSize } from "../../types.js";
 import StarterKit from "@tiptap/starter-kit";
-import Tooltip from "../../feedback/tooltip";
 import { useState, useEffect } from "react";
-import { PropsWithSize } from "../../types";
 import "./styles.css";
 import {
   faUnderline,
@@ -141,25 +143,25 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   }, [props.value, editor]);
 
   return (
-    <div className={`richtext-container richtext-container-${size}`}>
+    <div className={`k-richtext-container k-richtext-container-${size}`}>
       {props.label && (
-        <div className="richtext-label-wrapper">
-          <label htmlFor={fieldId} className="richtext-label">
+        <div className="k-richtext-label-wrapper">
+          <label htmlFor={fieldId} className="k-richtext-label">
             {props.label}
             {props.required && <MandatoryAsterisk />}
           </label>
           {props.showCharCount && (
-            <span className="richtext-char-count">{charCount}</span>
+            <span className="k-richtext-char-count">{charCount}</span>
           )}
         </div>
       )}
       <div
         id={fieldId}
-        className={`editor-wrapper ${
-          disabled ? "editor-wrapper-disabled" : ""
+        className={`k-editor-wrapper ${
+          disabled ? "k-editor-wrapper-disabled" : ""
         }`}
       >
-        <div className="editor-toolbar">
+        <div className="k-editor-toolbar">
           <Tooltip content="Bold" position="top">
             <IconButton
               icon={faBold}
@@ -187,7 +189,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
               disabled={showHtml || disabled}
             />
           </Tooltip>
-          <div className="toolbar-separator"></div>
+          <div className="k-toolbar-separator"></div>
           <Tooltip content="Bullet List" position="top">
             <IconButton
               icon={faListUl}
@@ -206,7 +208,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
               disabled={showHtml || disabled}
             />
           </Tooltip>
-          <div className="toolbar-separator"></div>
+          <div className="k-toolbar-separator"></div>
           <Tooltip content="Clear Formatting" position="top">
             <IconButton
               icon={faTextSlash}
@@ -225,7 +227,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
               disabled={showHtml || disabled}
             />
           </Tooltip>
-          <div className="toolbar-separator"></div>
+          <div className="k-toolbar-separator"></div>
           <Tooltip
             content={showHtml ? "Show Editor" : "Show HTML"}
             position="top"
@@ -241,7 +243,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
         </div>
 
         {showHtml && editor ? (
-          <pre className="html-section">
+          <pre className="k-html-section">
             {(() => {
               const cleaned = cleanHtml(editor?.getHTML());
               return cleaned

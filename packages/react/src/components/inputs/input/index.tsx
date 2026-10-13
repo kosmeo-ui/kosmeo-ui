@@ -1,9 +1,11 @@
+"use client";
+
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import DropdownArrowButton from "../dropdownArrowButton/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DropdownArrowButton from "../dropdownArrowButton";
-import FieldShell from "../../forms/fieldShell";
+import FieldShell from "../../forms/fieldShell/index.js";
+import { PropsWithSize } from "../../types.js";
 import { ReactNode, useState } from "react";
-import { PropsWithSize } from "../../types";
 import "./styles.css";
 
 interface InputProps extends PropsWithSize {

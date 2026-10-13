@@ -1,13 +1,15 @@
+"use client";
+
 import { faCheckSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "../../../buttons/iconButton";
+import IconButton from "../../../buttons/iconButton/index.js";
 import { useCallback } from "react";
 import "../styles.css";
 import {
   GeneratedSelectFilter,
   InfiniteScrollMenuFilterOption,
   InfiniteScrollMenuGeneratedFilter,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollSelectFilterTagProps {
   filter: GeneratedSelectFilter;
@@ -30,11 +32,11 @@ const SelectFilterTag = (props: InfiniteScrollSelectFilterTagProps) => {
   }, [props]);
 
   return (
-    <div className="tag-container">
-      <p className="tag-title">{props.filter.title}</p>
-      <div className="tag-actions">
+    <div className="k-tag-container">
+      <p className="k-tag-title">{props.filter.title}</p>
+      <div className="k-tag-actions">
         <FontAwesomeIcon icon={faCheckSquare} />
-        <p className="tag-value">{props.filterOption.name}</p>
+        <p className="k-tag-value">{props.filterOption.name}</p>
         <IconButton onClick={handleRemove} size="sm" icon={faXmark} />
       </div>
     </div>

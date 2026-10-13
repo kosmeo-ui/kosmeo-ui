@@ -1,4 +1,4 @@
-.menu-filters-container {
+.k-menu-filters-container {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
@@ -6,19 +6,19 @@
   justify-content: space-between;
 }
 
-.menu-filters {
+.k-menu-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: end;
 }
 
-.menu-filters-buttons {
+.k-menu-filters-buttons {
   display: flex;
   gap: 0.5rem;
 }
 
-.filter-menu {
+.k-filter-menu {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -26,22 +26,22 @@
   min-width: 15rem;
 }
 
-.range-filter-menu-column {
+.k-range-filter-menu-column {
   display: flex;
   flex-direction: column;
 }
 
-.range-filter-menu-label {
+.k-range-filter-menu-label {
   color: var(--text-color-secondary);
   margin-bottom: 0;
 }
 
-.select-filter-menu {
+.k-select-filter-menu {
   max-height: 30rem;
   min-width: 12rem;
 }
 
-.select-filter-menu-options {
+.k-select-filter-menu-options {
   display: flex;
   flex-direction: column;
   overflow-y: auto;

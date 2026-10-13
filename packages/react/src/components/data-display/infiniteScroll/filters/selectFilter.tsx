@@ -1,8 +1,10 @@
+"use client";
+
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
+import IconButton from "../../../buttons/iconButton/index.js";
+import Dropdown from "../../../inputs/dropdown/index.js";
 import { useEffect, useMemo, useState } from "react";
-import IconButton from "../../../buttons/iconButton";
-import Dropdown from "../../../inputs/dropdown";
-import Input from "../../../inputs/input";
+import Input from "../../../inputs/input/index.js";
 import "./styles.css";
 import {
   faCheckSquare,
@@ -12,7 +14,7 @@ import {
   GeneratedSelectFilter,
   InfiniteScrollMenuFilterOption,
   InfiniteScrollMenuGeneratedFilter,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollSelectFilterProps {
   filter: GeneratedSelectFilter;
@@ -86,14 +88,14 @@ const SelectFilter = (props: InfiniteScrollSelectFilterProps) => {
       isOpen={isOpen}
       onOpenChange={setIsOpen}
     >
-      <div className="filter-menu select-filter-menu">
+      <div className="k-filter-menu k-select-filter-menu">
         <Input
           size="sm"
           placeholder="Search"
           value={optionSearch}
           onChange={handleSearchOption}
         />
-        <div className="select-filter-menu-options">{optionComponents}</div>
+        <div className="k-select-filter-menu-options">{optionComponents}</div>
       </div>
     </Dropdown>
   );

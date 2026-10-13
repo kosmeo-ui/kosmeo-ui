@@ -1,7 +1,9 @@
-import ConfirmationModal from "../../../overlays/confirmationModal";
+"use client";
+
+import ConfirmationModal from "../../../overlays/confirmationModal/index.js";
+import IconButton from "../../../buttons/iconButton/index.js";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import IconButton from "../../../buttons/iconButton";
-import { TableRow } from "../types";
+import { TableRow } from "../types.js";
 import { useState } from "react";
 
 interface DeleteButtonProps<TData> {

@@ -1,4 +1,4 @@
-.infinite-scroll-container {
+.k-infinite-scroll-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -8,26 +8,26 @@
   height: 100%;
 }
 
-.infinite-scroll-table-container {
+.k-infinite-scroll-table-container {
   flex: 1;
   overflow-y: auto;
   min-height: 0;
   position: relative;
 }
 
-.infinite-scroll-menu-table-divider {
+.k-infinite-scroll-menu-table-divider {
   margin: 1rem;
   border-top: 2px solid var(--border-color);
 }
 
-.infinite-scroll-next-page-container {
+.k-infinite-scroll-next-page-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   padding: 0.5rem 0;
 }
 
-.infinite-scroll-empty-state {
+.k-infinite-scroll-empty-state {
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,4 +1,4 @@
-.loading-container {
+.k-loading-container {
   top: 0;
   left: 0;
   width: 100%;
@@ -7,20 +7,20 @@
   background-color: var(--background-color);
 }
 
-.loading-container-fixed {
+.k-loading-container-fixed {
   position: fixed;
 }
 
-.loading-container-absolute {
+.k-loading-container-absolute {
   position: absolute;
 }
 
-.visible {
+.k-loading-visible {
   visibility: visible;
   opacity: 1;
 }
 
-.hidden {
+.k-loading-hidden {
   visibility: hidden;
   opacity: 0;
   transition:
@@ -28,7 +28,7 @@
     opacity 0.25s linear;
 }
 
-.loading-content {
+.k-loading-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -36,12 +36,12 @@
   height: 100%;
 }
 
-.loading-message {
+.k-loading-message {
   font-size: 2rem;
   text-align: center;
 }
 
-.loading-logo {
+.k-loading-logo {
   max-width: 30rem;
   min-width: 10rem;
   width: 50%;

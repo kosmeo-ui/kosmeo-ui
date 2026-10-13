@@ -1,4 +1,6 @@
-import { PropsWithSize } from "../../types";
+"use client";
+
+import { PropsWithSize } from "../../types.js";
 import "./styles.css";
 
 export interface Breadcrumb {

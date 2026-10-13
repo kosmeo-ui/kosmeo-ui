@@ -28,11 +28,14 @@ function parseImports(content: string) {
   const imports: ImportStatement[] = [];
   const importLines = new Set<number>();
 
-  // The header — a shebang, then comments and blank lines — stays on top, but
+  // The header — a shebang, then comments, blank lines and "use client" — stays on top, but
   // only when an import follows it directly.
   const shebangLines = lines[0]?.startsWith("#!") ? 1 : 0;
   let start = shebangLines;
-  while (start < lines.length && /^\s*(\/\/|\/\*|\*|$)/.test(lines[start])) {
+  while (
+    start < lines.length &&
+    /^\s*(\/\/|\/\*|\*|$|["']use (client|server)["'];?$)/.test(lines[start])
+  ) {
     start++;
   }
   if (!lines[start]?.trim().startsWith("import ")) start = shebangLines;

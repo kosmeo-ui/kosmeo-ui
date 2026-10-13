@@ -1,9 +1,11 @@
+"use client";
+
+import { InfiniteScrollMenuGeneratedFilter } from "../types.js";
 import { ReactNode, SetStateAction, useCallback } from "react";
-import { InfiniteScrollMenuGeneratedFilter } from "../types";
-import SelectFilter from "./selectFilter";
-import SearchFilter from "./searchFilter";
-import RangeFilter from "./rangeFilter";
-import ListFilter from "./listFilter";
+import SelectFilter from "./selectFilter.js";
+import SearchFilter from "./searchFilter.js";
+import RangeFilter from "./rangeFilter.js";
+import ListFilter from "./listFilter.js";
 import "./styles.css";
 
 interface InfiniteScrollMenuFiltersProps {
@@ -61,10 +63,12 @@ const Filters = (props: InfiniteScrollMenuFiltersProps) => {
   };
 
   return (
-    <div className="menu-filters-container">
-      <div className="menu-filters">{props.pendingFilters.map(getFilter)}</div>
+    <div className="k-menu-filters-container">
+      <div className="k-menu-filters">
+        {props.pendingFilters.map(getFilter)}
+      </div>
       {props.children && (
-        <div className="menu-filters-buttons">{props.children}</div>
+        <div className="k-menu-filters-buttons">{props.children}</div>
       )}
     </div>
   );

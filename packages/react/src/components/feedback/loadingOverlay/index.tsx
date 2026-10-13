@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import Spinner from "../spinner";
+import Spinner from "../spinner/index.js";
 import "./styles.css";
 
 export interface LoadingProps {
@@ -34,11 +36,11 @@ const LoadingOverlay = (props: LoadingProps) => {
 
   return (
     <div
-      className={`loading-container ${fullPage ? "loading-container-fixed" : "loading-container-absolute"} ${showLoader ? "visible" : "hidden"}`}
+      className={`k-loading-container ${fullPage ? "k-loading-container-fixed" : "k-loading-container-absolute"} ${showLoader ? "k-loading-visible" : "k-loading-hidden"}`}
     >
-      <div className="loading-content">
+      <div className="k-loading-content">
         <Spinner size="lg" />
-        <p className="loading-message">{props.message}</p>
+        <p className="k-loading-message">{props.message}</p>
       </div>
     </div>
   );

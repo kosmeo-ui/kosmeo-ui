@@ -1,6 +1,8 @@
+"use client";
+
 import { useCallback, useEffect, useMemo, useState } from "react";
-import Dropdown from "../../../inputs/dropdown";
-import Input from "../../../inputs/input";
+import Dropdown from "../../../inputs/dropdown/index.js";
+import Input from "../../../inputs/input/index.js";
 import { DateTime } from "luxon";
 import "./styles.css";
 import {
@@ -12,7 +14,7 @@ import {
   GeneratedRangeFilter,
   InfiniteScrollMenuGeneratedFilter,
   RangeValue,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollRangeFilterProps {
   filter: GeneratedRangeFilter;
@@ -137,9 +139,9 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
       icon={iconToUse}
       align="left"
     >
-      <div className="filter-menu">
-        <div className="range-filter-menu-column">
-          <p className="range-filter-menu-label">Start</p>
+      <div className="k-filter-menu">
+        <div className="k-range-filter-menu-column">
+          <p className="k-range-filter-menu-label">Start</p>
           <Input
             size="sm"
             type={inputType}
@@ -148,8 +150,8 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
             max={formattedEndValue}
           />
         </div>
-        <div className="range-filter-menu-column">
-          <p className="range-filter-menu-label">End</p>
+        <div className="k-range-filter-menu-column">
+          <p className="k-range-filter-menu-label">End</p>
           <Input
             size="sm"
             type={inputType}

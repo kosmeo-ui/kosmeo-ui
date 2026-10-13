@@ -28,11 +28,11 @@
   text-align: left;
   color: var(--text-color);
 }
-.large {
+.k-search-list-dropdown-large {
   max-height: 30rem;
 }
 
-.small {
+.k-search-list-dropdown-small {
   max-height: 12.5rem;
 }
 

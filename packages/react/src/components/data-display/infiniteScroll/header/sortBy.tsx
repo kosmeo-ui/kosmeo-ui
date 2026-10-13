@@ -1,8 +1,10 @@
+"use client";
+
 import { faCheckSquare } from "@fortawesome/free-solid-svg-icons";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
-import { InfiniteScrollMenuSortDataKey } from "../types";
-import IconButton from "../../../buttons/iconButton";
-import Dropdown from "../../../inputs/dropdown";
+import IconButton from "../../../buttons/iconButton/index.js";
+import { InfiniteScrollMenuSortDataKey } from "../types.js";
+import Dropdown from "../../../inputs/dropdown/index.js";
 import { useState } from "react";
 import "./styles.css";
 
@@ -32,7 +34,7 @@ const SortBy = (props: SortbyProps) => {
       isOpen={isOpen}
       onOpenChange={setIsOpen}
     >
-      <div className="infinte-scroll-dropdown-menu ">
+      <div className="k-infinite-scroll-dropdown-menu ">
         {props.sortBy.map((key, index: number) => (
           <IconButton
             key={index}

@@ -1,3 +1,5 @@
+"use client";
+
 import { Dispatch, KeyboardEvent, SetStateAction, useCallback } from "react";
 
 interface UseListKeyboardOptions {

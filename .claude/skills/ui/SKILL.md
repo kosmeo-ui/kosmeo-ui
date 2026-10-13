@@ -24,7 +24,7 @@ See [examples.md](examples.md) for full code from the current library.
 ```
 package.json                # "type": "module"; exports "." and "./styles.css"
 project.json                # Nx targets: build, check, clean
-tsconfig.json               # moduleResolution "bundler", jsx "react-jsx"
+tsconfig.json               # moduleResolution "NodeNext", jsx "react-jsx"
 scripts/copy-css.js         # Copies every .css from src/ to dist/ after tsc
 src/
   index.ts                  # Re-exports components + hooks, and the shared types
@@ -51,11 +51,14 @@ Buckets: `layout/`, `forms/`, `inputs/`, `buttons/`, `overlays/`, `feedback/`,
   sub-folders, e.g. `feedback/badge/utils.ts`, `data-display/infiniteScroll/`).
 - `index.tsx` imports its stylesheet with `import "./styles.css";` and default
   exports the component. Export the props interface as `<Name>Props`.
-- Relative imports have **no `.js` extension** here — the package uses
-  `moduleResolution: "bundler"`, unlike the backend packages.
-  - Same bucket: `import Centered from "../centered";`
-  - Cross bucket: `import Spinner from "../../feedback/spinner";`
-  - Shared types: `import { PropsWithSize, PropsWithVariant } from "../../types";`
+- Relative imports are fully specified — `.js`, and `/index.js` for a folder.
+  webpack (and so Next.js) can't resolve anything shorter in an ESM package, and
+  `moduleResolution: "NodeNext"` makes `tsc` reject it.
+  - Same bucket: `import Centered from "../centered/index.js";`
+  - Cross bucket: `import Spinner from "../../feedback/spinner/index.js";`
+  - Shared types: `import { PropsWithSize, PropsWithVariant } from "../../types.js";`
+- Every component file starts with `"use client";`, so Next.js server components
+  can render it.
   - Hooks: `import useFocusTrap from "../../../hooks/useFocusTrap";`
 - Use `PropsWithVariant` / `PropsWithSize` for `variant` / `size` props, and map
   them to classes (`k-badge-${variant}`, `k-badge-${size}`) — never to inline
@@ -339,7 +342,9 @@ Every change to the library needs a version plan: `npm run version-plan`.
 
 - Never inline `style={{}}` outside the cases above, or add new `style` props.
 - Never hardcode hex/rgb/hsl or named colors.
-- Never add `.js` extensions to relative imports in this package.
+- Never leave the extension off a relative import.
+- Never style a class without the `k-` prefix, except third-party markup scoped under a
+  `k-` class (`.k-editor-wrapper .tiptap`).
 - Never import from an app package — the library has zero internal
   dependencies.
 - Never put app concerns (routing, auth, HTTP clients) in a component; take

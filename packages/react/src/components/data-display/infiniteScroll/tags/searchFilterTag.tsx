@@ -1,12 +1,14 @@
+"use client";
+
 import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "../../../buttons/iconButton";
+import IconButton from "../../../buttons/iconButton/index.js";
 import { useCallback } from "react";
 import "./styles.css";
 import {
   GeneratedSearchFilter,
   InfiniteScrollMenuGeneratedFilter,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollSearchFilterTagProps {
   filter: GeneratedSearchFilter;
@@ -25,11 +27,11 @@ const SearchFilterTag = (props: InfiniteScrollSearchFilterTagProps) => {
   }, [props.filters, props.filter]);
 
   return (
-    <div className="tag-container">
-      <p className="tag-title">{props.filter.title}</p>
-      <div className="tag-actions">
+    <div className="k-tag-container">
+      <p className="k-tag-title">{props.filter.title}</p>
+      <div className="k-tag-actions">
         <FontAwesomeIcon icon={faMagnifyingGlass} />
-        <p className="tag-value">{props.filter.value}</p>
+        <p className="k-tag-value">{props.filter.value}</p>
         <IconButton icon={faXmark} onClick={handleRemove} size="sm" />
       </div>
     </div>

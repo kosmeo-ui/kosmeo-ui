@@ -281,7 +281,7 @@ code {
 
 /* Print styles */
 @media print {
-  .va-sidebar {
+  .k-sidebar-nav {
     display: none !important;
   }
 }

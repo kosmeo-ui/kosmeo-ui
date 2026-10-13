@@ -1,6 +1,8 @@
+"use client";
+
+import ProgressBar from "../../feedback/progressBar/index.js";
 import { MouseEventHandler, ReactNode } from "react";
-import ProgressBar from "../../feedback/progressBar";
-import { PropsWithVariant } from "../../types";
+import { PropsWithVariant } from "../../types.js";
 import "./styles.css";
 
 export interface CardHeader {

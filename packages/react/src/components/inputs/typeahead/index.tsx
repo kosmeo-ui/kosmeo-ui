@@ -1,11 +1,13 @@
-import useFloatingPosition from "../../../hooks/useFloatingPosition";
-import useScrollIntoView from "../../../hooks/useScrollIntoView";
+"use client";
+
+import useFloatingPosition from "../../../hooks/useFloatingPosition.js";
+import useScrollIntoView from "../../../hooks/useScrollIntoView.js";
+import useListKeyboard from "../../../hooks/useListKeyboard.js";
+import useOutsideClick from "../../../hooks/useOutsideClick.js";
 import { useEffect, useRef, useState, ReactNode } from "react";
-import useListKeyboard from "../../../hooks/useListKeyboard";
-import useOutsideClick from "../../../hooks/useOutsideClick";
-import { PropsWithSize } from "../../types";
-import Portal from "../../overlays/portal";
-import Input from "../input";
+import Portal from "../../overlays/portal/index.js";
+import { PropsWithSize } from "../../types.js";
+import Input from "../input/index.js";
 import "./styles.css";
 
 interface TypeaheadRenderResult {
@@ -287,7 +289,9 @@ const Typeahead = <T,>(props: TypeaheadProps<T>) => {
       <ul
         ref={listRef}
         className={`k-typeahead-options-list k-typeahead-options-list-portal ${
-          longDropDown ? "large" : "small"
+          longDropDown
+            ? "k-typeahead-options-list-large"
+            : "k-typeahead-options-list-small"
         }`}
         style={{
           position: "fixed",

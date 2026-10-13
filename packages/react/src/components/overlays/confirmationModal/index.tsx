@@ -1,5 +1,7 @@
-import Button from "../../buttons/button";
-import Modal from "../modal";
+"use client";
+
+import Button from "../../buttons/button/index.js";
+import Modal from "../modal/index.js";
 
 export interface ConfirmationModalProps {
   show: boolean;

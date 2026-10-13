@@ -1,4 +1,6 @@
-import Card from "../../layout/card";
+"use client";
+
+import Card from "../../layout/card/index.js";
 import "./styles.css";
 
 interface ListCardProps {
@@ -12,16 +14,16 @@ const ListCard = (props: ListCardProps) => {
   return (
     <Card>
       {props.headerActions ? (
-        <div className="va-list-card-header">
+        <div className="k-list-card-header">
           <h3>{props.listTitle}</h3>
-          <div className="va-list-card-header-actions">
+          <div className="k-list-card-header-actions">
             {props.headerActions}
           </div>
         </div>
       ) : (
         <h3>{props.listTitle}</h3>
       )}
-      <dl className="va-list-card">
+      <dl className="k-list-card">
         {props.items.map((item, index) => (
           <div key={index}>
             <dt>{item.label}</dt>
@@ -31,7 +33,7 @@ const ListCard = (props: ListCardProps) => {
       </dl>
 
       {props.footerButtons && (
-        <div className="va-list-card-actions">{props.footerButtons}</div>
+        <div className="k-list-card-actions">{props.footerButtons}</div>
       )}
     </Card>
   );

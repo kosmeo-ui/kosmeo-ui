@@ -1,5 +1,7 @@
-import Spinner from "../../feedback/spinner";
-import Centered from "../centered";
+"use client";
+
+import Spinner from "../../feedback/spinner/index.js";
+import Centered from "../centered/index.js";
 import { ReactNode } from "react";
 import "./styles.css";
 
@@ -16,7 +18,7 @@ export interface PageProps {
   gap?: PageGap;
   /** Centered max-width constraint. */
   maxWidth?: PageMaxWidth;
-  /** Loading state. Renders centered spinner when true. */
+  /** Loading state. Renders a centered spinner when true. */
   loading?: boolean;
 }
 

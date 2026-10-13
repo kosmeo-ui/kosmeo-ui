@@ -1,9 +1,11 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import Portal from "../../overlays/portal";
+import Portal from "../../overlays/portal/index.js";
 import "./styles.css";
 import useFloatingPosition, {
   FloatingSide,
-} from "../../../hooks/useFloatingPosition";
+} from "../../../hooks/useFloatingPosition.js";
 
 type TooltipSide = Exclude<FloatingSide, "below">;
 

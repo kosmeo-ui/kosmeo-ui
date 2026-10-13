@@ -1,3 +1,5 @@
+"use client";
+
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 
 export type FloatingSide = "below" | "top" | "bottom" | "left" | "right";

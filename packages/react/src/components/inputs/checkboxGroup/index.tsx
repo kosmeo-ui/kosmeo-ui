@@ -1,5 +1,7 @@
-import OptionsGroup from "../../forms/optionsGroup";
-import Checkbox from "../checkbox";
+"use client";
+
+import OptionsGroup from "../../forms/optionsGroup/index.js";
+import Checkbox from "../checkbox/index.js";
 import { ReactNode } from "react";
 
 export interface CheckboxOption<T = string> {

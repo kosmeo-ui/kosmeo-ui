@@ -1,4 +1,4 @@
-.infinite-scroll-header {
+.k-infinite-scroll-header {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -7,20 +7,20 @@
   gap: 1rem;
 }
 
-.infinite-scroll-header-buttons-container {
+.k-infinite-scroll-header-buttons-container {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
 }
 
-.infinite-scroll-header-title {
+.k-infinite-scroll-header-title {
   font-size: 1.25rem;
   font-weight: bold;
   margin: 0;
 }
 
-.infinite-scroll-header-limit-sort-container {
+.k-infinite-scroll-header-limit-sort-container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -28,37 +28,37 @@
   gap: 1rem;
 }
 
-.infinite-scroll-header-sort-container {
+.k-infinite-scroll-header-sort-container {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
 }
 
-.infinite-scroll-header-sort-container {
+.k-infinite-scroll-header-sort-container {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
 }
 
-.infinite-scroll-header-sort-title {
+.k-infinite-scroll-header-sort-title {
   font-size: 1rem;
   margin: 0;
 }
 
-.infinte-scroll-dropdown-menu {
+.k-infinite-scroll-dropdown-menu {
   display: flex;
   flex-direction: column;
 }
 
-.limit-container {
+.k-limit-container {
   display: flex;
   gap: 0.5rem;
   align-items: center;
 }
 
-.limit-container p {
+.k-limit-container p {
   margin: 0;
   font-size: 1rem;
 }

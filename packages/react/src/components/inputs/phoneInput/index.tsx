@@ -1,9 +1,11 @@
+"use client";
+
 import { faCaretDown, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useOutsideClick from "../../../hooks/useOutsideClick";
-import { PropsWithSize } from "../../types";
-import Input from "../input";
+import useOutsideClick from "../../../hooks/useOutsideClick.js";
+import { PropsWithSize } from "../../types.js";
+import Input from "../input/index.js";
 import "./styles.css";
 import {
   AsYouType,

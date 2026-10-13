@@ -1,4 +1,6 @@
-import { PropsWithVariant } from "../../types";
+"use client";
+
+import { PropsWithVariant } from "../../types.js";
 import "./styles.css";
 
 export interface ProgressBarProps extends PropsWithVariant {

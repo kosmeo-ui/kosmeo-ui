@@ -1,11 +1,13 @@
+"use client";
+
+import DropdownArrowButton from "../dropdownArrowButton/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useOutsideClick from "../../../hooks/useOutsideClick.js";
 import { useState, useRef, useEffect, useMemo } from "react";
-import useOutsideClick from "../../../hooks/useOutsideClick";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import DropdownArrowButton from "../dropdownArrowButton";
-import FieldShell from "../../forms/fieldShell";
-import { DropDownSection } from "./dropDown";
-import { PropsWithSize } from "../../types";
+import FieldShell from "../../forms/fieldShell/index.js";
+import { DropDownSection } from "./dropDown.js";
+import { PropsWithSize } from "../../types.js";
 import "./styles.css";
 
 interface MultiSelectProps<T> extends PropsWithSize {

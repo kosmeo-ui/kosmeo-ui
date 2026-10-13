@@ -36,15 +36,17 @@ npm run version-plan          # writes .nx/version-plans/<name>.md — commit it
 ```
 
 After a PR with plans merges, CI opens (or updates) a `release/version-bump` PR that applies them:
-new versions in each `package.json` and a `CHANGELOG.md` per package. Publishing is manual for now:
-
-```sh
-npm run build
-npm publish -w @kosmeo-ui/react      # scoped packages publish public via publishConfig
-```
+new versions in each `package.json` and a `CHANGELOG.md` per package. Merging that PR runs
+`publish.yml`, which publishes every version npm doesn't have yet and tags it `<package>@<version>`.
+The same workflow can be started by hand (Actions → Publish to npm → Run workflow), which is how
+the first release goes out.
 
 ## Logos
 
 `assets/` holds the banner, the mark (SVG, plus PNG at 256 and 512 px for npm and GitHub avatars)
 and a favicon SVG drawn with heavier lines for 16–32 px. They're generated, not drawn, so edit the
 generator rather than the files.
+
+## License
+
+[Apache-2.0](LICENSE)

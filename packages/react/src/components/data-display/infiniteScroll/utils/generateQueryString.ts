@@ -3,7 +3,7 @@ import {
   InfiniteScrollMenuLimitOption,
   InfiniteScrollMenuSortDataKey,
   SortDirection,
-} from "../types";
+} from "../types.js";
 
 interface GenerateQueryStringParams {
   filters: InfiniteScrollMenuGeneratedFilter[];

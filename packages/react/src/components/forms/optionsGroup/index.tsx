@@ -1,4 +1,6 @@
-import MandatoryAsterisk from "../requiredAsterisk";
+"use client";
+
+import MandatoryAsterisk from "../requiredAsterisk/index.js";
 import { ReactNode } from "react";
 import "./styles.css";
 

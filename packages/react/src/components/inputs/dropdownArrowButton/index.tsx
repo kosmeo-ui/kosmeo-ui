@@ -1,6 +1,8 @@
+"use client";
+
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize } from "../../types";
+import { PropsWithSize } from "../../types.js";
 import "./styles.css";
 
 interface DropdownArrowButtonProps extends PropsWithSize {

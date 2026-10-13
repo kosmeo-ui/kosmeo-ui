@@ -1,12 +1,14 @@
-import useFloatingPosition from "../../../hooks/useFloatingPosition";
-import useScrollIntoView from "../../../hooks/useScrollIntoView";
+"use client";
+
+import useFloatingPosition from "../../../hooks/useFloatingPosition.js";
+import useScrollIntoView from "../../../hooks/useScrollIntoView.js";
+import useListKeyboard from "../../../hooks/useListKeyboard.js";
+import useOutsideClick from "../../../hooks/useOutsideClick.js";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import useListKeyboard from "../../../hooks/useListKeyboard";
-import useOutsideClick from "../../../hooks/useOutsideClick";
-import { PropsWithSize } from "../../types";
-import Portal from "../../overlays/portal";
+import Portal from "../../overlays/portal/index.js";
+import { PropsWithSize } from "../../types.js";
+import Input from "../input/index.js";
 import "../searchList/styles.css";
-import Input from "../input";
 
 interface SearchSelectProps<T> extends PropsWithSize {
   /** **_Optional_** label above the field. */

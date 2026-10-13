@@ -1,7 +1,9 @@
-import { TableColumn, TableLeadingColumn, TableRow } from "./types";
+"use client";
+
+import { TableColumn, TableLeadingColumn, TableRow } from "./types.js";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import parseDataKey from "./utils/parseDataKey.js";
 import { useMemo, type RefObject } from "react";
-import parseDataKey from "./utils/parseDataKey";
 import "../table/styles.css";
 import "./styles.css";
 
@@ -201,4 +203,4 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
 };
 
 export default DataTable;
-export type { TableColumn, TableRow, TableLeadingColumn } from "./types";
+export type { TableColumn, TableRow, TableLeadingColumn } from "./types.js";

@@ -1,5 +1,7 @@
-import { PropsWithSize } from "../../types";
-import Button from "../../buttons/button";
+"use client";
+
+import Button from "../../buttons/button/index.js";
+import { PropsWithSize } from "../../types.js";
 import "./styles.css";
 
 interface ImagePreviewProps extends PropsWithSize {

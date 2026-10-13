@@ -1,6 +1,8 @@
+"use client";
+
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { UseInfiniteReturn } from "./useInfinite.js";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import type { UseInfiniteReturn } from "./useInfinite";
 import type { AxiosInstance } from "axios";
 
 interface CursorPageResponse<T> {

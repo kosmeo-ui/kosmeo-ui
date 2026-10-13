@@ -1,6 +1,8 @@
+"use client";
+
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize, PropsWithVariant } from "../../types";
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
 import { RefObject } from "react";
 import "./styles.css";
 

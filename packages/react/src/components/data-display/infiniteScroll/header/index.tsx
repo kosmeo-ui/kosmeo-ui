@@ -1,9 +1,11 @@
-import IconButton from "../../../buttons/iconButton";
-import Dropdown from "../../../inputs/dropdown";
-import SortDirection from "./sortDirection";
-import DeleteButton from "./deleteButton";
-import SortBy from "./sortBy";
-import Limit from "./limit";
+"use client";
+
+import IconButton from "../../../buttons/iconButton/index.js";
+import Dropdown from "../../../inputs/dropdown/index.js";
+import SortDirection from "./sortDirection.js";
+import DeleteButton from "./deleteButton.js";
+import SortBy from "./sortBy.js";
+import Limit from "./limit.js";
 import "./styles.css";
 import {
   faDownload,
@@ -16,7 +18,7 @@ import {
   InfiniteScrollMenuLimitOption,
   InfiniteScrollMenuSortDataKey,
   TableRow,
-} from "../types";
+} from "../types.js";
 
 interface HeaderProps<TData> {
   title: string;
@@ -38,9 +40,9 @@ interface HeaderProps<TData> {
 
 const Header = <TData extends object>(props: HeaderProps<TData>) => {
   return (
-    <div className="infinite-scroll-header">
-      <div className="infinite-scroll-header-buttons-container">
-        <p className="infinite-scroll-header-title">{props.title}</p>
+    <div className="k-infinite-scroll-header">
+      <div className="k-infinite-scroll-header-buttons-container">
+        <p className="k-infinite-scroll-header-title">{props.title}</p>
         <IconButton
           size="sm"
           variant="secondary"
@@ -81,14 +83,14 @@ const Header = <TData extends object>(props: HeaderProps<TData>) => {
           </Dropdown>
         )}
       </div>
-      <div className="infinite-scroll-header-limit-sort-container">
+      <div className="k-infinite-scroll-header-limit-sort-container">
         <Limit
           limitOptions={props.limitOptions}
           onLimitChange={props.onLimitChange}
         />
         {props.sortBy.length > 0 && (
-          <div className="infinite-scroll-header-sort-container">
-            <p className="infinite-scroll-header-sort-title">Sort By:</p>
+          <div className="k-infinite-scroll-header-sort-container">
+            <p className="k-infinite-scroll-header-sort-title">Sort By:</p>
             <SortBy
               sortBy={props.sortBy}
               handleSortByChange={props.onSortByChange}

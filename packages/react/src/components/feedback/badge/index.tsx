@@ -1,7 +1,9 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize, PropsWithVariant } from "../../types";
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { getContrastTextColor } from "./utils";
+import { getContrastTextColor } from "./utils.js";
 import "./styles.css";
 
 export interface BadgeProps extends PropsWithSize, PropsWithVariant {

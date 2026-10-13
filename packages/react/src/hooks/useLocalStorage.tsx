@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useCallback } from "react";
 
 const LOCAL_STORAGE_CHANGE_EVENT = "localStorageChange";

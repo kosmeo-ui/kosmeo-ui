@@ -1,12 +1,14 @@
-import * as pendingChangesUtil from "./utils/hasPendingChanges";
-import generateQueryString from "./utils/generateQueryString";
-import LoadingOverlay from "../../feedback/loadingOverlay";
-import Button from "../../buttons/button";
-import Col from "../../layout/col";
-import Filters from "./filters";
-import Header from "./header";
-import Table from "./table";
-import Tags from "./tags";
+"use client";
+
+import LoadingOverlay from "../../feedback/loadingOverlay/index.js";
+import * as pendingChangesUtil from "./utils/hasPendingChanges.js";
+import generateQueryString from "./utils/generateQueryString.js";
+import Button from "../../buttons/button/index.js";
+import Col from "../../layout/col/index.js";
+import Filters from "./filters/index.js";
+import Header from "./header/index.js";
+import Table from "./table/index.js";
+import Tags from "./tags/index.js";
 import "./styles.css";
 import {
   TableColumn,
@@ -14,7 +16,7 @@ import {
   InfiniteScrollMenuGeneratedFilter,
   InfiniteScrollMenuLimitOption,
   TableRow,
-} from "./types";
+} from "./types.js";
 import {
   ReactNode,
   useCallback,
@@ -284,7 +286,7 @@ const InfiniteScroll = <TData extends object>(
   }, [pendingFilters]);
 
   return (
-    <div ref={containerRef} className="infinite-scroll-container">
+    <div ref={containerRef} className="k-infinite-scroll-container">
       {!props.hideFilters && (
         <>
           <Col size="sm">
@@ -330,12 +332,12 @@ const InfiniteScroll = <TData extends object>(
               handleNewFilters={setPendingFilters}
             />
           </Col>
-          <div className="infinite-scroll-menu-table-divider" />
+          <div className="k-infinite-scroll-menu-table-divider" />
         </>
       )}
       <div
         ref={infiniteScrollTableRef}
-        className="infinite-scroll-table-container"
+        className="k-infinite-scroll-table-container"
         onScroll={handleScroll}
       >
         {props.columns && (
@@ -353,12 +355,12 @@ const InfiniteScroll = <TData extends object>(
         )}
         {props.dataComponent && props.dataComponent(rows)}
         {!props.isLoading && props.data.length === 0 && (
-          <div className="infinite-scroll-empty-state">
+          <div className="k-infinite-scroll-empty-state">
             {props.emptyMessage || "No results found"}
           </div>
         )}
         {!props.hideNextPageButton && props.data.length > 0 && (
-          <div className="infinite-scroll-next-page-container">
+          <div className="k-infinite-scroll-next-page-container">
             <Button
               disabled={!props.hasMore || props.isLoading}
               onClick={handleNextPageClick}
@@ -389,4 +391,4 @@ export type {
   InfiniteScrollMenuSort,
   InfiniteScrollMenuSortDataKey,
   InfiniteScrollMenuLimitOption,
-} from "./types";
+} from "./types.js";

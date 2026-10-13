@@ -1,10 +1,12 @@
+"use client";
+
+import MandatoryAsterisk from "../../forms/requiredAsterisk/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize, PropsWithVariant } from "../../types";
-import MandatoryAsterisk from "../../forms/requiredAsterisk";
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
+import IconButton from "../../buttons/iconButton/index.js";
 import { useEffect, useRef, useState } from "react";
-import IconButton from "../../buttons/iconButton";
-import Button from "../../buttons/button";
-import Modal from "../../overlays/modal";
+import Button from "../../buttons/button/index.js";
+import Modal from "../../overlays/modal/index.js";
 import "./styles.css";
 import {
   faUpload,

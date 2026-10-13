@@ -1,6 +1,8 @@
-import Badge from "../../feedback/badge";
-import Card from "../../layout/card";
-import Col from "../../layout/col";
+"use client";
+
+import Badge from "../../feedback/badge/index.js";
+import Card from "../../layout/card/index.js";
+import Col from "../../layout/col/index.js";
 import "./styles.css";
 
 interface TagCardProps {
@@ -17,7 +19,7 @@ const TagCard = (props: TagCardProps) => {
       <Col size="sm">
         <h3>{props.title}</h3>
         {props.tags.length ? (
-          <ul className="va-tag-card-list">
+          <ul className="k-tag-card-list">
             {props.tags.map((t) => (
               <Badge key={t} variant={color} size="md" pill>
                 {t}
@@ -26,7 +28,7 @@ const TagCard = (props: TagCardProps) => {
           </ul>
         ) : (
           props.emptyText && (
-            <p className="va-tag-card-empty-text">{props.emptyText}</p>
+            <p className="k-tag-card-empty-text">{props.emptyText}</p>
           )
         )}
       </Col>

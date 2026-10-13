@@ -2,6 +2,19 @@
   "name": "@kosmeo-ui/react",
   "version": "0.1.0",
   "description": "React components themed with CSS variables, light and dark",
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "design-system",
+    "css-variables",
+    "dark-mode"
+  ],
+  "homepage": "https://github.com/kosmeo-ui/kosmeo-ui/tree/master/packages/react#readme",
+  "bugs": {
+    "url": "https://github.com/kosmeo-ui/kosmeo-ui/issues"
+  },
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kosmeo-ui/kosmeo-ui.git",
@@ -21,7 +34,8 @@
     "./styles.css": "./dist/styles.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "publishConfig": {
     "access": "public"

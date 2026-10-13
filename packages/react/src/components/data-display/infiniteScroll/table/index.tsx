@@ -1,11 +1,13 @@
-import DataTable from "../../../data-display/dataTable";
-import Checkbox from "../../../inputs/checkbox";
+"use client";
+
+import DataTable from "../../../data-display/dataTable/index.js";
+import Checkbox from "../../../inputs/checkbox/index.js";
 import { type RefObject } from "react";
 import {
   TableColumn,
   TableLeadingColumn,
   TableRow,
-} from "../../dataTable/types";
+} from "../../dataTable/types.js";
 
 interface InfiniteScrollTableProps<TData> {
   columns: TableColumn<TData>[];

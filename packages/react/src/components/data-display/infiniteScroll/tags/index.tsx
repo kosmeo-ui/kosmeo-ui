@@ -1,8 +1,10 @@
-import { InfiniteScrollMenuGeneratedFilter } from "../types";
-import SearchFilterTag from "./searchFilterTag";
-import SelectFilterTag from "./selectFilterTag";
-import RangeFilterTag from "./rangeFilterTag";
-import ListFilterTag from "./listFilterTag";
+"use client";
+
+import { InfiniteScrollMenuGeneratedFilter } from "../types.js";
+import SearchFilterTag from "./searchFilterTag.js";
+import SelectFilterTag from "./selectFilterTag.js";
+import RangeFilterTag from "./rangeFilterTag.js";
+import ListFilterTag from "./listFilterTag.js";
 import "./styles.css";
 
 interface InfiniteScrollMenuTagsProps {
@@ -74,7 +76,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
   }, [] as React.ReactNode[]);
 
   if (!filterTags.length) return null;
-  return <div className="tags-container">{filterTags}</div>;
+  return <div className="k-tags-container">{filterTags}</div>;
 };
 
 export default Tags;

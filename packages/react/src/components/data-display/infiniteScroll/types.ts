@@ -1,11 +1,11 @@
-import type { DataKey } from "../dataTable/types";
+import type { DataKey } from "../dataTable/types.js";
 
 export type {
   DataKey,
   TableColumn,
   TableRow,
   TableLeadingColumn,
-} from "../dataTable/types";
+} from "../dataTable/types.js";
 
 export type RangeType = "DATE" | "DATETIME" | "NUMBER" | "STRING";
 export type RangeValue = string | number;

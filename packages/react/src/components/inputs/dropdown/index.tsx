@@ -1,9 +1,11 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PropsWithSize, PropsWithVariant } from "../../types";
-import useOutsideClick from "../../../hooks/useOutsideClick";
+import { PropsWithSize, PropsWithVariant } from "../../types.js";
+import useOutsideClick from "../../../hooks/useOutsideClick.js";
+import IconButton from "../../buttons/iconButton/index.js";
 import { ReactNode, useRef, useState } from "react";
-import IconButton from "../../buttons/iconButton";
-import Button from "../../buttons/button";
+import Button from "../../buttons/button/index.js";
 import "./styles.css";
 import {
   faCaretDown,

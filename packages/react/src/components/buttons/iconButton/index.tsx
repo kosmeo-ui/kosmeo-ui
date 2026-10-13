@@ -1,6 +1,8 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import Button, { ButtonProps } from "../button";
+import Button, { ButtonProps } from "../button/index.js";
 import "./styles.css";
 
 interface IconButtonProps extends ButtonProps {

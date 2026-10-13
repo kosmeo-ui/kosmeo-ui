@@ -1,3 +1,5 @@
+"use client";
+
 import { ComponentPropsWithoutRef, ElementType, ReactNode } from "react";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

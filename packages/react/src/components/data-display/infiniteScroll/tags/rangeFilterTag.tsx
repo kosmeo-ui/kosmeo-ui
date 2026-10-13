@@ -1,5 +1,7 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "../../../buttons/iconButton";
+import IconButton from "../../../buttons/iconButton/index.js";
 import { useCallback, useMemo } from "react";
 import { DateTime } from "luxon";
 import "./styles.css";
@@ -12,7 +14,7 @@ import {
 import {
   GeneratedRangeFilter,
   InfiniteScrollMenuGeneratedFilter,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollRangeFilterTagProps {
   filter: GeneratedRangeFilter;
@@ -61,11 +63,11 @@ const RangeFilterTag = (props: InfiniteScrollRangeFilterTagProps) => {
   }, [props.filters, filterValue]);
 
   return (
-    <div className="tag-container">
-      <p className="tag-title">{tagTitle}</p>
-      <div className="tag-actions">
+    <div className="k-tag-container">
+      <p className="k-tag-title">{tagTitle}</p>
+      <div className="k-tag-actions">
         {iconToUse && <FontAwesomeIcon icon={iconToUse} />}
-        <p className="tag-value">{tagValue}</p>
+        <p className="k-tag-value">{tagValue}</p>
         <IconButton icon={faXmark} onClick={handleRemove} size="sm" />
       </div>
     </div>

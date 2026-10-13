@@ -1,11 +1,13 @@
+"use client";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { TableColumn } from "../../dataTable/types";
+import IconButton from "../../../buttons/iconButton/index.js";
+import type { TableColumn } from "../../dataTable/types.js";
+import Table from "../../../data-display/table/index.js";
 import { useCallback, useMemo, useState } from "react";
-import IconButton from "../../../buttons/iconButton";
-import Table from "../../../data-display/table";
-import Modal from "../../../overlays/modal";
-import Input from "../../../inputs/input";
-import Row from "../../../layout/row";
+import Modal from "../../../overlays/modal/index.js";
+import Input from "../../../inputs/input/index.js";
+import Row from "../../../layout/row/index.js";
 import "./styles.css";
 import {
   faList,
@@ -16,7 +18,7 @@ import {
 import {
   GeneratedListFilter,
   InfiniteScrollMenuGeneratedFilter,
-} from "../types";
+} from "../types.js";
 
 interface InfiniteScrollListFilterTagProps {
   filter: GeneratedListFilter;
@@ -83,7 +85,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
       {
         title: "#",
         headerElement: (t) => (
-          <span className="lft-modal-table-header">{t}</span>
+          <span className="k-lft-modal-table-header">{t}</span>
         ),
         cellElement: (_, i) => i + 1,
       },
@@ -91,10 +93,10 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
       {
         title: "Remove",
         headerElement: (t) => (
-          <span className="lft-modal-table-header">{t}</span>
+          <span className="k-lft-modal-table-header">{t}</span>
         ),
         cellElement: () => (
-          <div className="lft-modal-table-remove-button">
+          <div className="k-lft-modal-table-remove-button">
             <IconButton
               icon={faXmark}
               size="sm"
@@ -109,12 +111,12 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
   );
 
   return (
-    <div className="tag-container">
-      <p className="tag-title">{props.filter.title}</p>
-      <div className="tag-actions">
+    <div className="k-tag-container">
+      <p className="k-tag-title">{props.filter.title}</p>
+      <div className="k-tag-actions">
         <FontAwesomeIcon icon={faList} />
-        <p className="tag-value">{tagValue}</p>
-        <div className="lft-buttons">
+        <p className="k-tag-value">{tagValue}</p>
+        <div className="k-lft-buttons">
           <IconButton
             icon={faPenToSquare}
             onClick={() => setShow(!show)}
@@ -124,7 +126,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
         </div>
       </div>
       <Modal show={show} onClose={handleClose} title={props.filter.title}>
-        <div className="lft-modal-body">
+        <div className="k-lft-modal-body">
           <Input
             size="sm"
             placeholder="Search"
@@ -145,7 +147,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
               onClick={handleAddValues}
             />
           </Row>
-          <div className="lft-modal-table-container">
+          <div className="k-lft-modal-table-container">
             <Table<string>
               striped
               bordered

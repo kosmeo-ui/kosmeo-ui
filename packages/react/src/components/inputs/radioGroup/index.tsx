@@ -1,4 +1,6 @@
-import OptionsGroup from "../../forms/optionsGroup";
+"use client";
+
+import OptionsGroup from "../../forms/optionsGroup/index.js";
 import { ReactNode } from "react";
 
 export interface RadioOption<T = string> {
