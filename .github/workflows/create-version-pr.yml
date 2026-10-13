@@ -9,6 +9,12 @@ concurrency:
   group: version-bump-create
   cancel-in-progress: false
 
+# GITHUB_TOKEN, not a PAT: the PR it opens triggers no workflows, which is fine
+# because CI and the version-plan check both skip release/version-bump.
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   create-pr:
     if: >
@@ -22,7 +28,7 @@ jobs:
           ref: master
           fetch-depth: 0
           fetch-tags: true
-          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check for version plans
         id: check-plans
@@ -40,7 +46,7 @@ jobs:
         if: steps.check-plans.outputs.has_plans == 'true'
         id: check-pr
         env:
-          GH_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_NUMBER=$(gh pr list --base master --head release/version-bump --json number -q '.[0].number' 2>/dev/null || echo "")
           if [ -n "$PR_NUMBER" ]; then
@@ -96,7 +102,7 @@ jobs:
       - name: Create PR if needed
         if: steps.check-plans.outputs.has_plans == 'true' && steps.commit.outputs.has_changes == 'true' && steps.check-pr.outputs.exists != 'true'
         env:
-          GH_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create \
             --base master \
