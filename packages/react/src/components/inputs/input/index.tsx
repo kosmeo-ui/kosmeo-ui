@@ -1,0 +1,184 @@
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import DropdownArrowButton from "../dropdownArrowButton";
+import FieldShell from "../../forms/fieldShell";
+import { ReactNode, useState } from "react";
+import { PropsWithSize } from "../../types";
+import "./styles.css";
+
+interface InputProps extends PropsWithSize {
+  /**
+   * **_Optional_** type of input field to render.
+   *
+   * Defaults to `text`
+   */
+  type?:
+    | "text"
+    | "number"
+    | "password"
+    | "email"
+    | "date"
+    | "datetime-local"
+    | "time"
+    | "url"
+    | "tel";
+
+  /** **_Optional_** if the field is disabled */
+  disabled?: boolean;
+  /** **_Optional_** if the field is a dropdown */
+  dropDown?: boolean;
+  /** **_Optional_** whether or not the drop down options are open */
+  isOpen?: boolean;
+  /** **_Optional_** label that appears above the input */
+  label?: string;
+  /** **_Optional_** whether the field is required (shows red asterisk and enables validation) */
+  required?: boolean;
+  /** **_Optional_** ID of the field. If one is not provided, it will be randomly generated */
+  id?: string;
+  /** **_Optional_** placeholder text that will appear in the input until the user adds a value */
+  placeholder?: string;
+  /** **_Optional_** value to be set when the element first loads */
+  value?: string | number;
+  /** **_Optional_** reference to the input element */
+  ref?: React.Ref<HTMLInputElement>;
+  /** **_Optional_** maximum value for the input */
+  max?: string | number;
+  /** **_Optional_** minimum value for the input */
+  min?: string | number;
+  /** **_Optional_** whether to show character count */
+  showCharCount?: boolean;
+  /** **_Optional_** whether the input should be focused when it first loads */
+  autoFocus?: boolean;
+  /** **_Optional_** name attribute for the input (useful for form submissions) */
+  name?: string;
+  /** **_Optional_** autocomplete attribute for the input */
+  autoComplete?: string;
+  /** **_Optional_** inline addon rendered on the left (currency symbol, unit prefix). */
+  prefix?: ReactNode;
+  /** **_Optional_** inline addon rendered on the right (unit suffix, currency code). */
+  suffix?: ReactNode;
+  /** **_Optional_** error message rendered below the input (replaces helperText if both set). */
+  error?: ReactNode;
+  /** **_Optional_** helper text rendered below the input (hidden when `error` is set). */
+  helperText?: ReactNode;
+  /** **_Optional_** function that is called when the value of the input changes */
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  /** **_Optional_** function that is called when the input is focused */
+  onFocus?: React.FocusEventHandler<HTMLInputElement>;
+  /** **_Optional_** function that is called when the input loses focus */
+  onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  /** **_Optional_** function that is called when the user presses a key down in the input */
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+  /** **_Optional_** function that is called when the input is clicked */
+  onClick?: React.MouseEventHandler<HTMLInputElement>;
+}
+
+const Input = (props: InputProps) => {
+  const {
+    type = "text",
+    size = "md",
+    disabled = false,
+    isOpen = false,
+    required = false,
+    prefix,
+    suffix,
+  } = props;
+  const [showPassword, setShowPassword] = useState(false);
+
+  const inputId =
+    props.id || `input-${Math.random().toString(36).substring(2, 9)}`;
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const inputType =
+    type === "password" ? (showPassword ? "text" : "password") : type;
+
+  const hasAddon = prefix !== undefined || suffix !== undefined;
+  const inputClasses = [
+    "k-input",
+    `k-input-${size}`,
+    type === "password" && "k-input-password",
+    hasAddon && "k-input-with-addon",
+    prefix !== undefined && "k-input-with-prefix",
+    suffix !== undefined && "k-input-with-suffix",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const renderAddon = (content: ReactNode, side: "prefix" | "suffix") => (
+    <span
+      className={`k-input-addon k-input-addon-${side} k-input-addon-${size}`}
+      aria-hidden="true"
+    >
+      {content}
+    </span>
+  );
+
+  const charCount =
+    props.showCharCount && type === "text" ? (
+      <>
+        {String(props.value || "").length}
+        {props.max && ` / ${props.max}`}
+      </>
+    ) : undefined;
+
+  return (
+    <FieldShell
+      label={props.label}
+      required={required}
+      htmlFor={inputId}
+      labelAside={charCount}
+      error={props.error}
+      helperText={props.helperText}
+    >
+      <div
+        className={`k-input-wrapper${hasAddon ? " k-input-wrapper-addon" : ""}`}
+      >
+        {prefix !== undefined && renderAddon(prefix, "prefix")}
+        <input
+          ref={props.ref}
+          id={inputId}
+          name={props.name}
+          type={inputType}
+          placeholder={props.placeholder}
+          value={props.value}
+          max={props.max}
+          min={props.min}
+          required={required}
+          autoFocus={props.autoFocus}
+          autoComplete={props.autoComplete}
+          disabled={disabled}
+          onChange={props.onChange}
+          onFocus={props.onFocus}
+          onBlur={props.onBlur}
+          onClick={props.onClick}
+          onKeyDown={props.onKeyDown}
+          className={inputClasses}
+        />
+        {suffix !== undefined && renderAddon(suffix, "suffix")}
+        {props.dropDown && (
+          <DropdownArrowButton
+            size={size}
+            isOpen={isOpen}
+            onClick={props.onClick}
+          />
+        )}
+        {type === "password" && (
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="k-password-toggle-button"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            disabled={disabled}
+          >
+            <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+          </button>
+        )}
+      </div>
+    </FieldShell>
+  );
+};
+
+export default Input;

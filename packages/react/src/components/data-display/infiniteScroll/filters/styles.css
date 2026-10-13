@@ -1,0 +1,48 @@
+.menu-filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: end;
+}
+
+.menu-filters-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  min-width: 15rem;
+}
+
+.range-filter-menu-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.range-filter-menu-label {
+  color: var(--text-color-secondary);
+  margin-bottom: 0;
+}
+
+.select-filter-menu {
+  max-height: 30rem;
+  min-width: 12rem;
+}
+
+.select-filter-menu-options {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}

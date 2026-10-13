@@ -1,0 +1,54 @@
+.k-data-table-leading {
+  text-align: center;
+  vertical-align: middle;
+  width: 3rem;
+}
+
+.k-data-table-spacer {
+  padding: 0;
+  border: 0;
+}
+
+.k-data-table-header-cell {
+  text-align: center;
+}
+
+.k-data-table-row-clickable {
+  cursor: pointer;
+}
+
+.k-data-table-row-clickable:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Alignment classes using flexbox for reliable alignment of any content */
+td.k-data-table-align-left,
+th.k-data-table-align-left {
+  text-align: left;
+}
+
+td.k-data-table-align-left > *,
+th.k-data-table-align-left > * {
+  margin-right: auto;
+}
+
+td.k-data-table-align-center,
+th.k-data-table-align-center {
+  text-align: center;
+}
+
+td.k-data-table-align-center > *,
+th.k-data-table-align-center > * {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.k-data-table-align-right,
+th.k-data-table-align-right {
+  text-align: right;
+}
+
+td.k-data-table-align-right > *,
+th.k-data-table-align-right > * {
+  margin-left: auto;
+}

@@ -1,0 +1,33 @@
+.k-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.k-row-inline {
+  display: inline-flex;
+  flex-direction: row;
+  width: auto;
+}
+
+.k-row-sm {
+  gap: 0.5rem;
+}
+
+.k-row-md {
+  gap: 1rem;
+}
+
+.k-row-lg {
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .k-row {
+    flex-direction: row;
+  }
+  .k-row .k-wrapper {
+    flex: 1;
+    min-width: 0;
+  }
+}

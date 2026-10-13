@@ -1,0 +1,27 @@
+.k-row-actions {
+  display: flex;
+}
+
+.k-row-actions-start {
+  justify-content: flex-start;
+}
+
+.k-row-actions-center {
+  justify-content: center;
+}
+
+.k-row-actions-end {
+  justify-content: flex-end;
+}
+
+.k-row-actions-gap-xs {
+  gap: 0.25rem;
+}
+
+.k-row-actions-gap-sm {
+  gap: 0.5rem;
+}
+
+.k-row-actions-gap-md {
+  gap: 0.75rem;
+}

@@ -1,0 +1,386 @@
+/* CSS Reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  line-height: 1.5;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root {
+  height: 100%;
+  isolation: isolate;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+:root {
+  /* Primary Colors */
+  --primary-color: #17257d;
+  --primary-color-dark: #1a2332;
+  --primary-color-hover: #2032ac;
+  --primary-color-active: #141f6c;
+  --primary-color-background: #3d52db;
+  --primary-color-background-light: #f0f2ff;
+
+  /* Secondary Colors */
+  --secondary-color: #858585;
+  --secondary-color-hover: #8c8c8c;
+  --secondary-color-active: #808080;
+  --secondary-color-background: #a6a6a6;
+
+  /* Light Colors */
+  --light-color: #fafafa;
+  --light-color-hover: #e6e6e6;
+  --light-color-active: #f2f2f2;
+  --light-color-background: white;
+
+  /* Warning Colors */
+  --warning-color: #ffc107;
+  --warning-color-hover: #ffc61a;
+  --warning-color-active: #ffbf00;
+  --warning-color-background: #ffd24d;
+  --warning-color-background-light: #fff8e1;
+  --warning-color-text: #92400e;
+
+  /* Danger Colors */
+  --danger-color: #dc3545;
+  --danger-color-hover: #e23243;
+  --danger-color-active: #d92638;
+  --danger-color-background: #e46774;
+
+  /* Success Colors */
+  --success-color: #198754;
+  --success-color-hover: #1c975d;
+  --success-color-active: #188150;
+  --success-color-background: #24c278;
+  --success-color-background-light: #e8f5e8;
+
+  /* Background Colors */
+  --background-color: #fafafa;
+  --background-color-dark: #f2f2f2;
+  --background-color-light: white;
+  --background-color-hover: #e6e6e6;
+  --background-color-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Border Styles */
+  --border-color: #ccc;
+  --border-color-active: var(--primary-color);
+  --border-shadow-color-active: rgba(23, 37, 125, 0.2);
+
+  /* Shadow Colors */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color-active: rgba(0, 0, 0, 0.05);
+  --shadow-color-hover: rgba(0, 0, 0, 0.2);
+
+  /* Text Styles */
+  --text-color: #333;
+  --text-color-secondary: #666;
+  --text-color-light: white;
+  --text-color-link: #007bff;
+  --text-size-sm: 0.875rem;
+  --text-size-md: 1rem;
+  --text-size-lg: 1.125rem;
+  --text-size-xl: 1.25rem;
+  --text-size-2xl: 1.5rem;
+  --text-size-3xl: 1.875rem;
+
+  /* Glass/Overlay Effects */
+  --overlay-light-weak: rgba(255, 255, 255, 0.1);
+  --overlay-light-medium: rgba(255, 255, 255, 0.2);
+  --overlay-light-strong: rgba(255, 255, 255, 0.5);
+  --overlay-dark-weak: rgba(0, 0, 0, 0.1);
+  --overlay-dark-medium: rgba(0, 0, 0, 0.2);
+  --overlay-dark-strong: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] {
+  /* Primary Colors — desaturated, less violent on dark surfaces */
+  --primary-color: #4a5fb5;
+  --primary-color-dark: #0e1119;
+  --primary-color-hover: #5a70c4;
+  --primary-color-active: #3d4f99;
+  --primary-color-background: #4a5fb5;
+  --primary-color-background-light: #1c2240;
+
+  /* Secondary Colors */
+  --secondary-color: #8a8f99;
+  --secondary-color-hover: #9aa0aa;
+  --secondary-color-active: #7a7f88;
+  --secondary-color-background: #4a4f5a;
+
+  /* Light Colors — surface-toned (used for "light" variant buttons/pills) */
+  --light-color: #2d323d;
+  --light-color-hover: #383e4a;
+  --light-color-active: #343945;
+  --light-color-background: #242831;
+
+  /* Warning Colors */
+  --warning-color: #d99e00;
+  --warning-color-hover: #e8aa0d;
+  --warning-color-active: #c08c00;
+  --warning-color-background: #4d3a00;
+  --warning-color-background-light: #2e2200;
+  --warning-color-text: #f5c542;
+
+  /* Danger Colors */
+  --danger-color: #c94250;
+  --danger-color-hover: #d35261;
+  --danger-color-active: #b53847;
+  --danger-color-background: #4a1820;
+
+  /* Success Colors */
+  --success-color: #2a9560;
+  --success-color-hover: #32a66c;
+  --success-color-active: #248355;
+  --success-color-background: #133e2c;
+  --success-color-background-light: #0d2419;
+
+  /* Background Colors — cool-grey hierarchy */
+  --background-color: #15181f;
+  --background-color-dark: #1d2129;
+  --background-color-light: #2a2f3a;
+  --background-color-hover: #343a47;
+  --background-color-overlay: rgba(0, 0, 0, 0.7);
+
+  /* Border Styles — visible on surface */
+  --border-color: #565d6b;
+  --border-color-active: var(--primary-color);
+  --border-shadow-color-active: rgba(74, 95, 181, 0.35);
+
+  /* Shadow Colors — stronger on dark */
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-color-active: rgba(0, 0, 0, 0.3);
+  --shadow-color-hover: rgba(0, 0, 0, 0.65);
+
+  /* Text Styles */
+  --text-color: #e4e6eb;
+  --text-color-secondary: #9aa0aa;
+  --text-color-light: white;
+  --text-color-link: #6e9fff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: var(--text-size-3xl);
+}
+
+h2 {
+  font-size: var(--text-size-2xl);
+}
+
+h3 {
+  font-size: var(--text-size-xl);
+}
+
+h4 {
+  font-size: var(--text-size-lg);
+}
+
+h5 {
+  font-size: var(--text-size-md);
+}
+
+h6 {
+  font-size: var(--text-size-sm);
+}
+
+body {
+  font-size: var(--text-size-md);
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+:where(a, a:visited) {
+  color: var(--text-color-link);
+}
+
+:where(a:hover) {
+  filter: brightness(1.15);
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .va-sidebar {
+    display: none !important;
+  }
+}
+
+/* ===== Utility classes ===== */
+.k-faded {
+  opacity: 0.7;
+}
+
+.k-faded-soft {
+  opacity: 0.6;
+}
+
+.k-muted-text {
+  color: var(--text-color-secondary);
+}
+
+.k-help-text {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+  margin: 0.5rem 0;
+}
+
+.k-hint {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: 0.25rem;
+}
+
+.k-hint--danger {
+  color: var(--danger-color);
+}
+
+.k-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.k-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.k-link:hover {
+  text-decoration: underline;
+}
+
+.k-text-success {
+  color: var(--success-color);
+}
+
+.k-text-danger {
+  color: var(--danger-color);
+}
+
+.k-text-semibold {
+  font-weight: 500;
+}
+
+.k-tab-fill {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ===== Flex alignment helpers (Row/Col) ===== */
+.k-flex-align-start {
+  align-items: flex-start;
+}
+.k-flex-align-center {
+  align-items: center;
+}
+.k-flex-align-end {
+  align-items: flex-end;
+}
+.k-flex-align-baseline {
+  align-items: baseline;
+}
+.k-flex-align-stretch {
+  align-items: stretch;
+}
+.k-flex-justify-start {
+  justify-content: flex-start;
+}
+.k-flex-justify-center {
+  justify-content: center;
+}
+.k-flex-justify-end {
+  justify-content: flex-end;
+}
+.k-flex-justify-between {
+  justify-content: space-between;
+}
+.k-flex-justify-around {
+  justify-content: space-around;
+}
+.k-flex-wrap {
+  flex-wrap: wrap;
+}

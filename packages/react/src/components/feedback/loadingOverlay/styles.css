@@ -1,0 +1,48 @@
+.loading-container {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 300;
+  background-color: var(--background-color);
+}
+
+.loading-container-fixed {
+  position: fixed;
+}
+
+.loading-container-absolute {
+  position: absolute;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    visibility 0s 0.25s,
+    opacity 0.25s linear;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loading-message {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.loading-logo {
+  max-width: 30rem;
+  min-width: 10rem;
+  width: 50%;
+}

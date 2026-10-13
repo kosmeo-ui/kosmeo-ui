@@ -1,0 +1,47 @@
+.k-recovery-code-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+  border: 0.0625rem solid var(--border-color);
+  border-radius: 0.375rem;
+  background: var(--background-color-light, var(--background-color));
+}
+
+.k-recovery-code-grid-1col {
+  grid-template-columns: 1fr;
+}
+.k-recovery-code-grid-2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+.k-recovery-code-grid-3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 480px) {
+  .k-recovery-code-grid-2col,
+  .k-recovery-code-grid-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.k-recovery-code-grid-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+}
+
+.k-recovery-code-grid-index {
+  font-size: 0.75rem;
+  color: var(--text-color);
+  opacity: 0.55;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.k-recovery-code-grid-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9375rem;
+  letter-spacing: 0.03em;
+}

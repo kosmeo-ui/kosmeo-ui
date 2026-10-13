@@ -1,0 +1,47 @@
+/* Generic dropdown arrow toggle — used by Input (dropDown), MultiSelect, etc. */
+.k-dropdown-arrow {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-secondary);
+  transition:
+    color 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+.k-dropdown-arrow:hover:not(:disabled) {
+  color: var(--primary-color);
+}
+
+.k-dropdown-arrow:focus {
+  outline: none;
+}
+
+.k-dropdown-arrow:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.k-dropdown-arrow-sm {
+  font-size: 0.75rem;
+  top: 0.5rem;
+}
+
+.k-dropdown-arrow-md {
+  font-size: 0.875rem;
+  top: 0.625rem;
+}
+
+.k-dropdown-arrow-lg {
+  font-size: 1rem;
+  top: 0.75rem;
+}
+
+.k-dropdown-arrow-open {
+  transform: rotate(180deg);
+}

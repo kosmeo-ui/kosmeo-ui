@@ -1,0 +1,61 @@
+.k-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: var(--text-color);
+  background-color: var(--background-color-light);
+}
+
+.k-table th,
+.k-table td {
+  padding: 0.5rem;
+}
+
+.k-table th {
+  font-weight: 600;
+}
+
+.k-table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--background-color-dark);
+}
+
+.k-table-hover tbody tr:hover {
+  background-color: var(--background-color-hover);
+}
+
+.k-table-bordered {
+  border: 1px solid var(--border-color);
+}
+
+.k-table-bordered th,
+.k-table-bordered td {
+  border-top: 1px solid var(--border-color);
+}
+
+.k-table-bordered th:not(:first-child),
+.k-table-bordered td:not(:first-child) {
+  border-left: 1px solid var(--border-color);
+}
+
+/* ===== Clickable rows ===== */
+.k-table-clickable tbody tr {
+  cursor: pointer;
+}
+
+/* ===== Row selection (caller marks rows with data-selected="true") ===== */
+.k-table tbody tr[data-selected="true"] {
+  background-color: var(--primary-color-background-light);
+}
+
+/* ===== Scrollable wrapper with sticky header ===== */
+.k-table-scroll-container {
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.k-table-scroll-container .k-table thead tr {
+  position: sticky;
+  top: 0;
+  background: var(--background-color-light);
+}

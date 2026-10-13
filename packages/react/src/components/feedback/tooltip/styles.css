@@ -1,0 +1,84 @@
+.k-tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.k-tooltip-container-full-width {
+  width: 100%;
+}
+
+.k-tooltip-container-full-width .k-button {
+  width: 100%;
+}
+
+.k-tooltip-wrapper {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  transition:
+    opacity 0.2s ease-in-out,
+    visibility 0.2s ease-in-out;
+  overflow: visible;
+}
+
+.k-tooltip-wrapper-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.k-tooltip-wrapper-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.k-tooltip-content {
+  position: relative;
+  background-color: var(--text-color);
+  color: var(--text-color-light);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: var(--text-size-sm);
+  white-space: normal;
+  max-width: 12.5rem;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.k-tooltip-content::after {
+  content: "";
+  position: absolute;
+  border-width: 0.3125rem;
+  border-style: solid;
+  display: block;
+  width: 0;
+  height: 0;
+  box-sizing: border-box;
+}
+
+.k-tooltip-top .k-tooltip-content::after {
+  bottom: -0.625rem; /* Double the border-width to ensure visibility */
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: var(--text-color) transparent transparent transparent;
+}
+
+.k-tooltip-bottom .k-tooltip-content::after {
+  top: -0.625rem; /* Double the border-width to ensure visibility */
+  left: 50%;
+  transform: translateX(-50%);
+  border-color: transparent transparent var(--text-color) transparent;
+}
+
+.k-tooltip-left .k-tooltip-content::after {
+  right: -0.625rem; /* Double the border-width to ensure visibility */
+  top: 50%;
+  transform: translateY(-50%);
+  border-color: transparent transparent transparent var(--text-color);
+}
+
+.k-tooltip-right .k-tooltip-content::after {
+  left: -0.625rem; /* Double the border-width to ensure visibility */
+  top: 50%;
+  transform: translateY(-50%);
+  border-color: transparent var(--text-color) transparent transparent;
+}

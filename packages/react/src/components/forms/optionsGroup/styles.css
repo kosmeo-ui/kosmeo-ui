@@ -1,0 +1,34 @@
+.k-options-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.k-options-group-label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-color);
+}
+
+.k-options-group-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.k-options-group-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.k-options-group-option input {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.k-options-group-option:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

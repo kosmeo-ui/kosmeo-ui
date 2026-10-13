@@ -1,0 +1,46 @@
+.k-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.k-tabs-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  border-bottom: 0.0625rem solid var(--border-color);
+  margin-bottom: 1rem;
+}
+
+.k-tabs-button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: 0.1875rem solid transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  padding: 0.625rem 0.9375rem;
+  margin-bottom: -0.0625rem;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.k-tabs-button:hover:not(:disabled) {
+  color: var(--primary-color);
+}
+
+.k-tabs-button-active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+}
+
+.k-tabs-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.k-tabs-content {
+  flex: 1;
+}

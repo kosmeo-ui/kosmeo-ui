@@ -1,0 +1,46 @@
+.k-bordered-section {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1rem;
+  background: var(--background-color-light);
+  box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+.k-bordered-section-layout-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.k-bordered-section-gap-sm {
+  gap: 0.75rem;
+}
+
+.k-bordered-section-gap-md {
+  gap: 1rem;
+}
+
+.k-bordered-section-min-width-0 {
+  min-width: 0;
+}
+
+.k-bordered-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 0.75rem;
+}
+
+.k-bordered-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.k-bordered-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

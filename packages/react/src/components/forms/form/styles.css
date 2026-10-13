@@ -1,0 +1,27 @@
+.k-form {
+  width: 100%;
+}
+
+.k-form-validating .k-input,
+.k-form-validating .k-textarea,
+.k-form-validating .k-multiselect {
+  transition: border-color 0.3s ease-in-out;
+}
+
+.k-form-validating .k-input-invalid {
+  border-color: var(--danger-color);
+}
+
+.k-form-validating .k-input-invalid:focus {
+  border-color: var(--danger-color);
+  box-shadow: 0 0 0 0.1875rem var(--shadow-color-hover);
+}
+
+.k-form-validating .k-input-valid {
+  border-color: var(--success-color);
+}
+
+.k-form-validating .k-input-valid:focus {
+  border-color: var(--success-color);
+  box-shadow: 0 0 0 0.1875rem var(--shadow-color-hover);
+}

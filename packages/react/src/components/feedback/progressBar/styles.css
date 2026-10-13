@@ -1,0 +1,42 @@
+.k-progress-bar-container {
+  width: 100%;
+  height: 1.5625rem;
+  background-color: var(--background-color-dark);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  box-shadow: inset 0 0.0625rem 0.1875rem var(--shadow-color);
+}
+
+.k-progress-bar-fill {
+  height: 100%;
+  background-color: var(--success-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-light);
+  font-weight: 600;
+  transition: width 0.5s ease-in-out;
+}
+
+.k-progress-bar-text {
+  font-size: var(--text-size-sm);
+}
+
+.k-progress-bar-fill-primary {
+  background-color: var(--primary-color);
+}
+.k-progress-bar-fill-secondary {
+  background-color: var(--secondary-color);
+}
+.k-progress-bar-fill-light {
+  background-color: var(--light-color);
+}
+.k-progress-bar-fill-warning {
+  background-color: var(--warning-color);
+}
+.k-progress-bar-fill-danger {
+  background-color: var(--danger-color);
+}
+.k-progress-bar-fill-success {
+  background-color: var(--success-color);
+}

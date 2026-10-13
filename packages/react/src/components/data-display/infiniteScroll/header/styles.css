@@ -1,0 +1,64 @@
+.infinite-scroll-header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.infinite-scroll-header-buttons-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infinite-scroll-header-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.infinite-scroll-header-limit-sort-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.infinite-scroll-header-sort-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infinite-scroll-header-sort-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.infinite-scroll-header-sort-title {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.infinte-scroll-dropdown-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.limit-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.limit-container p {
+  margin: 0;
+  font-size: 1rem;
+}

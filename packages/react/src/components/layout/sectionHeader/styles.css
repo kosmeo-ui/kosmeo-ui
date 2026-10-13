@@ -1,0 +1,116 @@
+.k-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.k-section-header-dense {
+  margin-bottom: 0.375rem;
+}
+
+.k-section-header-divider {
+  padding-bottom: 1rem;
+  border-bottom: 0.0625rem solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.k-section-header-preface {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+.k-section-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.k-section-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.k-section-header-row-with-center .k-section-header-left {
+  flex: 1;
+}
+
+.k-section-header-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.k-section-header-leading {
+  display: inline-flex;
+  align-items: center;
+}
+
+.k-section-header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.k-section-header-title {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+.k-section-header-h1 .k-section-header-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.k-section-header-h2 .k-section-header-title {
+  font-size: 1.25rem;
+}
+.k-section-header-h3 .k-section-header-title {
+  font-size: 1rem;
+}
+.k-section-header-h4 .k-section-header-title {
+  font-size: 0.9375rem;
+}
+
+.k-section-header-subtitle {
+  font-size: 0.8125rem;
+  color: var(--text-color);
+  opacity: 0.65;
+}
+
+.k-section-header-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  align-items: center;
+}
+
+.k-section-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.k-section-header-row-with-center .k-section-header-actions {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+  .k-section-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .k-section-header-actions {
+    width: 100%;
+  }
+}

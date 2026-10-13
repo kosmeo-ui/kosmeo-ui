@@ -1,0 +1,187 @@
+.richtext-container {
+  width: fit-content;
+  min-width: 100%;
+}
+
+.richtext-label-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.1rem;
+}
+
+.richtext-label {
+  display: block;
+  font-size: var(--text-size-sm);
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.tiptap {
+  color: var(--text-color);
+  min-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+  height: 30rem;
+  min-height: 30rem;
+  max-height: fit-content;
+  resize: both;
+  overflow-y: auto;
+  padding: 0.625rem 1rem;
+  font-size: var(--text-size-md);
+  background-color: var(--background-color-light);
+}
+
+p.is-editor-empty:first-child::before {
+  color: var(--text-color-secondary);
+  opacity: 0.7;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.tiptap:focus {
+  outline: none;
+  border-color: var(--border-color-active);
+  box-shadow: 0 0 0 0.1875rem var(--border-shadow-color-active);
+}
+.ProsMirror {
+  height: fit-content;
+}
+.tiptap p {
+  margin: 0 0 0.5rem 0;
+}
+
+.tiptap p:last-child {
+  margin-bottom: 0;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.tiptap li {
+  margin: 0.25rem 0;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background-color: var(--background-color-dark);
+  border-bottom: 0.0625rem solid var(--border-color);
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.editor-wrapper {
+  position: relative;
+  border: 0.0625rem solid var(--border-color);
+  border-radius: 0.375rem;
+}
+
+.toolbar-separator {
+  border-left: 1px solid var(--border-color);
+  height: 1.5rem;
+  margin: 0 0.5rem;
+  align-self: center;
+}
+
+.html-section {
+  background: var(--background-color-dark);
+  padding: 1rem;
+  border-radius: 0 0 0.375rem 0.375rem;
+  overflow: auto;
+  margin: 0;
+  height: 30rem;
+  resize: both;
+  min-width: 100%;
+  min-height: 30rem;
+  max-height: fit-content;
+  font-size: var(--text-size-md);
+  color: var(--text-color);
+  white-space: pre-wrap;
+}
+
+.richtext-container-sm .tiptap {
+  height: 25rem;
+  min-height: 25rem;
+  max-height: fit-content;
+  padding: 0.5rem 0.75rem;
+  font-size: var(--text-size-sm);
+}
+
+.richtext-container-sm .html-section {
+  height: 25rem;
+  min-height: 25rem;
+  max-height: fit-content;
+  padding: 0.75rem;
+  font-size: var(--text-size-sm);
+}
+
+.richtext-container-sm .editor-toolbar {
+  padding: 0.375rem;
+}
+
+.richtext-container-sm .toolbar-separator {
+  height: 1.25rem;
+  margin: 0 0.375rem;
+}
+
+.richtext-container-lg .tiptap {
+  height: 35rem;
+  min-height: 35rem;
+  max-height: fit-content;
+  padding: 0.75rem 1.25rem;
+  font-size: var(--text-size-lg);
+}
+
+.richtext-container-lg .html-section {
+  height: 35rem;
+  min-height: 35rem;
+  max-height: fit-content;
+  padding: 1.25rem;
+  font-size: var(--text-size-lg);
+}
+
+.richtext-container-lg .editor-toolbar {
+  padding: 0.625rem;
+}
+
+.richtext-container-lg .toolbar-separator {
+  height: 1.75rem;
+  margin: 0 0.625rem;
+}
+
+/* Disabled state styles */
+.editor-wrapper-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.editor-wrapper-disabled .tiptap {
+  background-color: var(--background-color-light);
+  cursor: not-allowed;
+}
+
+.editor-wrapper-disabled .editor-toolbar {
+  background-color: var(--background-color-light);
+}
+
+.editor-wrapper-disabled .html-section {
+  background-color: var(--background-color-light);
+  cursor: not-allowed;
+}
+
+.richtext-char-count {
+  font-weight: 500;
+  font-size: var(--text-size-sm);
+  color: var(--text-color-secondary);
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}

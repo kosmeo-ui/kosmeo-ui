@@ -1,0 +1,48 @@
+.va-list-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.va-list-card-header h3 {
+  margin: 0;
+}
+
+.va-list-card-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.va-list-card {
+  margin: 0;
+}
+
+.va-list-card > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.va-list-card > div:last-child {
+  border-bottom: none;
+}
+
+.va-list-card dt {
+  font-weight: 600;
+  text-align: left;
+  flex-shrink: 0;
+  color: var(--text-color-secondary);
+}
+
+.va-list-card dd {
+  margin: 0;
+}
+
+.va-list-card-actions {
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}

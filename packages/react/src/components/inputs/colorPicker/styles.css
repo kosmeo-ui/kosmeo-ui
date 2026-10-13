@@ -1,0 +1,52 @@
+.k-color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.k-color-picker-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.k-color-picker-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.k-color-picker-swatch {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.0625rem solid var(--border-color);
+  border-radius: 0.375rem;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+}
+
+.k-color-picker-swatch::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.k-color-picker-swatch::-webkit-color-swatch {
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.k-color-picker-swatch::-moz-color-swatch {
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.k-color-picker-input {
+  flex: 1;
+}
+
+.k-color-picker-error {
+  font-size: 0.8125rem;
+  color: var(--danger-color);
+}

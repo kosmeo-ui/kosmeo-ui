@@ -1,0 +1,27 @@
+.k-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.k-detail-field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-color-secondary);
+}
+
+.k-detail-field-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  word-break: break-word;
+}
+
+.k-detail-field-action {
+  display: inline-flex;
+  align-items: center;
+}

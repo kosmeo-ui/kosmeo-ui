@@ -1,0 +1,46 @@
+.k-dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.k-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  background-color: var(--background-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.375rem 1.25rem var(--shadow-color);
+  overflow: hidden;
+  transform: translateY(-0.625rem);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0.2s;
+  min-width: 100%;
+  z-index: 100;
+  padding: 0.5rem 0;
+  margin-top: 0.25rem;
+}
+
+.k-dropdown-menu.left {
+  left: 0;
+}
+
+.k-dropdown-menu.right {
+  right: 0;
+}
+
+.k-dropdown-menu.open {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.k-dropdown-label-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}

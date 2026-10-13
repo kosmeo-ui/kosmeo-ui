@@ -1,0 +1,53 @@
+.k-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.k-page-fill {
+  height: 100%;
+  min-height: 0;
+}
+
+.k-page-padded {
+  padding: 1.5rem;
+}
+
+.k-page-gap-sm {
+  gap: 0.75rem;
+}
+
+.k-page-gap-md {
+  gap: 1.5rem;
+}
+
+.k-page-max-narrow {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.k-page-max-default {
+  max-width: 80rem;
+  margin: 0 auto;
+}
+
+.k-page-max-wide {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.k-page-loading {
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+}
+
+@media (max-width: 640px) {
+  .k-page-padded {
+    padding: 1rem;
+  }
+  .k-page-gap-md {
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,41 @@
+.k-form-grid {
+  display: grid;
+}
+
+.k-form-grid-1col {
+  grid-template-columns: 1fr;
+}
+.k-form-grid-2col {
+  grid-template-columns: repeat(2, 1fr);
+}
+.k-form-grid-3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+.k-form-grid-4col {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.k-form-grid-gap-sm {
+  gap: 0.5rem;
+}
+.k-form-grid-gap-md {
+  gap: 1rem;
+}
+.k-form-grid-gap-lg {
+  gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+  .k-form-grid-3col,
+  .k-form-grid-4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .k-form-grid-2col,
+  .k-form-grid-3col,
+  .k-form-grid-4col {
+    grid-template-columns: 1fr;
+  }
+}

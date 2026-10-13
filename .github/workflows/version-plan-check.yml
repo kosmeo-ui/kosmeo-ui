@@ -1,0 +1,43 @@
+name: Version Plan Check
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  check-version-plan:
+    if: github.head_ref != 'release/version-bump'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # plan:check builds the Nx project graph from the checked-in package.json
+      # files (nx.json has no inference plugins), so it never needs the workspace
+      # packages' node_modules — only Nx itself and @nx/js (JS release version
+      # actions). Installing just those two skips the full `npm ci` (~960MB → ~200MB).
+      # Versions are read from the committed package.json so they can't drift from
+      # the workspace; nx and its plugin must stay version-matched.
+      - name: Install Nx only
+        run: |
+          NX_VERSION=$(node -p "require('./package.json').devDependencies.nx")
+          JS_VERSION=$(node -p "require('./package.json').devDependencies['@nx/js']")
+          npm install --no-save --no-workspaces --ignore-scripts \
+            "nx@${NX_VERSION}" "@nx/js@${JS_VERSION}"
+
+      # Ask Nx — not a path grep — whether a version plan is required. Nx only
+      # considers releasable projects (those in nx.json `release.projects`), so
+      # changes to private, never-released packages don't demand a plan. Passes
+      # when every touched releasable project has an applicable plan, or none
+      # require one.
+      - name: Check version plans cover touched releasable projects
+        run: npx --no-install nx release plan:check --base=origin/master --head=HEAD

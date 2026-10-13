@@ -1,0 +1,66 @@
+{
+  "name": "@kosmeo-ui/react",
+  "version": "0.1.0",
+  "description": "React components themed with CSS variables, light and dark",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosmeo-ui/kosmeo-ui.git",
+    "directory": "packages/react"
+  },
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc && node scripts/copy-css.js",
+    "check": "tsc --noEmit",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.101.0",
+    "axios": "^1.0.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "peerDependenciesMeta": {
+    "axios": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.2.0",
+    "@fortawesome/free-regular-svg-icons": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "@fortawesome/react-fontawesome": "^3.3.1",
+    "@tanstack/react-virtual": "^3.14.2",
+    "@tiptap/extensions": "^3.26.0",
+    "@tiptap/react": "^3.26.0",
+    "@tiptap/starter-kit": "^3.26.0",
+    "libphonenumber-js": "^1.13.6",
+    "luxon": "^3.7.2",
+    "react-toastify": "^11.1.0"
+  },
+  "devDependencies": {
+    "@tanstack/react-query": "^5.104.2",
+    "@types/luxon": "^3.7.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "axios": "^1.17.0",
+    "typescript": "^6.0.3"
+  }
+}

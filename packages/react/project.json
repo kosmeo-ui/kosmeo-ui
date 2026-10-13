@@ -1,0 +1,30 @@
+{
+  "name": "@kosmeo-ui/react",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/react/src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc && node scripts/copy-css.js",
+        "cwd": "packages/react"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "packages/react"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rm -rf dist tsconfig.tsbuildinfo",
+        "cwd": "packages/react"
+      }
+    }
+  }
+}

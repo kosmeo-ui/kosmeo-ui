@@ -1,0 +1,37 @@
+.infinite-scroll-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  overflow-y: hidden;
+  height: 100%;
+}
+
+.infinite-scroll-table-container {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  position: relative;
+}
+
+.infinite-scroll-menu-table-divider {
+  margin: 1rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.infinite-scroll-next-page-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.infinite-scroll-empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+}

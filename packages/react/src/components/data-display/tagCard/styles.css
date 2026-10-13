@@ -1,0 +1,14 @@
+.va-tag-card-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.va-tag-card-empty-text {
+  color: var(--text-color-secondary);
+  font-style: italic;
+  margin: 0;
+}

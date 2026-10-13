@@ -1,0 +1,27 @@
+.k-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.k-col-sm {
+  gap: 0.5rem;
+}
+
+.k-col-md {
+  gap: 1rem;
+}
+
+.k-col-lg {
+  gap: 1.5rem;
+}
+
+.k-col-span-full {
+  grid-column: 1 / -1;
+}
+
+.k-col-divider-solid-top {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color);
+}

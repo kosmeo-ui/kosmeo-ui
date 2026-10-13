@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    if: github.head_ref != 'release/version-bump'
+    runs-on: ubuntu-latest
+    env:
+      NX_BASE: origin/master
+      # A push to master has nothing "affected" relative to origin/master, so it
+      # runs every project; a PR runs only what it touches.
+      NX_SCOPE: ${{ github.event_name == 'pull_request' && 'affected' || 'run-many' }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Check import order
+        run: npm run sort-imports:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npx nx $NX_SCOPE -t check --parallel=4
+
+      - name: Build
+        run: npx nx $NX_SCOPE -t build --parallel=4
+
+      # The tarball must carry the build; without `files`, .gitignore's dist/
+      # rule would keep it out.
+      - name: Check package contents
+        run: |
+          npm pack --dry-run --json -w @kosmeo-ui/react > pack.json
+          node -e '
+            const files = require("./pack.json")[0].files.map((f) => f.path);
+            for (const f of ["dist/index.js", "dist/index.d.ts", "dist/styles.css"])
+              if (!files.includes(f)) { console.error("missing from tarball: " + f); process.exit(1); }
+          '

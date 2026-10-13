@@ -1,0 +1,52 @@
+.k-image-preview-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 0.0625rem dashed var(--border-color);
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.k-image-previews-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  overflow-x: auto;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+  box-sizing: border-box;
+}
+
+.k-image-preview-item {
+  object-fit: cover;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.125rem 0.25rem var(--shadow-color);
+  flex-shrink: 0;
+}
+
+.k-image-preview-item-sm {
+  max-width: 7rem;
+  min-width: 7rem;
+  height: 7rem;
+}
+
+.k-image-preview-item-md {
+  max-width: 10rem;
+  min-width: 10rem;
+  height: 10rem;
+}
+
+.k-image-preview-item-lg {
+  max-width: 13rem;
+  min-width: 13rem;
+  height: 13rem;
+}
+
+.k-image-preview-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}

@@ -1,0 +1,107 @@
+name: Create Version Bump PR
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+concurrency:
+  group: version-bump-create
+  cancel-in-progress: false
+
+jobs:
+  create-pr:
+    if: >
+      github.event.pull_request.merged == true &&
+      !contains(github.event.pull_request.labels.*.name, 'automated-version-bump')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          fetch-tags: true
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+
+      - name: Check for version plans
+        id: check-plans
+        run: |
+          if [ -d ".nx/version-plans" ] && ls .nx/version-plans/*.md 1>/dev/null 2>&1; then
+            echo "has_plans=true" >> $GITHUB_OUTPUT
+            echo "Found version plans:"
+            ls -la .nx/version-plans/*.md
+          else
+            echo "has_plans=false" >> $GITHUB_OUTPUT
+            echo "No version plans found. Skipping."
+          fi
+
+      - name: Check if version bump PR exists
+        if: steps.check-plans.outputs.has_plans == 'true'
+        id: check-pr
+        env:
+          GH_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --base master --head release/version-bump --json number -q '.[0].number' 2>/dev/null || echo "")
+          if [ -n "$PR_NUMBER" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Version bump PR already exists: #$PR_NUMBER"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.check-plans.outputs.has_plans == 'true'
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        if: steps.check-plans.outputs.has_plans == 'true'
+        run: npm ci
+
+      - name: Configure git
+        if: steps.check-plans.outputs.has_plans == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create version bump branch from master
+        if: steps.check-plans.outputs.has_plans == 'true'
+        run: git checkout -B release/version-bump origin/master
+
+      - name: Run Nx Release
+        if: steps.check-plans.outputs.has_plans == 'true'
+        run: npx nx release --skip-publish
+
+      - name: Sync lockfile to bumped versions
+        if: steps.check-plans.outputs.has_plans == 'true'
+        run: npm install --package-lock-only
+
+      - name: Commit and push version changes
+        if: steps.check-plans.outputs.has_plans == 'true'
+        id: commit
+        run: |
+          rm -f .nx/version-plans/*.md
+          git add packages/*/package.json packages/*/CHANGELOG.md package-lock.json .nx/version-plans/
+
+          if git diff --staged --quiet; then
+            echo "No version changes to commit."
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "chore(release): bump versions"
+            git push --force-with-lease origin release/version-bump
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR if needed
+        if: steps.check-plans.outputs.has_plans == 'true' && steps.commit.outputs.has_changes == 'true' && steps.check-pr.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base master \
+            --head release/version-bump \
+            --title "chore(release): bump versions" \
+            --body "Automated version bump based on conventional commits." \
+            --label "automated-version-bump"
+          echo "Created version bump PR"

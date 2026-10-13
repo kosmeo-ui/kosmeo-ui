@@ -1,0 +1,116 @@
+.k-switch-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.k-switch-left {
+  flex-direction: row;
+}
+
+.k-switch-right {
+  flex-direction: row;
+}
+
+.k-switch-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.k-switch-track {
+  position: relative;
+  border-radius: 999px;
+  background-color: var(--border-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.k-switch-track.k-switch-on {
+  background-color: var(--success-color);
+}
+
+/* Size: md (default) */
+.k-switch-md {
+  width: 40px;
+  height: 22px;
+}
+
+.k-switch-md .k-switch-thumb {
+  width: 18px;
+  height: 18px;
+  top: 2px;
+  left: 2px;
+}
+
+.k-switch-md.k-switch-on .k-switch-thumb {
+  transform: translateX(18px);
+}
+
+/* Size: sm */
+.k-switch-sm {
+  width: 32px;
+  height: 18px;
+}
+
+.k-switch-sm .k-switch-thumb {
+  width: 14px;
+  height: 14px;
+  top: 2px;
+  left: 2px;
+}
+
+.k-switch-sm.k-switch-on .k-switch-thumb {
+  transform: translateX(14px);
+}
+
+/* Thumb */
+.k-switch-thumb {
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--background-color-light);
+  transition: transform 0.2s ease-in-out;
+  pointer-events: none;
+}
+
+/* Hidden input */
+.k-switch-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* Disabled */
+.k-switch-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.k-switch-disabled .k-switch-input {
+  cursor: not-allowed;
+}
+
+.k-switch-disabled + .k-switch-label,
+.k-switch-label:has(~ .k-switch-track.k-switch-disabled) {
+  color: var(--text-color-disabled);
+  cursor: not-allowed;
+}
+
+/* Loading */
+.k-switch-loading {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.k-switch-loading .k-switch-input {
+  cursor: wait;
+}

@@ -1,0 +1,118 @@
+.k-phone-input-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.k-phone-input-picker-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: transparent;
+  border: none;
+  padding: 0 0.5rem 0 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--text-color);
+  font: inherit;
+}
+
+.k-phone-input-picker-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.k-phone-input-flag {
+  font-size: 1.125em;
+  line-height: 1;
+}
+
+.k-phone-input-dial {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-color-secondary, var(--text-color));
+}
+
+.k-phone-input-caret {
+  font-size: 0.75em;
+  color: var(--text-color-secondary, var(--text-color));
+}
+
+.k-phone-input-panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: -0.5rem;
+  width: 18rem;
+  max-height: 20rem;
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.375rem 1.25rem var(--shadow-color);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.k-phone-input-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-color-secondary, var(--text-color));
+}
+
+.k-phone-input-search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color);
+  font: inherit;
+}
+
+.k-phone-input-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.k-phone-input-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font: inherit;
+  text-align: left;
+}
+
+.k-phone-input-option:hover,
+.k-phone-input-option:focus-visible {
+  background-color: var(--hover-color, var(--border-color));
+  outline: none;
+}
+
+.k-phone-input-option.selected {
+  background-color: var(--hover-color, var(--border-color));
+}
+
+.k-phone-input-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.k-phone-input-empty {
+  padding: 0.75rem;
+  color: var(--text-color-secondary, var(--text-color));
+  text-align: center;
+  font-size: 0.875rem;
+}

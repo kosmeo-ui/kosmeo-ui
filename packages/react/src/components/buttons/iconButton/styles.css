@@ -1,0 +1,14 @@
+.k-icon-button-body {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  /* Reserve the same 1.5em line-box as a text Button so an icon-only button is
+     exactly as tall as a text button at the same size (matches .k-button
+     line-height). Without this, the icon's intrinsic height makes it shorter. */
+  min-height: 1.5em;
+}
+
+.k-icon-button-body:disabled {
+  cursor: not-allowed;
+}

@@ -1,0 +1,22 @@
+.k-list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  background: var(--background-color);
+}
+
+.k-list-row-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.k-list-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}

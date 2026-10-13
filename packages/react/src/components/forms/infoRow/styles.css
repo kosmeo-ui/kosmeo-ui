@@ -1,0 +1,38 @@
+.k-info-row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 0.0625rem solid var(--border-color);
+}
+
+.k-info-row:last-child {
+  border-bottom: none;
+}
+
+.k-info-row-horizontal {
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.k-info-row-stacked {
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.k-info-row-label {
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.k-info-row-value {
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
+
+.k-info-row-stacked .k-info-row-value {
+  text-align: left;
+  font-weight: 400;
+}

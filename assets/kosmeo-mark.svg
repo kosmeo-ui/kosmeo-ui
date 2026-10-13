@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <title>Kosmeo</title>
+  <defs>
+    <linearGradient id="mfill" gradientUnits="userSpaceOnUse" x1="44" y1="170" x2="212" y2="86">
+      <stop offset="0" stop-color="#0F1F4B"/>
+      <stop offset="0.3" stop-color="#2F7FD0"/>
+      <stop offset="0.52" stop-color="#2BB6C4"/>
+      <stop offset="0.75" stop-color="#5AD89A"/>
+      <stop offset="1" stop-color="#5AD89A"/>
+    </linearGradient>
+    <filter id="mglow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <linearGradient id="mbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EAF0F8"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#mbg)"/>
+  <g transform="translate(22 22) scale(0.8281)">
+    <polygon points="128.00,24.00 218.07,76.00 218.07,180.00 128.00,232.00 37.93,180.00 37.93,76.00" fill="none" stroke="#0F1F4B" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M122.80,103.00 Q128.00,100.00 133.20,103.00 L147.05,111.00 Q152.25,114.00 152.25,120.00 L152.25,136.00 Q152.25,142.00 147.05,145.00 L133.20,153.00 Q128.00,156.00 122.80,153.00 L108.95,145.00 Q103.75,142.00 103.75,136.00 L103.75,120.00 Q103.75,114.00 108.95,111.00 Z" fill="#0F1F4B"/>
+    <path d="M177.30,103.00 Q182.50,100.00 187.69,103.00 L201.55,111.00 Q206.75,114.00 206.75,120.00 L206.75,136.00 Q206.75,142.00 201.55,145.00 L187.69,153.00 Q182.50,156.00 177.30,153.00 L163.44,145.00 Q158.25,142.00 158.25,136.00 L158.25,120.00 Q158.25,114.00 163.44,111.00 Z" fill="url(#mfill)"/>
+    <path d="M150.05,150.20 Q155.25,147.20 160.44,150.20 L174.30,158.20 Q179.50,161.20 179.50,167.20 L179.50,183.20 Q179.50,189.20 174.30,192.20 L160.44,200.20 Q155.25,203.20 150.05,200.20 L136.20,192.20 Q131.00,189.20 131.00,183.20 L131.00,167.20 Q131.00,161.20 136.20,158.20 Z" fill="url(#mfill)"/>
+    <path d="M95.56,150.20 Q100.75,147.20 105.95,150.20 L119.80,158.20 Q125.00,161.20 125.00,167.20 L125.00,183.20 Q125.00,189.20 119.80,192.20 L105.95,200.20 Q100.75,203.20 95.56,200.20 L81.70,192.20 Q76.50,189.20 76.50,183.20 L76.50,167.20 Q76.50,161.20 81.70,158.20 Z" fill="url(#mfill)"/>
+    <path d="M68.31,103.00 Q73.50,100.00 78.70,103.00 L92.56,111.00 Q97.75,114.00 97.75,120.00 L97.75,136.00 Q97.75,142.00 92.56,145.00 L78.70,153.00 Q73.50,156.00 68.31,153.00 L54.45,145.00 Q49.25,142.00 49.25,136.00 L49.25,120.00 Q49.25,114.00 54.45,111.00 Z" fill="url(#mfill)"/>
+    <path d="M95.56,55.80 Q100.75,52.80 105.95,55.80 L119.80,63.80 Q125.00,66.80 125.00,72.80 L125.00,88.80 Q125.00,94.80 119.80,97.80 L105.95,105.80 Q100.75,108.80 95.56,105.80 L81.70,97.80 Q76.50,94.80 76.50,88.80 L76.50,72.80 Q76.50,66.80 81.70,63.80 Z" fill="url(#mfill)"/>
+    <path d="M150.05,55.80 Q155.25,52.80 160.44,55.80 L174.30,63.80 Q179.50,66.80 179.50,72.80 L179.50,88.80 Q179.50,94.80 174.30,97.80 L160.44,105.80 Q155.25,108.80 150.05,105.80 L136.20,97.80 Q131.00,94.80 131.00,88.80 L131.00,72.80 Q131.00,66.80 136.20,63.80 Z" fill="url(#mfill)"/>
+    <circle cx="128.00" cy="24.00" r="13.0" fill="#46CAAC" opacity="0.55" filter="url(#mglow)"/>
+    <circle cx="128.00" cy="24.00" r="9.5" fill="#46CAAC" stroke="#0F1F4B" stroke-width="4"/>
+    <circle cx="218.07" cy="76.00" r="13.0" fill="#55D59E" opacity="0.55" filter="url(#mglow)"/>
+    <circle cx="218.07" cy="76.00" r="9.5" fill="#55D59E" stroke="#0F1F4B" stroke-width="4"/>
+    <circle cx="218.07" cy="180.00" r="13.0" fill="#52D2A1" opacity="0.55" filter="url(#mglow)"/>
+    <circle cx="218.07" cy="180.00" r="9.5" fill="#52D2A1" stroke="#0F1F4B" stroke-width="4"/>
+    <circle cx="128.00" cy="232.00" r="13.0" fill="#2CAEC6" opacity="0.55" filter="url(#mglow)"/>
+    <circle cx="128.00" cy="232.00" r="9.5" fill="#2CAEC6" stroke="#0F1F4B" stroke-width="4"/>
+    <circle cx="37.93" cy="180.00" r="13.0" fill="#2E89CE" opacity="0.55" filter="url(#mglow)"/>
+    <circle cx="37.93" cy="180.00" r="9.5" fill="#2E89CE" stroke="#0F1F4B" stroke-width="4"/>
+    <circle cx="37.93" cy="76.00" r="13.0" fill="#2E92CC" opacity="0.55" filter="url(#mglow)"/>
+    <circle cx="37.93" cy="76.00" r="9.5" fill="#2E92CC" stroke="#0F1F4B" stroke-width="4"/>
+  </g>
+</svg>

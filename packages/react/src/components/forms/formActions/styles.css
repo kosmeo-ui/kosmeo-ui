@@ -1,0 +1,50 @@
+.k-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.k-form-actions-right {
+  justify-content: flex-end;
+}
+.k-form-actions-left {
+  justify-content: flex-start;
+}
+.k-form-actions-center {
+  justify-content: center;
+}
+.k-form-actions-between {
+  justify-content: space-between;
+}
+/* Each direct child grows to an equal share of the row (basis 0), so a
+   Deny/Allow pair renders as two equal-width buttons side by side. */
+.k-form-actions-fill > * {
+  flex: 1 1 0;
+}
+
+.k-form-actions-spacing-none {
+  margin-top: 0;
+}
+.k-form-actions-spacing-sm {
+  margin-top: 0.5rem;
+}
+.k-form-actions-spacing-md {
+  margin-top: 1rem;
+}
+.k-form-actions-spacing-lg {
+  margin-top: 1.5rem;
+}
+
+.k-form-error {
+  background-color: color-mix(
+    in srgb,
+    var(--danger-color) 12%,
+    var(--background-color)
+  );
+  color: var(--danger-color);
+  border: 0.0625rem solid var(--danger-color);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
