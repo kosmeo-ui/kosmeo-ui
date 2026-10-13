@@ -9,11 +9,13 @@ concurrency:
   group: version-bump-create
   cancel-in-progress: false
 
-# GITHUB_TOKEN, not a PAT: the PR it opens triggers no workflows, which is fine
-# because CI and the version-plan check both skip release/version-bump.
+# GITHUB_TOKEN, not a PAT. The PR it opens triggers no workflows, so the last
+# step starts the PR's required checks itself.
 permissions:
   contents: write
   pull-requests: write
+  # Starts CI and the version-plan check on the bump branch.
+  actions: write
 
 jobs:
   create-pr:
@@ -111,3 +113,13 @@ jobs:
             --body "Automated version bump based on conventional commits." \
             --label "automated-version-bump"
           echo "Created version bump PR"
+
+      # The PR's required checks never start on their own (see ci.yml), so run
+      # them on every new head of the branch.
+      - name: Run required checks on the bump branch
+        if: steps.check-plans.outputs.has_plans == 'true' && steps.commit.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run ci.yml --ref release/version-bump
+          gh workflow run version-plan-check.yml --ref release/version-bump
