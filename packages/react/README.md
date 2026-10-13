@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/kosmeo-ui/kosmeo-ui/master/assets/kosmeo-banner.png" alt="Kosmeo — React UI components" width="720">
+</p>
+
 # @kosmeo-ui/react
 
 React component library. All CSS classes use a `k-` prefix and are themed with CSS variables (light, and dark via
