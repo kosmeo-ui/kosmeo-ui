@@ -25,6 +25,7 @@ const DropdownArrowButton = ({
       onClick={onClick}
       tabIndex={-1}
       disabled={disabled}
+      aria-label={isOpen ? "Hide options" : "Show options"}
     >
       <FontAwesomeIcon
         icon={faChevronDown}

@@ -50,8 +50,12 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   const [charCount, setCharCount] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  const fieldId =
-    props.id || `richtext-${Math.random().toString(36).substring(2, 9)}`;
+  // Stable across renders: the editor reads labelId once, when it's created.
+  const [generatedId] = useState(
+    () => `richtext-${Math.random().toString(36).substring(2, 9)}`
+  );
+  const fieldId = props.id || generatedId;
+  const labelId = `${fieldId}-label`;
 
   const cleanHtml = (html: string): string | undefined => {
     // Remove trailing empty <p></p> tags
@@ -79,6 +83,14 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       }),
     ],
     content: props.value,
+    editorProps: {
+      attributes: {
+        "aria-multiline": "true",
+        ...(props.label
+          ? { "aria-labelledby": labelId }
+          : { "aria-label": props.placeholder ?? "Rich text editor" }),
+      },
+    },
     editable: !disabled,
     autofocus: props.autofocus,
     onUpdate: ({ editor }) => {
@@ -146,7 +158,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     <div className={`k-richtext-container k-richtext-container-${size}`}>
       {props.label && (
         <div className="k-richtext-label-wrapper">
-          <label htmlFor={fieldId} className="k-richtext-label">
+          <label id={labelId} className="k-richtext-label">
             {props.label}
             {props.required && <MandatoryAsterisk />}
           </label>
@@ -165,6 +177,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           <Tooltip content="Bold" position="top">
             <IconButton
               icon={faBold}
+              aria-label="Bold"
+              aria-pressed={editorState.isBold}
               size={size}
               variant={editorState.isBold ? "primary" : "secondary"}
               onClick={() => editor.chain().focus().toggleBold().run()}
@@ -174,6 +188,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           <Tooltip content="Italic" position="top">
             <IconButton
               icon={faItalic}
+              aria-label="Italic"
+              aria-pressed={editorState.isItalic}
               size={size}
               variant={editorState.isItalic ? "primary" : "secondary"}
               onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -183,6 +199,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           <Tooltip content="Underline" position="top">
             <IconButton
               icon={faUnderline}
+              aria-label="Underline"
+              aria-pressed={editorState.isUnderlined}
               size={size}
               variant={editorState.isUnderlined ? "primary" : "secondary"}
               onClick={() => editor.chain().focus().toggleUnderline().run()}
@@ -193,6 +211,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           <Tooltip content="Bullet List" position="top">
             <IconButton
               icon={faListUl}
+              aria-label="Bullet list"
+              aria-pressed={editorState.isBulletedList}
               size={size}
               variant={editorState.isBulletedList ? "primary" : "secondary"}
               onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -202,6 +222,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           <Tooltip content="Numbered List" position="top">
             <IconButton
               icon={faListOl}
+              aria-label="Numbered list"
+              aria-pressed={editorState.isNumberedList}
               size={size}
               variant={editorState.isNumberedList ? "primary" : "secondary"}
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -212,6 +234,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           <Tooltip content="Clear Formatting" position="top">
             <IconButton
               icon={faTextSlash}
+              aria-label="Clear formatting"
               size={size}
               variant="secondary"
               onClick={() => {
@@ -234,6 +257,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
           >
             <IconButton
               icon={faCode}
+              aria-label={showHtml ? "Show editor" : "Show HTML"}
               size={size}
               variant={showHtml ? "primary" : "secondary"}
               onClick={() => setShowHtml(!showHtml)}

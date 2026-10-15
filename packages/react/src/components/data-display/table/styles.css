@@ -8,7 +8,18 @@
 
 .k-table th,
 .k-table td {
-  padding: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Keep text clear of the table's outer edges. */
+.k-table th:first-child,
+.k-table td:first-child {
+  padding-left: 1rem;
+}
+
+.k-table th:last-child,
+.k-table td:last-child {
+  padding-right: 1rem;
 }
 
 .k-table th {

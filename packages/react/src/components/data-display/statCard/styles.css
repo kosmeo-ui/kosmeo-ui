@@ -92,5 +92,5 @@
 }
 
 .k-stat-card-interactive:hover .k-stat-card-trailing {
-  color: var(--primary-color);
+  color: var(--primary-color-text);
 }

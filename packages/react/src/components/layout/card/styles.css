@@ -76,8 +76,30 @@
 }
 
 /* Padding Variants */
+/* Edge-to-edge content (tables, images): clip it to the rounded corners, and
+   give the header and footer their own padding instead. */
 .k-card-padding-none {
   padding: 0;
+  overflow: hidden;
+}
+
+.k-card-padding-none .k-card-header {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0;
+}
+
+.k-card-padding-none .k-card-footer {
+  padding: 0.75rem 1rem;
+  margin-top: 0;
+}
+
+/* The card already draws the outer edge and the line under the header. */
+.k-card-padding-none .k-card-body > .k-table {
+  border: none;
+}
+
+.k-card-padding-none .k-card-body > .k-table thead th {
+  border-top: none;
 }
 
 .k-card-padding-small {

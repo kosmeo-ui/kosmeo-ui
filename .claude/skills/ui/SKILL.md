@@ -286,6 +286,7 @@ it (add a prop) instead of forking.
 | `TabButton` | One tab-styled button | `active`, `onClick`, `disabled` |
 | `Breadcrumbs` | Path nav | `items=[{label, path, onClick?}]` |
 | `Stepper` | Multi-step progress | `steps=[{key, label, icon?, status, clickable?}]`, `orientation`, `onStepClick` |
+| `Pagination` | Page controls for a paged list | `page`, `pageCount`, `onPageChange`, `total` + `pageSize` ("51–75 of 240"), `pageSizeOptions` + `onPageSizeChange`, `siblingCount`, `size` |
 | `Sidebar` / `SidebarNavGroup` / `SidebarNavLink` | Section nav | `SidebarNavGroup label`; `SidebarNavLink as={NavLink} to icon` — `as` defaults to `a` |
 
 ## Hooks (`src/hooks/`)
@@ -293,6 +294,7 @@ it (add a prop) instead of forking.
 | Hook | Purpose |
 |------|---------|
 | `useInfiniteCursor` | **Default** list fetching for cursor endpoints (`{ data, hasMore, limit, nextCursor }`). Takes `axiosInstance`, `endpoint`, `queryKey`, `orgId`, `initialLimit`, `enabled`; returns `UseInfiniteReturn<T>` for `InfiniteScroll` |
+| `usePaginated` | One page at a time from an offset endpoint (`limit`/`offset` in, `{ data, total }` out) for `Pagination`. Takes `axiosInstance`, `endpoint`, `queryKey`, `initialPageSize`, `params` (filters/sort; a change returns to page 1); returns `data`, `total`, `page`, `pageCount`, `setPage`, `setPageSize` |
 | `useInfiniteArchivableCursor` | Same, for archivable resources — lifts the "Archived" filter to a top-level `includeArchived` param |
 | `useInfinite` | Legacy offset pagination — don't use in new code; exports the `UseInfiniteReturn` type |
 | `useLocalStorage` | Typed localStorage with cross-tab sync |

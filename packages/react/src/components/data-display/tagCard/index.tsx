@@ -21,9 +21,11 @@ const TagCard = (props: TagCardProps) => {
         {props.tags.length ? (
           <ul className="k-tag-card-list">
             {props.tags.map((t) => (
-              <Badge key={t} variant={color} size="md" pill>
-                {t}
-              </Badge>
+              <li key={t}>
+                <Badge variant={color} size="md" pill>
+                  {t}
+                </Badge>
+              </li>
             ))}
           </ul>
         ) : (

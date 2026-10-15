@@ -1,0 +1,113 @@
+.k-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  color: var(--text-color);
+}
+
+.k-pagination-summary {
+  margin: 0;
+  color: var(--text-color-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.k-pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.k-pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.0625rem solid var(--border-color);
+  border-radius: 0.375rem;
+  background-color: var(--background-color-light);
+  color: var(--text-color);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out;
+}
+
+.k-pagination-button:not(:disabled):hover {
+  background-color: var(--background-color-hover);
+}
+
+.k-pagination-button:focus-visible {
+  outline: 0.125rem solid var(--border-color-active);
+  outline-offset: 0.125rem;
+}
+
+.k-pagination-button-current,
+.k-pagination-button-current:not(:disabled):hover {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+  font-weight: 600;
+}
+
+.k-pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.k-pagination-gap {
+  color: var(--text-color-secondary);
+  text-align: center;
+}
+
+.k-pagination-page-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color-secondary);
+  white-space: nowrap;
+}
+
+/* Sizes: every button stays at least 32px, above the 24px target minimum. */
+.k-pagination-sm {
+  font-size: var(--text-size-sm);
+}
+
+.k-pagination-sm .k-pagination-button,
+.k-pagination-sm .k-pagination-gap {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+}
+
+.k-pagination-md {
+  font-size: var(--text-size-sm);
+}
+
+.k-pagination-md .k-pagination-button,
+.k-pagination-md .k-pagination-gap {
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.625rem;
+}
+
+.k-pagination-lg {
+  font-size: var(--text-size-md);
+}
+
+.k-pagination-lg .k-pagination-button,
+.k-pagination-lg .k-pagination-gap {
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+}
+
+.k-pagination-gap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -165,7 +165,7 @@
 }
 
 .k-multiselect-selected-item-remove:hover {
-  color: var(--danger-color);
+  color: var(--danger-color-text);
 }
 
 /* Dropdown */

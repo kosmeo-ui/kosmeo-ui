@@ -36,6 +36,14 @@
   color: var(--text-color);
 }
 
+.k-checkbox[aria-readonly="true"] {
+  cursor: default;
+}
+
+.k-checkbox-label:has(+ .k-checkbox[aria-readonly="true"]) {
+  color: var(--text-color-secondary);
+}
+
 .k-checkbox:disabled {
   cursor: not-allowed;
   opacity: 0.6;

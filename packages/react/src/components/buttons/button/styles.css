@@ -151,7 +151,7 @@
 
 .k-button-warning {
   background-color: var(--warning-color);
-  color: var(--text-color);
+  color: var(--warning-color-contrast);
 }
 .k-button-warning:not(:disabled):hover {
   background-color: var(--warning-color-hover);
@@ -165,7 +165,7 @@
 
 .k-button-link {
   background-color: transparent;
-  color: var(--primary-color);
+  color: var(--primary-color-text);
   padding: 0;
   border-radius: 0;
   font-weight: 500;
@@ -174,12 +174,14 @@
   box-shadow: none;
 }
 .k-button-link:not(:disabled):hover {
-  color: var(--primary-color-hover);
+  color: var(--primary-color-text);
+  /* One text color keeps contrast in both themes; hover shows as a heavier underline. */
+  text-decoration-thickness: 0.125rem;
   background-color: transparent;
   box-shadow: none;
 }
 .k-button-link:active {
-  color: var(--primary-color-active);
+  color: var(--primary-color-text);
   background-color: transparent;
   box-shadow: none;
 }

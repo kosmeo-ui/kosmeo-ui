@@ -42,6 +42,7 @@ const DeleteButton = <TData extends object>(
         onClick={handleShowBulkDeleteModal}
         disabled={!props.selectedRows.size && !props.allSelected}
         icon={faTrash}
+        aria-label="Delete selected"
       />
       <ConfirmationModal
         show={showBulkDeleteModal}

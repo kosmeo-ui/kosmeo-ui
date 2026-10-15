@@ -48,5 +48,5 @@
 
 .k-color-picker-error {
   font-size: 0.8125rem;
-  color: var(--danger-color);
+  color: var(--danger-color-text);
 }

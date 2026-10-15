@@ -23,13 +23,16 @@ interface ModalProps extends PropsWithChildren {
    * editors) that would feel cramped at `lg`.
    */
   size?: ModalSize;
+  /** **_Optional_** whether Escape and a click on the backdrop close the modal. When `false`, only the modal's own buttons can close it. Defaults to `true` */
+  dismissible?: boolean;
 }
 
 const Modal = (props: ModalProps) => {
-  const { size = "md" } = props;
+  const { size = "md", dismissible = true } = props;
   const [shouldRender, setShouldRender] = useState(props.show);
   const [isAnimating, setIsAnimating] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const pressStartedOnOverlay = useRef(false);
 
   useEffect(() => {
     if (props.show) {
@@ -46,13 +49,13 @@ const Modal = (props: ModalProps) => {
   }, [props.show]);
 
   useEffect(() => {
-    if (!props.show) return;
+    if (!props.show || !dismissible) return;
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") props.onClose();
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [props.show, props.onClose]);
+  }, [props.show, props.onClose, dismissible]);
 
   useFocusTrap(contentRef, !!props.show && !!shouldRender);
 
@@ -60,7 +63,23 @@ const Modal = (props: ModalProps) => {
 
   return (
     <Portal>
-      <div className={`k-modal-overlay ${isAnimating ? "closing" : ""}`}>
+      {/* Close only when the press starts and ends on the backdrop, so a text
+          selection dragged out of the dialog doesn't close it. */}
+      <div
+        className={`k-modal-overlay ${isAnimating ? "closing" : ""}`}
+        onMouseDown={(e) => {
+          pressStartedOnOverlay.current = e.target === e.currentTarget;
+        }}
+        onClick={(e) => {
+          if (
+            dismissible &&
+            pressStartedOnOverlay.current &&
+            e.target === e.currentTarget
+          ) {
+            props.onClose();
+          }
+        }}
+      >
         <div
           ref={contentRef}
           className={`k-modal-content ${isAnimating ? "closing" : ""} ${size}`}

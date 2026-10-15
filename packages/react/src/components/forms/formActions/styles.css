@@ -42,7 +42,7 @@
     var(--danger-color) 12%,
     var(--background-color)
   );
-  color: var(--danger-color);
+  color: var(--danger-color-text);
   border: 0.0625rem solid var(--danger-color);
   border-radius: 0.375rem;
   padding: 0.5rem 0.75rem;

@@ -17,16 +17,22 @@ const ProgressBar = (props: ProgressBarProps) => {
   const fillBorderRadius =
     clampedProgress === 100 ? "0.25rem" : "0.25rem 0 0 0.25rem";
 
+  // The percentage sits beside the bar, not on the fill: no single text color
+  // reaches 4.5:1 on every variant's fill in both themes.
   return (
-    <div className={`k-progress-bar-container`}>
-      <div
-        className={`k-progress-bar-fill k-progress-bar-fill-${variant}`}
-        style={{ width: `${clampedProgress}%`, borderRadius: fillBorderRadius }}
-      >
-        {showPercentage && clampedProgress > 0 && (
-          <span className="k-progress-bar-text">{clampedProgress}%</span>
-        )}
+    <div className="k-progress-bar">
+      <div className="k-progress-bar-container">
+        <div
+          className={`k-progress-bar-fill k-progress-bar-fill-${variant}`}
+          style={{
+            width: `${clampedProgress}%`,
+            borderRadius: fillBorderRadius,
+          }}
+        />
       </div>
+      {showPercentage && (
+        <span className="k-progress-bar-text">{clampedProgress}%</span>
+      )}
     </div>
   );
 };

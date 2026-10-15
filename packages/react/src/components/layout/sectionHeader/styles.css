@@ -82,8 +82,7 @@
 
 .k-section-header-subtitle {
   font-size: 0.8125rem;
-  color: var(--text-color);
-  opacity: 0.65;
+  color: var(--text-color-secondary);
 }
 
 .k-section-header-badges {

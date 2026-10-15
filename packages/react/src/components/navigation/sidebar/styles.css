@@ -14,7 +14,9 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--overlay-light-medium);
+  /* 50% white: the weakest overlay that keeps small text above 4.5:1 on the
+     sidebar's dark background. */
+  color: var(--overlay-light-strong);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -36,6 +38,12 @@
 
 .k-sidebar-nav-link:hover {
   background-color: var(--overlay-light-weak);
+}
+
+/* Browser default focus rings can vanish on the dark background. */
+.k-sidebar-nav-link:focus-visible {
+  outline: 2px solid var(--text-color-light);
+  outline-offset: -2px;
 }
 
 .k-sidebar-nav-link.active {

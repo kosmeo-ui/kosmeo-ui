@@ -169,10 +169,14 @@ const PhoneInput = (props: PhoneInputProps) => {
         className="k-phone-input-picker-trigger"
         onClick={() => !disabled && setPickerOpen((o) => !o)}
         disabled={disabled}
-        aria-label={`Country: ${countryName(country)}`}
+        // Starts with the visible "+1" so voice-control users can say what
+        // they see (WCAG 2.5.3); the flag is decorative next to the name.
+        aria-label={`+${getCountryCallingCode(country)} ${countryName(country)}, change country`}
         aria-expanded={pickerOpen}
       >
-        <span className="k-phone-input-flag">{flagEmoji(country)}</span>
+        <span className="k-phone-input-flag" aria-hidden="true">
+          {flagEmoji(country)}
+        </span>
         <span className="k-phone-input-dial">
           +{getCountryCallingCode(country)}
         </span>

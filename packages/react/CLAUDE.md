@@ -29,11 +29,12 @@ src/
 │   ├── data-display/           # Table, DataTable, InfiniteScroll, ListCard, ListRow,
 │   │                           # TagCard, ImagePreview, ColorSwatch, AddressBlock,
 │   │                           # RecoveryCodeGrid, SecretDisplay, StatCard, SummaryRow
-│   └── navigation/             # Tabs, TabButton, Breadcrumbs, Stepper,
+│   └── navigation/             # Tabs, TabButton, Breadcrumbs, Stepper, Pagination,
 │                               # Sidebar (+ SidebarNavGroup, SidebarNavLink)
 └── hooks/
     ├── useInfinite.ts          # Infinite scroll data fetching (React Query)
     ├── useInfiniteCursor.ts    # Cursor-based infinite scroll
+    ├── usePaginated.ts         # Offset pages with a total, for Pagination
     ├── useLocalStorage.tsx     # Typed localStorage hook with cross-tab sync
     ├── useFloatingPosition.ts  # Anchor-relative positioning, side-aware, viewport clamp
     ├── useOutsideClick.ts      # Click-outside detection
@@ -73,7 +74,7 @@ import "@kosmeo-ui/react/styles.css";
 
 **Data display**: `Table`, `DataTable`, `InfiniteScroll`, `ListCard`, `ListRow`, `TagCard`, `ImagePreview`, `ColorSwatch`, `AddressBlock`, `RecoveryCodeGrid`, `SecretDisplay`, `StatCard`, `SummaryRow`
 
-**Navigation**: `Tabs`, `TabButton`, `Breadcrumbs`, `Stepper`, `Sidebar` (with `SidebarNavGroup`, `SidebarNavLink`)
+**Navigation**: `Tabs`, `TabButton`, `Breadcrumbs`, `Stepper`, `Pagination`, `Sidebar` (with `SidebarNavGroup`, `SidebarNavLink`)
 
 > Consolidation history: `PageContainer`/`DetailPage` → `Page` (`fillHeight`/`padded`/`gap`/`maxWidth`/`loading`). `FullScreenModal` → `Modal size="full"`. `DetailGrid` → `FormGrid`. `DetailHeader` → `SectionHeader as="h1"` (with `preface`/`badges`). `WorkflowCard` → `Card` + `footer`/`progress` props. `SymbolInput` → `Input prefix`/`suffix`. `Error` → `Alert variant="danger"` (with optional `heading`). `ImageUpload` → `FileUpload` + `ImagePreview` composition via `renderFiles`. `SectionContainer`/`ContentContainer` deleted (unused). Shared internals: `FieldShell` (Input/TextArea/Select/MultiSelect/DateInput shell), `OptionsGroup` (CheckboxGroup/RadioGroup shell), `Portal` (Modal/Tooltip/Typeahead/SearchList).
 

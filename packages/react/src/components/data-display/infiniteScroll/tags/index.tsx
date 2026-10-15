@@ -1,7 +1,6 @@
 "use client";
 
 import { InfiniteScrollMenuGeneratedFilter } from "../types.js";
-import SearchFilterTag from "./searchFilterTag.js";
 import SelectFilterTag from "./selectFilterTag.js";
 import RangeFilterTag from "./rangeFilterTag.js";
 import ListFilterTag from "./listFilterTag.js";
@@ -13,6 +12,7 @@ interface InfiniteScrollMenuTagsProps {
 }
 
 const Tags = (props: InfiniteScrollMenuTagsProps) => {
+  // SEARCH filters get no tag: their search box already shows the value.
   const filterTags = props.filters.reduce((tags, f) => {
     if (f.type === "SELECT") {
       const selectedFilters = f.options?.filter((o) => o.selected);
@@ -51,16 +51,6 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
           />
         );
       }
-    } else if (f.type === "SEARCH") {
-      if (!f.value) return tags;
-      tags.push(
-        <SearchFilterTag
-          key={f.filterId}
-          filter={f}
-          filters={props.filters}
-          handleNewFilters={props.handleNewFilters}
-        />
-      );
     } else if (f.type === "LIST") {
       if (!f.list) return tags;
       tags.push(

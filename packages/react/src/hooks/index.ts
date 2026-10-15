@@ -4,6 +4,10 @@ export {
   type UseInfiniteReturn,
 } from "./useInfinite.js";
 export { default as useInfiniteCursor } from "./useInfiniteCursor.js";
+export {
+  default as usePaginated,
+  type UsePaginatedReturn,
+} from "./usePaginated.js";
 export { default as useScrollIntoView } from "./useScrollIntoView.js";
 export { default as useDebouncedValue } from "./useDebouncedValue.js";
 export { default as useOutsideClick } from "./useOutsideClick.js";

@@ -28,11 +28,11 @@
 }
 
 .k-tabs-button:hover:not(:disabled) {
-  color: var(--primary-color);
+  color: var(--primary-color-text);
 }
 
 .k-tabs-button-active {
-  color: var(--primary-color);
+  color: var(--primary-color-text);
   border-bottom-color: var(--primary-color);
 }
 

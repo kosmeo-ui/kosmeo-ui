@@ -1,16 +1,9 @@
 "use client";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "../../../buttons/iconButton/index.js";
+import Badge from "../../../feedback/badge/index.js";
 import { useCallback, useMemo } from "react";
 import { DateTime } from "luxon";
 import "./styles.css";
-import {
-  faCalendarDays,
-  faFont,
-  faHashtag,
-  faXmark,
-} from "@fortawesome/free-solid-svg-icons";
 import {
   GeneratedRangeFilter,
   InfiniteScrollMenuGeneratedFilter,
@@ -48,12 +41,6 @@ const RangeFilterTag = (props: InfiniteScrollRangeFilterTagProps) => {
     else if (filter.rangeType === "STRING") return value;
   }, [filter, filterValue, filter.rangeType]);
 
-  const iconToUse = useMemo(() => {
-    if (isDate) return faCalendarDays;
-    else if (filter.rangeType === "NUMBER") return faHashtag;
-    else if (filter.rangeType === "STRING") return faFont;
-  }, [filter.rangeType]);
-
   const handleRemove = useCallback(() => {
     const newFilters = props.filters.map((f) => {
       if (f.filterId !== props.filter.filterId) return f;
@@ -63,14 +50,9 @@ const RangeFilterTag = (props: InfiniteScrollRangeFilterTagProps) => {
   }, [props.filters, filterValue]);
 
   return (
-    <div className="k-tag-container">
-      <p className="k-tag-title">{tagTitle}</p>
-      <div className="k-tag-actions">
-        {iconToUse && <FontAwesomeIcon icon={iconToUse} />}
-        <p className="k-tag-value">{tagValue}</p>
-        <IconButton icon={faXmark} onClick={handleRemove} size="sm" />
-      </div>
-    </div>
+    <Badge onRemove={handleRemove}>
+      {tagTitle}: {tagValue}
+    </Badge>
   );
 };
 

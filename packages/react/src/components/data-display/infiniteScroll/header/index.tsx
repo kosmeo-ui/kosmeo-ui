@@ -47,6 +47,7 @@ const Header = <TData extends object>(props: HeaderProps<TData>) => {
           size="sm"
           variant="secondary"
           onClick={props.onRefetch}
+          aria-label="Refresh"
           icon={faRotate}
         />
         {props.onDownload && (
@@ -54,6 +55,7 @@ const Header = <TData extends object>(props: HeaderProps<TData>) => {
             size="sm"
             variant="secondary"
             onClick={props.onDownload}
+            aria-label="Download"
             icon={faDownload}
           />
         )}
@@ -62,6 +64,7 @@ const Header = <TData extends object>(props: HeaderProps<TData>) => {
             size="sm"
             variant="success"
             onClick={props.onAddNew}
+            aria-label="Add new"
             icon={faPlus}
           />
         )}
@@ -74,6 +77,7 @@ const Header = <TData extends object>(props: HeaderProps<TData>) => {
         {props.optionsDropdown && (
           <Dropdown
             icon={faEllipsisVertical}
+            aria-label="More options"
             size="sm"
             variant="secondary"
             align="left"

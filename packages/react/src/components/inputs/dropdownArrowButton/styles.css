@@ -15,7 +15,7 @@
 }
 
 .k-dropdown-arrow:hover:not(:disabled) {
-  color: var(--primary-color);
+  color: var(--primary-color-text);
 }
 
 .k-dropdown-arrow:focus {
