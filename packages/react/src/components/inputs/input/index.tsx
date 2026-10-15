@@ -75,6 +75,12 @@ interface InputProps extends PropsWithSize {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   /** **_Optional_** function that is called when the input is clicked */
   onClick?: React.MouseEventHandler<HTMLInputElement>;
+  /** **_Optional_** accessible name when there's no visible `label` */
+  "aria-label"?: string;
+  /** **_Optional_** id of the element (e.g. a listbox) this input controls */
+  "aria-controls"?: string;
+  /** **_Optional_** id of the option highlighted in the controlled element, while focus stays in the input */
+  "aria-activedescendant"?: string;
   /** **_Optional_** shows an × button at the end of a non-empty field; clear the value here. Sits at the right edge, so don't combine with `suffix` or `type="password"` */
   onClear?: () => void;
 }
@@ -190,6 +196,9 @@ const Input = (props: InputProps) => {
           onBlur={props.onBlur}
           onClick={props.onClick}
           onKeyDown={props.onKeyDown}
+          aria-label={props["aria-label"]}
+          aria-controls={props["aria-controls"]}
+          aria-activedescendant={props["aria-activedescendant"]}
           className={inputClasses}
         />
         {showClear && (

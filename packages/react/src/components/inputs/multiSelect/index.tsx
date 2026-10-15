@@ -1,8 +1,10 @@
 "use client";
 
+import useScrollIntoView from "../../../hooks/useScrollIntoView.js";
 import DropdownArrowButton from "../dropdownArrowButton/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useOutsideClick from "../../../hooks/useOutsideClick.js";
+import useListKeyboard from "../../../hooks/useListKeyboard.js";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useState, useRef, useEffect, useId } from "react";
 import FieldShell from "../../forms/fieldShell/index.js";
@@ -60,8 +62,13 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
   const [filteredOptions, setFilteredOptions] = useState(props.options);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const comboboxRef = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const generatedId = useId();
   const componentId = props.id || `multiselect-${generatedId}`;
+  const labelId = `${componentId}-label`;
+  const listboxId = `${componentId}-listbox`;
 
   // Filter options based on search term
   useEffect(() => {
@@ -75,6 +82,7 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
     } else {
       setFilteredOptions(props.options);
     }
+    setHighlightedIndex(-1);
   }, [searchTerm, props.options]);
 
   useOutsideClick([containerRef], () => setIsOpen(false));
@@ -86,11 +94,27 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
     }
   }, [isOpen]);
 
+  useScrollIntoView(optionRefs, highlightedIndex, isOpen);
+
   const handleToggleDropdown = () => {
     if (disabled) return;
     setIsOpen(!isOpen);
     if (!isOpen) {
       setSearchTerm("");
+      setHighlightedIndex(-1);
+    }
+  };
+
+  const close = () => {
+    setIsOpen(false);
+    comboboxRef.current?.focus();
+  };
+
+  const handleComboboxKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (disabled || isOpen) return;
+    if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
+      e.preventDefault();
+      handleToggleDropdown();
     }
   };
 
@@ -168,17 +192,29 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
     props.onChange([]);
   };
 
+  const handleSearchKeyDown = useListKeyboard({
+    isOpen,
+    length: filteredOptions.length,
+    highlightedIndex,
+    setHighlightedIndex,
+    onSelect: (index) => handleOptionToggle(filteredOptions[index]),
+    onClose: close,
+  });
+
   const selectedKeys = itemKeys(value, props.labelKey);
   const selectedItems = value.map((v, index) => (
     <div key={selectedKeys[index]} className="k-multiselect-selected-item">
       <span className="k-multiselect-selected-item-label">
         {String(v[props.labelKey])}
       </span>
+      {/* Mouse-only: a combobox can't contain controls, so keyboard and
+          screen-reader users deselect from the listbox instead. */}
       {!disabled && (
         <button
           type="button"
           className="k-multiselect-selected-item-remove"
-          aria-label={`Remove ${String(v[props.labelKey])}`}
+          tabIndex={-1}
+          aria-hidden="true"
           onClick={(e) => {
             e.stopPropagation();
             handleOptionToggle(v);
@@ -195,11 +231,21 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
       <FieldShell
         label={props.label}
         required={required}
-        htmlFor={componentId}
+        labelId={labelId}
         className="k-multiselect-container"
       >
         <div
+          ref={comboboxRef}
           id={componentId}
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls={isOpen ? listboxId : undefined}
+          aria-labelledby={props.label ? labelId : undefined}
+          aria-label={props.label ? undefined : placeholder}
+          aria-required={required || undefined}
+          aria-disabled={disabled || undefined}
+          onKeyDown={handleComboboxKeyDown}
           className={`k-multiselect k-multiselect-${size} ${
             disabled ? "k-multiselect-disabled" : ""
           } ${isOpen ? "k-multiselect-open" : ""}`}
@@ -238,6 +284,11 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
             handleSelectAll={handleSelectAll}
             handleClearAll={handleClearAll}
             handleOptionToggle={handleOptionToggle}
+            listboxId={listboxId}
+            labelId={props.label ? labelId : undefined}
+            highlightedIndex={highlightedIndex}
+            optionRefs={optionRefs}
+            onSearchKeyDown={handleSearchKeyDown}
           />
         )}
       </FieldShell>

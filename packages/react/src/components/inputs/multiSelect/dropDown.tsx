@@ -23,7 +23,16 @@ interface DropDownProps<T> extends PropsWithSize {
   handleSelectAll: () => void;
   handleClearAll: () => void;
   handleOptionToggle: (optionValue: T) => void;
+  listboxId: string;
+  /** Id of the field's label, which also names the listbox. */
+  labelId?: string;
+  highlightedIndex: number;
+  optionRefs: React.RefObject<(HTMLLIElement | null)[]>;
+  onSearchKeyDown: React.KeyboardEventHandler<HTMLInputElement>;
 }
+
+export const optionId = (listboxId: string, index: number) =>
+  `${listboxId}-option-${index}`;
 
 export const DropDownSection = <T,>(props: DropDownProps<T>) => {
   const { size = "md", value = [] } = props;
@@ -31,36 +40,64 @@ export const DropDownSection = <T,>(props: DropDownProps<T>) => {
   const optionKeys = itemKeys(props.filteredOptions, props.labelKey);
   const list =
     props.filteredOptions.length > 0 ? (
-      props.filteredOptions.map((option, index) => {
-        const isSelected = value.find(
-          (v) => v[props.labelKey] === option[props.labelKey]
-        );
-        return (
-          <li
-            key={optionKeys[index]}
-            className={`k-multiselect-option k-multiselect-option-${size} ${
-              isSelected ? "k-multiselect-option-selected" : ""
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              props.handleOptionToggle(option);
-            }}
-          >
-            <span className="k-multiselect-option-label">
-              {String(option[props.labelKey])}
-            </span>
-            {isSelected && (
-              <FontAwesomeIcon icon={faCheck} className="k-multiselect-check" />
-            )}
-          </li>
-        );
-      })
+      <ul
+        id={props.listboxId}
+        role="listbox"
+        aria-multiselectable="true"
+        aria-labelledby={props.labelId}
+        className="k-multiselect-options-list"
+      >
+        {props.filteredOptions.map((option, index) => {
+          const isSelected = value.find(
+            (v) => v[props.labelKey] === option[props.labelKey]
+          );
+          return (
+            <li
+              key={optionKeys[index]}
+              ref={(el) => {
+                props.optionRefs.current[index] = el;
+              }}
+              id={optionId(props.listboxId, index)}
+              role="option"
+              aria-selected={!!isSelected}
+              className={`k-multiselect-option k-multiselect-option-${size} ${
+                isSelected ? "k-multiselect-option-selected" : ""
+              } ${
+                index === props.highlightedIndex
+                  ? "k-multiselect-option-highlighted"
+                  : ""
+              }`}
+              // Keeps focus, and so the keyboard, in the search box.
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={(e) => {
+                e.stopPropagation();
+                props.handleOptionToggle(option);
+              }}
+            >
+              <span className="k-multiselect-option-label">
+                {String(option[props.labelKey])}
+              </span>
+              {isSelected && (
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  className="k-multiselect-check"
+                />
+              )}
+            </li>
+          );
+        })}
+      </ul>
     ) : (
-      <li className={`k-multiselect-no-results k-multiselect-option-${size}`}>
-        {props.options.length === 0
-          ? "No options available"
-          : "No options found"}
-      </li>
+      <div className="k-multiselect-options-list">
+        <div
+          role="status"
+          className={`k-multiselect-no-results k-multiselect-option-${size}`}
+        >
+          {props.options.length === 0
+            ? "No options available"
+            : "No options found"}
+        </div>
+      </div>
     );
 
   return (
@@ -78,11 +115,22 @@ export const DropDownSection = <T,>(props: DropDownProps<T>) => {
           onClick={(e: React.MouseEvent<HTMLInputElement>) =>
             e.stopPropagation()
           }
+          onKeyDown={props.onSearchKeyDown}
+          aria-label="Search options"
+          aria-controls={
+            props.filteredOptions.length > 0 ? props.listboxId : undefined
+          }
+          aria-activedescendant={
+            props.highlightedIndex > -1
+              ? optionId(props.listboxId, props.highlightedIndex)
+              : undefined
+          }
         />
         <div className="k-multiselect-bulk-actions">
           <Tooltip content="Select All">
             <IconButton
               icon={faCheckDouble}
+              aria-label="Select all"
               size={size}
               variant="success"
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -95,6 +143,7 @@ export const DropDownSection = <T,>(props: DropDownProps<T>) => {
           <Tooltip content="Clear All">
             <IconButton
               icon={faXmark}
+              aria-label="Clear all"
               size={size}
               variant="danger"
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -107,7 +156,7 @@ export const DropDownSection = <T,>(props: DropDownProps<T>) => {
         </div>
       </div>
 
-      <ul className="k-multiselect-options-list">{list}</ul>
+      {list}
     </div>
   );
 };

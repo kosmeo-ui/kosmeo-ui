@@ -11,6 +11,8 @@ interface FieldShellProps {
   required?: boolean;
   /** `htmlFor` target id, used when label is a string. */
   htmlFor?: string;
+  /** Id for the label element, for a control named with `aria-labelledby` (a `<label>` can't target a non-form element). */
+  labelId?: string;
   /** Optional right-aligned annotation in the label row (e.g. char count). */
   labelAside?: ReactNode;
   /** Optional error message rendered below the input. */
@@ -28,6 +30,7 @@ const FieldShell = ({
   label,
   required,
   htmlFor,
+  labelId,
   labelAside,
   error,
   helperText,
@@ -38,7 +41,7 @@ const FieldShell = ({
     {(label || labelAside) && (
       <div className="k-field-shell-label-row">
         {label && (
-          <label htmlFor={htmlFor} className="k-field-shell-label">
+          <label id={labelId} htmlFor={htmlFor} className="k-field-shell-label">
             {typeof label === "string" ? (
               <>
                 {label}
