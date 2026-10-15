@@ -15,7 +15,7 @@
     "check": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "tsc --noEmit",
+        "command": "tsc --noEmit && tsc -p tsconfig.spec.json",
         "cwd": "packages/react"
       }
     },
@@ -23,6 +23,13 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "rm -rf dist tsconfig.tsbuildinfo",
+        "cwd": "packages/react"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run",
         "cwd": "packages/react"
       }
     }

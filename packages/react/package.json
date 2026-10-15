@@ -35,14 +35,17 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "!src/**/__tests__"
   ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "tsc && node scripts/copy-css.js",
-    "check": "tsc --noEmit",
+    "check": "tsc --noEmit && tsc -p tsconfig.spec.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "clean": "rm -rf dist tsconfig.tsbuildinfo"
   },
   "peerDependencies": {
@@ -71,10 +74,17 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.104.2",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/luxon": "^3.7.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "^5.0.5",
     "axios": "^1.17.0",
-    "typescript": "^6.0.3"
+    "jsdom": "^30.1.3",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
   }
 }

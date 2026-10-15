@@ -97,6 +97,25 @@ All CSS classes use `k-` prefix: `k-button`, `k-button-primary`, `k-button-sm`. 
 
 ```bash
 npm run build    # tsc + copy CSS files to dist/
-npm run check    # Type-check only
+npm run check    # Type-check the source, then the tests (tsconfig.spec.json)
+npm run test     # Vitest, once; `npm run test:watch` to watch
 npm run clean    # Remove dist/, tsconfig.tsbuildinfo
 ```
+
+## Tests
+
+Vitest + Testing Library on jsdom (`vitest.config.ts`, `vitest.setup.ts`). Each
+component's tests sit in a `__tests__` folder inside its own folder
+(`buttons/button/__tests__/button.test.tsx`); hooks' tests are in
+`hooks/__tests__/`, where `queryWrapper.tsx` provides a `QueryClient` wrapper and
+a mock `AxiosInstance`. `__tests__` is excluded from the build `tsconfig.json`,
+from `dist/` and from the published tarball.
+
+- Query by role and accessible name (`getByRole("button", { name: "Save" })`),
+  and drive interaction with `userEvent` — imported as
+  `import { userEvent } from "@testing-library/user-event"`, since the default
+  import mistypes under NodeNext.
+- Test behaviour through props and the DOM; assert `k-` classes only where the
+  class is the contract (variant/size mapping).
+- jsdom toggles a checkbox whose click is cancelled instead of restoring it, so
+  for `preventDefault`ed checkboxes assert the cancellation, not `checked`.
