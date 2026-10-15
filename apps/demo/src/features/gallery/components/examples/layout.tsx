@@ -23,7 +23,8 @@ export const Layout = () => (
         <Card>Children stack with a gap</Card>
       </Page>
     </div>
-    <div className="demo-frame demo-frame-short">
+    {/* No fixed height: a loading Page sets its own 12rem minimum. */}
+    <div className="demo-frame">
       <Page loading />
     </div>
     <div className="demo-frame demo-frame-short">
