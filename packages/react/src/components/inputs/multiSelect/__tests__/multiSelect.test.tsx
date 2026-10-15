@@ -187,7 +187,7 @@ describe("MultiSelect", () => {
       render(
         <MultiSelect label="Fruit" options={fruits} labelKey="name" required />
       );
-      const combobox = screen.getByRole("combobox", { name: "Fruit*" });
+      const combobox = screen.getByRole("combobox", { name: "Fruit" });
       expect(combobox).toHaveAttribute("aria-haspopup", "listbox");
       expect(combobox).toHaveAttribute("aria-expanded", "false");
       expect(combobox).toHaveAttribute("aria-required", "true");

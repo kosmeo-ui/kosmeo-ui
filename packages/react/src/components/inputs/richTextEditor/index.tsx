@@ -86,6 +86,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
     editorProps: {
       attributes: {
         "aria-multiline": "true",
+        ...(props.required ? { "aria-required": "true" } : {}),
         ...(props.label
           ? { "aria-labelledby": labelId }
           : { "aria-label": props.placeholder ?? "Rich text editor" }),
