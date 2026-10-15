@@ -2,6 +2,13 @@
   display: flex;
 }
 
+/* Never squeeze an action below its natural width: in a narrow table cell a
+   shrunk icon button collapses its icon to 0px (svg max-width: 100%). The
+   column grows to fit instead. */
+.k-row-actions > * {
+  flex-shrink: 0;
+}
+
 .k-row-actions-start {
   justify-content: flex-start;
 }

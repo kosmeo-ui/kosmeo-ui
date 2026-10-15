@@ -1,8 +1,6 @@
 "use client";
 
-import { faCheckSquare, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "../../../buttons/iconButton/index.js";
+import Badge from "../../../feedback/badge/index.js";
 import { useCallback } from "react";
 import "../styles.css";
 import {
@@ -32,14 +30,9 @@ const SelectFilterTag = (props: InfiniteScrollSelectFilterTagProps) => {
   }, [props]);
 
   return (
-    <div className="k-tag-container">
-      <p className="k-tag-title">{props.filter.title}</p>
-      <div className="k-tag-actions">
-        <FontAwesomeIcon icon={faCheckSquare} />
-        <p className="k-tag-value">{props.filterOption.name}</p>
-        <IconButton onClick={handleRemove} size="sm" icon={faXmark} />
-      </div>
-    </div>
+    <Badge onRemove={handleRemove}>
+      {props.filter.title}: {props.filterOption.name}
+    </Badge>
   );
 };
 

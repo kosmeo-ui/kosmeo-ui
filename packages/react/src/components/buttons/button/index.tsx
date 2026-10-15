@@ -33,6 +33,8 @@ export interface ButtonProps extends PropsWithSize, PropsWithVariant {
   fullWidth?: boolean;
   /** Accessible label. Required for icon-only buttons. */
   "aria-label"?: string;
+  /** Marks a toggle button as on or off. */
+  "aria-pressed"?: boolean;
   /** ID of element describing this button (for additional context). */
   "aria-describedby"?: string;
   /** ID of element labelling this button. */
@@ -61,6 +63,8 @@ const Button = (props: ButtonProps) => {
       aria-label={props["aria-label"]}
       aria-describedby={props["aria-describedby"]}
       aria-labelledby={props["aria-labelledby"]}
+      aria-busy={isLoading || undefined}
+      aria-pressed={props["aria-pressed"]}
       title={props.title}
       className={`k-button k-button-${variant} k-button-${size} k-button-${align} ${
         shadow ? "k-button-shadow" : ""
@@ -68,11 +72,16 @@ const Button = (props: ButtonProps) => {
       onClick={props.onClick}
     >
       {isLoading ? (
-        <FontAwesomeIcon
-          icon={faCircleNotch}
-          className="k-button-spinner"
-          spin
-        />
+        <>
+          <FontAwesomeIcon
+            icon={faCircleNotch}
+            className="k-button-spinner"
+            spin
+            aria-hidden="true"
+          />
+          {/* Keeps the button's accessible name while the spinner shows. */}
+          <span className="k-sr-only">{props.children}</span>
+        </>
       ) : (
         props.children
       )}

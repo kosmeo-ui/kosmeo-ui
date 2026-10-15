@@ -23,6 +23,8 @@ export interface DropdownProps extends PropsWithSize, PropsWithVariant {
   isOpen?: boolean;
   /** Controlled mode: callback when open state changes */
   onOpenChange?: (isOpen: boolean) => void;
+  /** Accessible name for the trigger. Required when it shows only an `icon`. */
+  "aria-label"?: string;
 }
 
 const Dropdown = (props: DropdownProps) => {
@@ -63,6 +65,7 @@ const Dropdown = (props: DropdownProps) => {
           variant={props.variant}
           icon={props.icon}
           onClick={handleTriggerClick}
+          aria-label={props["aria-label"]}
         >
           {props.label && label}
         </IconButton>
@@ -71,6 +74,7 @@ const Dropdown = (props: DropdownProps) => {
           size={props.size}
           variant={props.variant}
           onClick={handleTriggerClick}
+          aria-label={props["aria-label"]}
         >
           {props.label && label}
         </Button>

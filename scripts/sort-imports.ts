@@ -9,7 +9,7 @@
  *   npx tsx scripts/sort-imports.ts [paths...]          # sort in place
  *   npx tsx scripts/sort-imports.ts --check [paths...]  # list unsorted files, exit 1 if any
  *
- * Paths are files or directories; the default is every package's `src/`.
+ * Paths are files or directories; the default is every package's and app's `src/`.
  */
 import path from "path";
 import fs from "fs";
@@ -109,9 +109,13 @@ const check = args.includes("--check");
 const root = path.resolve(import.meta.dirname, "..");
 let targets = args.filter((a) => a !== "--check");
 if (targets.length === 0) {
-  targets = fs
-    .readdirSync(path.join(root, "packages"))
-    .map((pkg) => path.join(root, "packages", pkg, "src"))
+  targets = ["packages", "apps"]
+    .filter((group) => fs.existsSync(path.join(root, group)))
+    .flatMap((group) =>
+      fs
+        .readdirSync(path.join(root, group))
+        .map((pkg) => path.join(root, group, pkg, "src"))
+    )
     .filter((dir) => fs.existsSync(dir));
 }
 

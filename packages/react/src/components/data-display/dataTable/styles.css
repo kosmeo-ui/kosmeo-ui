@@ -4,6 +4,21 @@
   width: 3rem;
 }
 
+/* Even padding, overriding the table's wider first-column inset, so the
+   checkbox stays centered. */
+.k-table th.k-data-table-leading,
+.k-table td.k-data-table-leading {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* text-align doesn't move flex items, and Checkbox's container is a
+   full-width flex column, so center flex content on both axes too. */
+.k-data-table-leading > * {
+  justify-content: center;
+  align-items: center;
+}
+
 .k-data-table-spacer {
   padding: 0;
   border: 0;

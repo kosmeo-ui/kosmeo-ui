@@ -179,6 +179,7 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
             <button
               type="button"
               className="k-multiselect-selected-item-remove"
+              aria-label={`Remove ${String(v[props.labelKey])}`}
               onClick={(e) => {
                 e.stopPropagation();
                 handleOptionToggle(v);

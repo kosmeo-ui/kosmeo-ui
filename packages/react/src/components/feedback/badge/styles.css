@@ -88,7 +88,7 @@ button.k-badge {
 
 .k-badge-warning {
   background-color: var(--warning-color);
-  color: var(--text-color);
+  color: var(--warning-color-contrast);
 }
 
 .k-badge-success {
@@ -107,13 +107,15 @@ button.k-badge {
 }
 
 /* Subtle variants - transparent background with colored text */
+/* Subtle text blends the variant color 60/40 with --text-color: the full
+   variant color on its own 15% tint falls under 4.5:1 for most variants. */
 .k-badge-subtle.k-badge-primary {
   background-color: color-mix(
     in srgb,
     var(--primary-color) 15%,
     var(--background-color)
   );
-  color: var(--primary-color);
+  color: color-mix(in srgb, var(--primary-color) 60%, var(--text-color));
 }
 
 .k-badge-subtle.k-badge-secondary {
@@ -122,7 +124,7 @@ button.k-badge {
     var(--secondary-color) 15%,
     var(--background-color)
   );
-  color: var(--secondary-color);
+  color: color-mix(in srgb, var(--secondary-color) 60%, var(--text-color));
 }
 
 .k-badge-subtle.k-badge-light {
@@ -140,7 +142,7 @@ button.k-badge {
     var(--danger-color) 15%,
     var(--background-color)
   );
-  color: var(--danger-color);
+  color: color-mix(in srgb, var(--danger-color) 60%, var(--text-color));
 }
 
 .k-badge-subtle.k-badge-warning {
@@ -149,7 +151,7 @@ button.k-badge {
     var(--warning-color) 20%,
     var(--background-color)
   );
-  color: var(--warning-color);
+  color: var(--warning-color-text);
 }
 
 .k-badge-subtle.k-badge-success {
@@ -158,5 +160,5 @@ button.k-badge {
     var(--success-color) 15%,
     var(--background-color)
   );
-  color: var(--success-color);
+  color: color-mix(in srgb, var(--success-color) 60%, var(--text-color));
 }

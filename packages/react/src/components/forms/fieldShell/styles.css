@@ -28,7 +28,7 @@
 .k-field-shell-error {
   margin-top: 0.25rem;
   font-size: 0.8125rem;
-  color: var(--danger-color);
+  color: var(--danger-color-text);
 }
 
 .k-field-shell-helper {

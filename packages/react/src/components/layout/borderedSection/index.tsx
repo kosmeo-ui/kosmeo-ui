@@ -7,6 +7,8 @@ export interface BorderedSectionProps {
   children: ReactNode;
   /** Optional title shown above the body. */
   title?: ReactNode;
+  /** Heading element for the title, to fit the page's heading outline. Defaults to `h3`. Looks the same at every level. */
+  as?: "h2" | "h3" | "h4";
   /** Right-aligned actions in the title row. Implies a title row even when `title` is empty. */
   actions?: ReactNode;
   /** Body layout. `"stack"` (default) stacks children; `"row"` lays them out as a horizontal flex strip. */
@@ -20,6 +22,7 @@ export interface BorderedSectionProps {
 const BorderedSection = ({
   children,
   title,
+  as: Heading = "h3",
   actions,
   layout = "stack",
   gap,
@@ -40,7 +43,7 @@ const BorderedSection = ({
       {showHeader && (
         <div className="k-bordered-section-header">
           {title !== undefined && (
-            <h3 className="k-bordered-section-title">{title}</h3>
+            <Heading className="k-bordered-section-title">{title}</Heading>
           )}
           {actions !== undefined && (
             <div className="k-bordered-section-actions">{actions}</div>

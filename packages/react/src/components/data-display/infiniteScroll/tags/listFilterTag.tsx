@@ -1,16 +1,15 @@
 "use client";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IconButton from "../../../buttons/iconButton/index.js";
 import type { TableColumn } from "../../dataTable/types.js";
 import Table from "../../../data-display/table/index.js";
 import { useCallback, useMemo, useState } from "react";
+import Badge from "../../../feedback/badge/index.js";
 import Modal from "../../../overlays/modal/index.js";
 import Input from "../../../inputs/input/index.js";
 import Row from "../../../layout/row/index.js";
 import "./styles.css";
 import {
-  faList,
   faPenToSquare,
   faPlus,
   faXmark,
@@ -111,20 +110,17 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
   );
 
   return (
-    <div className="k-tag-container">
-      <p className="k-tag-title">{props.filter.title}</p>
-      <div className="k-tag-actions">
-        <FontAwesomeIcon icon={faList} />
-        <p className="k-tag-value">{tagValue}</p>
-        <div className="k-lft-buttons">
-          <IconButton
-            icon={faPenToSquare}
-            onClick={() => setShow(!show)}
-            size="sm"
-          />
-          <IconButton icon={faXmark} onClick={handleRemove} size="sm" />
-        </div>
-      </div>
+    <div className="k-lft-buttons">
+      <Badge onRemove={handleRemove}>
+        {props.filter.title}: {tagValue}
+      </Badge>
+      <IconButton
+        icon={faPenToSquare}
+        onClick={() => setShow(!show)}
+        size="sm"
+        variant="light"
+        aria-label={`Edit ${props.filter.title}`}
+      />
       <Modal show={show} onClose={handleClose} title={props.filter.title}>
         <div className="k-lft-modal-body">
           <Input

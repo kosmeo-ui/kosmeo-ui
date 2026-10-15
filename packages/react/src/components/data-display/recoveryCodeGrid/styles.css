@@ -34,8 +34,7 @@
 
 .k-recovery-code-grid-index {
   font-size: 0.75rem;
-  color: var(--text-color);
-  opacity: 0.55;
+  color: var(--text-color-secondary);
   min-width: 1.5rem;
   text-align: right;
 }

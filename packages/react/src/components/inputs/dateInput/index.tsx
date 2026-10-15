@@ -1,7 +1,7 @@
 "use client";
 
 import FieldShell from "../../forms/fieldShell/index.js";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useId } from "react";
 import "./styles.css";
 import {
   dateInputToIso,
@@ -50,9 +50,12 @@ export const DateInput = ({
   disabled,
   min,
   max,
-  id,
+  id: idProp,
   name,
 }: DateInputProps) => {
+  // Without an id the label isn't linked to the input.
+  const fallbackId = useId();
+  const id = idProp ?? fallbackId;
   const handle = (e: ChangeEvent<HTMLInputElement>) =>
     onChange(dateInputToIso(e.target.value));
   return (
@@ -89,9 +92,12 @@ export const DateTimeInput = ({
   disabled,
   min,
   max,
-  id,
+  id: idProp,
   name,
 }: DateTimeInputProps) => {
+  // Without an id the label isn't linked to the input.
+  const fallbackId = useId();
+  const id = idProp ?? fallbackId;
   const handle = (e: ChangeEvent<HTMLInputElement>) =>
     onChange(dateTimeLocalToIso(e.target.value));
   return (
@@ -128,9 +134,12 @@ export const TimeInput = ({
   disabled,
   min,
   max,
-  id,
+  id: idProp,
   name,
 }: TimeInputProps) => {
+  // Without an id the label isn't linked to the input.
+  const fallbackId = useId();
+  const id = idProp ?? fallbackId;
   const handle = (e: ChangeEvent<HTMLInputElement>) =>
     onChange(e.target.value || null);
   return (

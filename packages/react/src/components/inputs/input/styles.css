@@ -51,6 +51,13 @@
   box-shadow: 0 0 0 0.1875rem var(--border-shadow-color-active);
 }
 
+/* No opacity, unlike disabled: a read-only value keeps full text contrast. */
+.k-input[readonly]:not(:disabled) {
+  background-color: var(--background-color-dark);
+  color: var(--text-color-secondary);
+  cursor: default;
+}
+
 .k-input:disabled {
   background-color: var(--bg-color-disabled);
   color: var(--text-color-disabled);
@@ -58,9 +65,46 @@
   opacity: 0.6;
 }
 
+.k-input-clearable {
+  padding-right: 2.25rem;
+}
+
+.k-input-clear-button {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+.k-input-clear-button:hover {
+  color: var(--primary-color-text);
+}
+
+.k-input-clear-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.125rem var(--border-shadow-color-active);
+}
+
 .k-password-toggle-button {
   position: absolute;
-  right: 0.75rem;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  /* 24px hit area (WCAG 2.5.8) around the small eye icon. */
+  width: 1.5rem;
+  height: 1.5rem;
   background: none;
   border: none;
   cursor: pointer;
@@ -73,7 +117,7 @@
 }
 
 .k-password-toggle-button:hover {
-  color: var(--primary-color);
+  color: var(--primary-color-text);
 }
 
 .k-password-toggle-button:focus {

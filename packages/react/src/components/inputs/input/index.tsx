@@ -1,11 +1,11 @@
 "use client";
 
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import DropdownArrowButton from "../dropdownArrowButton/index.js";
+import { ReactNode, useCallback, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FieldShell from "../../forms/fieldShell/index.js";
 import { PropsWithSize } from "../../types.js";
-import { ReactNode, useState } from "react";
 import "./styles.css";
 
 interface InputProps extends PropsWithSize {
@@ -27,6 +27,8 @@ interface InputProps extends PropsWithSize {
 
   /** **_Optional_** if the field is disabled */
   disabled?: boolean;
+  /** **_Optional_** if the field is read-only: unlike `disabled`, it stays focusable and is submitted */
+  readOnly?: boolean;
   /** **_Optional_** if the field is a dropdown */
   dropDown?: boolean;
   /** **_Optional_** whether or not the drop down options are open */
@@ -73,6 +75,8 @@ interface InputProps extends PropsWithSize {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   /** **_Optional_** function that is called when the input is clicked */
   onClick?: React.MouseEventHandler<HTMLInputElement>;
+  /** **_Optional_** shows an × button at the end of a non-empty field; clear the value here. Sits at the right edge, so don't combine with `suffix` or `type="password"` */
+  onClear?: () => void;
 }
 
 const Input = (props: InputProps) => {
@@ -86,6 +90,31 @@ const Input = (props: InputProps) => {
     suffix,
   } = props;
   const [showPassword, setShowPassword] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { ref: forwardedRef } = props;
+
+  // Keep our own handle on the input (the clear button refocuses it) while
+  // still honouring a caller's `ref`.
+  const setRefs = useCallback(
+    (el: HTMLInputElement | null) => {
+      inputRef.current = el;
+      if (typeof forwardedRef === "function") forwardedRef(el);
+      else if (forwardedRef) forwardedRef.current = el;
+    },
+    [forwardedRef]
+  );
+
+  const showClear =
+    !!props.onClear &&
+    String(props.value ?? "") !== "" &&
+    !disabled &&
+    !props.readOnly;
+
+  const handleClear = () => {
+    props.onClear?.();
+    // The button unmounts once the field is empty; keep focus in the field.
+    inputRef.current?.focus();
+  };
 
   const inputId =
     props.id || `input-${Math.random().toString(36).substring(2, 9)}`;
@@ -102,6 +131,7 @@ const Input = (props: InputProps) => {
     "k-input",
     `k-input-${size}`,
     type === "password" && "k-input-password",
+    props.onClear && "k-input-clearable",
     hasAddon && "k-input-with-addon",
     prefix !== undefined && "k-input-with-prefix",
     suffix !== undefined && "k-input-with-suffix",
@@ -110,9 +140,11 @@ const Input = (props: InputProps) => {
     .join(" ");
 
   const renderAddon = (content: ReactNode, side: "prefix" | "suffix") => (
+    // Not aria-hidden: addons can be interactive (PhoneInput's country
+    // picker), and text like "$" or "USD" is useful context. Icons hide
+    // themselves.
     <span
       className={`k-input-addon k-input-addon-${side} k-input-addon-${size}`}
-      aria-hidden="true"
     >
       {content}
     </span>
@@ -140,7 +172,7 @@ const Input = (props: InputProps) => {
       >
         {prefix !== undefined && renderAddon(prefix, "prefix")}
         <input
-          ref={props.ref}
+          ref={setRefs}
           id={inputId}
           name={props.name}
           type={inputType}
@@ -152,6 +184,7 @@ const Input = (props: InputProps) => {
           autoFocus={props.autoFocus}
           autoComplete={props.autoComplete}
           disabled={disabled}
+          readOnly={props.readOnly}
           onChange={props.onChange}
           onFocus={props.onFocus}
           onBlur={props.onBlur}
@@ -159,6 +192,16 @@ const Input = (props: InputProps) => {
           onKeyDown={props.onKeyDown}
           className={inputClasses}
         />
+        {showClear && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="k-input-clear-button"
+            aria-label="Clear"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
+        )}
         {suffix !== undefined && renderAddon(suffix, "suffix")}
         {props.dropDown && (
           <DropdownArrowButton

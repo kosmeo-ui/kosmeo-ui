@@ -32,12 +32,14 @@ const InfiniteScrollTable = <TData extends object>(
             <Checkbox
               checked={props.allSelected}
               onChange={props.onSelectAll}
+              aria-label="Select all rows"
             />
           ),
           cell: (row) => (
             <Checkbox
               checked={props.selectedRows.has(row.index) || props.allSelected}
               onChange={() => props.onRowSelect(row.index)}
+              aria-label={`Select row ${row.index + 1}`}
             />
           ),
         };

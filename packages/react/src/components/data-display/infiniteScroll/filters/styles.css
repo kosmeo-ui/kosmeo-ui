@@ -26,6 +26,10 @@
   min-width: 15rem;
 }
 
+.k-search-filter {
+  width: 14rem;
+}
+
 .k-range-filter-menu-column {
   display: flex;
   flex-direction: column;

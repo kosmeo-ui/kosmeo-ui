@@ -81,12 +81,14 @@ h6 {
   --primary-color-active: #141f6c;
   --primary-color-background: #3d52db;
   --primary-color-background-light: #f0f2ff;
+  /* Primary as text (links, active tabs) on page and card surfaces. */
+  --primary-color-text: #17257d;
 
-  /* Secondary Colors */
-  --secondary-color: #858585;
-  --secondary-color-hover: #8c8c8c;
-  --secondary-color-active: #808080;
-  --secondary-color-background: #a6a6a6;
+  /* Secondary Colors — dark enough for white text (4.5:1) */
+  --secondary-color: #6b6b6b;
+  --secondary-color-hover: #757575;
+  --secondary-color-active: #616161;
+  --secondary-color-background: #6b6b6b;
 
   /* Light Colors */
   --light-color: #fafafa;
@@ -101,18 +103,22 @@ h6 {
   --warning-color-background: #ffd24d;
   --warning-color-background-light: #fff8e1;
   --warning-color-text: #92400e;
+  /* Text on a warning fill. */
+  --warning-color-contrast: #333;
 
   /* Danger Colors */
   --danger-color: #dc3545;
   --danger-color-hover: #e23243;
   --danger-color-active: #d92638;
-  --danger-color-background: #e46774;
+  --danger-color-background: #c42b3b;
+  /* Danger as text (field errors) on page and card surfaces. */
+  --danger-color-text: #b92535;
 
   /* Success Colors */
   --success-color: #198754;
   --success-color-hover: #1c975d;
   --success-color-active: #188150;
-  --success-color-background: #24c278;
+  --success-color-background: #157347;
   --success-color-background-light: #e8f5e8;
 
   /* Background Colors */
@@ -136,7 +142,7 @@ h6 {
   --text-color: #333;
   --text-color-secondary: #666;
   --text-color-light: white;
-  --text-color-link: #007bff;
+  --text-color-link: #0062cc;
   --text-size-sm: 0.875rem;
   --text-size-md: 1rem;
   --text-size-lg: 1.125rem;
@@ -161,11 +167,12 @@ h6 {
   --primary-color-active: #3d4f99;
   --primary-color-background: #4a5fb5;
   --primary-color-background-light: #1c2240;
+  --primary-color-text: #9aabf2;
 
   /* Secondary Colors */
-  --secondary-color: #8a8f99;
-  --secondary-color-hover: #9aa0aa;
-  --secondary-color-active: #7a7f88;
+  --secondary-color: #646a75;
+  --secondary-color-hover: #6e7480;
+  --secondary-color-active: #5a606a;
   --secondary-color-background: #4a4f5a;
 
   /* Light Colors — surface-toned (used for "light" variant buttons/pills) */
@@ -181,17 +188,19 @@ h6 {
   --warning-color-background: #4d3a00;
   --warning-color-background-light: #2e2200;
   --warning-color-text: #f5c542;
+  --warning-color-contrast: #15181f;
 
   /* Danger Colors */
   --danger-color: #c94250;
   --danger-color-hover: #d35261;
   --danger-color-active: #b53847;
   --danger-color-background: #4a1820;
+  --danger-color-text: #ff8f9a;
 
   /* Success Colors */
-  --success-color: #2a9560;
-  --success-color-hover: #32a66c;
-  --success-color-active: #248355;
+  --success-color: #1f7a4e;
+  --success-color-hover: #238556;
+  --success-color-active: #1b6d45;
   --success-color-background: #133e2c;
   --success-color-background-light: #0d2419;
 
@@ -383,4 +392,18 @@ code {
 }
 .k-flex-wrap {
   flex-wrap: wrap;
+}
+
+/* Visually hidden, still read by screen readers. Global so any component can
+   use it without depending on another component's stylesheet. */
+.k-sr-only {
+  position: absolute;
+  width: 0.0625rem;
+  height: 0.0625rem;
+  padding: 0;
+  margin: -0.0625rem;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

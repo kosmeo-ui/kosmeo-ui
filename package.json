@@ -1,18 +1,22 @@
 {
   "name": "kosmeo-ui",
   "version": "0.1.0",
-  "description": "kosmeo UI packages \u2014 React components themed with CSS variables, light and dark",
+  "description": "kosmeo UI packages — React components themed with CSS variables, light and dark",
   "author": "Aaron Leman",
   "license": "Apache-2.0",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "apps/*"
   ],
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@nx/js": "22.7.5",
     "@types/node": "^25.9.2",
     "eslint": "^9.39.4",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-check-file": "^3.3.2",
+    "eslint-plugin-import": "^2.32.0",
     "nx": "22.7.5",
     "prettier": "^3.9.10",
     "tsx": "^4.22.4",
@@ -29,12 +33,13 @@
     "singleQuote": false
   },
   "scripts": {
-    "format": "prettier --write \"packages/*/src/**/*.{ts,tsx,js,jsx,css}\" scripts",
-    "format:check": "prettier --check \"packages/*/src/**/*.{ts,tsx,js,jsx,css}\" scripts",
-    "lint": "eslint packages/ scripts/",
+    "format": "prettier --write \"{packages,apps}/*/src/**/*.{ts,tsx,js,jsx,css}\" scripts",
+    "format:check": "prettier --check \"{packages,apps}/*/src/**/*.{ts,tsx,js,jsx,css}\" scripts",
+    "lint": "eslint packages/ apps/ scripts/",
     "sort-imports": "tsx scripts/sort-imports.ts",
     "sort-imports:check": "tsx scripts/sort-imports.ts --check",
     "build": "nx run-many -t build",
+    "demo": "npm run dev -w @kosmeo-ui/demo",
     "check": "nx run-many -t check",
     "version-plan": "nx release plan"
   }

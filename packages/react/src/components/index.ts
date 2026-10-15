@@ -39,6 +39,7 @@ export { default as RadioGroup } from "./inputs/radioGroup/index.js";
 export { default as ListRow } from "./data-display/listRow/index.js";
 export { default as TagCard } from "./data-display/tagCard/index.js";
 export { default as Stepper } from "./navigation/stepper/index.js";
+export { default as Pagination } from "./navigation/pagination/index.js";
 export { default as Typeahead } from "./inputs/typeahead/index.js";
 export { default as AuthPage } from "./layout/authPage/index.js";
 export { default as Checkbox } from "./inputs/checkbox/index.js";
@@ -120,6 +121,7 @@ export type {
   AddressBlockProps,
   AddressBlockAddress,
 } from "./data-display/addressBlock/index.js";
+export type { PaginationProps } from "./navigation/pagination/index.js";
 export type {
   StepperProps,
   StepperStep,
