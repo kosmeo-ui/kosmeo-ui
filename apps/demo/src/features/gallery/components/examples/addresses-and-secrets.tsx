@@ -29,11 +29,7 @@ export const AddressesAndSecrets = () => (
         hideContact
       />
     </FormGrid>
-    <SecretDisplay
-      value="kdemo_not_a_real_key_7f3a9c2e"
-      copyable
-      revealable
-    />
+    <SecretDisplay value="kdemo_not_a_real_key_7f3a9c2e" copyable revealable />
     <RecoveryCodeGrid
       codes={[
         "k7f2-9qxa",
