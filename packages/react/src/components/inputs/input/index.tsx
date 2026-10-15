@@ -1,8 +1,8 @@
 "use client";
 
 import { faEye, faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { ReactNode, useCallback, useId, useRef, useState } from "react";
 import DropdownArrowButton from "../dropdownArrowButton/index.js";
-import { ReactNode, useCallback, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FieldShell from "../../forms/fieldShell/index.js";
 import { PropsWithSize } from "../../types.js";
@@ -116,8 +116,8 @@ const Input = (props: InputProps) => {
     inputRef.current?.focus();
   };
 
-  const inputId =
-    props.id || `input-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const inputId = props.id || `input-${generatedId}`;
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

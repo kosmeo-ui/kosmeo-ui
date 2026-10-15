@@ -2,7 +2,7 @@
 
 import FieldShell from "../../forms/fieldShell/index.js";
 import { PropsWithSize } from "../../types.js";
-import { useLayoutEffect } from "react";
+import { useId, useLayoutEffect } from "react";
 import "./styles.css";
 
 export interface SelectOption<T = string> {
@@ -36,8 +36,8 @@ interface SelectProps<T = string> extends PropsWithSize {
 const Select = <T extends string = string>(props: SelectProps<T>) => {
   const { size = "md", disabled = false, required = false } = props;
 
-  const selectId =
-    props.id || `select-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const selectId = props.id || `select-${generatedId}`;
 
   const selectClasses = ["k-select", `k-select-${size}`]
     .filter(Boolean)

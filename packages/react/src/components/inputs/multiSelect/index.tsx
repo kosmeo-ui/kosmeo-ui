@@ -1,9 +1,9 @@
 "use client";
 
+import { useState, useRef, useEffect, useId, useMemo } from "react";
 import DropdownArrowButton from "../dropdownArrowButton/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useOutsideClick from "../../../hooks/useOutsideClick.js";
-import { useState, useRef, useEffect, useMemo } from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import FieldShell from "../../forms/fieldShell/index.js";
 import { DropDownSection } from "./dropDown.js";
@@ -59,8 +59,8 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
   const [filteredOptions, setFilteredOptions] = useState(props.options);
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const componentId =
-    props.id || `multiselect-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const componentId = props.id || `multiselect-${generatedId}`;
 
   // Filter options based on search term
   useEffect(() => {

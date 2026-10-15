@@ -1,8 +1,8 @@
 "use client";
 
 import FieldShell from "../../forms/fieldShell/index.js";
+import { useEffect, useId, useRef } from "react";
 import { PropsWithSize } from "../../types.js";
-import { useEffect, useRef } from "react";
 import "./styles.css";
 
 interface TextAreaProps extends PropsWithSize {
@@ -57,8 +57,8 @@ const TextArea = (props: TextAreaProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const internalRef = props.ref || textareaRef;
 
-  const inputId =
-    props.id || `input-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const inputId = props.id || `input-${generatedId}`;
 
   const adjustHeight = () => {
     if (!autoExpand) return;

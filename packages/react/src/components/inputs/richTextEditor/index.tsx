@@ -4,10 +4,10 @@ import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
 import MandatoryAsterisk from "../../forms/requiredAsterisk/index.js";
 import IconButton from "../../buttons/iconButton/index.js";
 import Tooltip from "../../feedback/tooltip/index.js";
+import { useState, useEffect, useId } from "react";
 import { Placeholder } from "@tiptap/extensions";
 import { PropsWithSize } from "../../types.js";
 import StarterKit from "@tiptap/starter-kit";
-import { useState, useEffect } from "react";
 import "./styles.css";
 import {
   faUnderline,
@@ -50,11 +50,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   const [charCount, setCharCount] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Stable across renders: the editor reads labelId once, when it's created.
-  const [generatedId] = useState(
-    () => `richtext-${Math.random().toString(36).substring(2, 9)}`
-  );
-  const fieldId = props.id || generatedId;
+  const generatedId = useId();
+  const fieldId = props.id || `richtext-${generatedId}`;
   const labelId = `${fieldId}-label`;
 
   const cleanHtml = (html: string): string | undefined => {
