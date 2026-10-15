@@ -73,6 +73,9 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   };
 
   const editor = useEditor({
+    // A server render has no editor, so the first client render mustn't
+    // either, or hydration mismatches. TipTap creates it in an effect.
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       Placeholder.configure({
@@ -107,16 +110,16 @@ const RichTextEditor = (props: RichTextEditorProps) => {
 
   const editorState = useEditorState({
     editor,
-    selector: ({ editor }) => {
-      return {
-        isBold: editor.isActive("bold"),
-        isItalic: editor.isActive("italic"),
-        isUnderlined: editor.isActive("underline"),
-        isBulletedList: editor.isActive("bulletList"),
-        isNumberedList: editor.isActive("orderedList"),
-      };
-    },
+    selector: ({ editor }) => ({
+      isBold: editor?.isActive("bold") ?? false,
+      isItalic: editor?.isActive("italic") ?? false,
+      isUnderlined: editor?.isActive("underline") ?? false,
+      isBulletedList: editor?.isActive("bulletList") ?? false,
+      isNumberedList: editor?.isActive("orderedList") ?? false,
+    }),
   });
+
+  const toolbarDisabled = !editor || showHtml || disabled;
 
   useEffect(() => {
     if (editor) {
@@ -175,33 +178,33 @@ const RichTextEditor = (props: RichTextEditorProps) => {
             <IconButton
               icon={faBold}
               aria-label="Bold"
-              aria-pressed={editorState.isBold}
+              aria-pressed={editorState?.isBold}
               size={size}
-              variant={editorState.isBold ? "primary" : "secondary"}
-              onClick={() => editor.chain().focus().toggleBold().run()}
-              disabled={showHtml || disabled}
+              variant={editorState?.isBold ? "primary" : "secondary"}
+              onClick={() => editor?.chain().focus().toggleBold().run()}
+              disabled={toolbarDisabled}
             />
           </Tooltip>
           <Tooltip content="Italic" position="top">
             <IconButton
               icon={faItalic}
               aria-label="Italic"
-              aria-pressed={editorState.isItalic}
+              aria-pressed={editorState?.isItalic}
               size={size}
-              variant={editorState.isItalic ? "primary" : "secondary"}
-              onClick={() => editor.chain().focus().toggleItalic().run()}
-              disabled={showHtml || disabled}
+              variant={editorState?.isItalic ? "primary" : "secondary"}
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
+              disabled={toolbarDisabled}
             />
           </Tooltip>
           <Tooltip content="Underline" position="top">
             <IconButton
               icon={faUnderline}
               aria-label="Underline"
-              aria-pressed={editorState.isUnderlined}
+              aria-pressed={editorState?.isUnderlined}
               size={size}
-              variant={editorState.isUnderlined ? "primary" : "secondary"}
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              disabled={showHtml || disabled}
+              variant={editorState?.isUnderlined ? "primary" : "secondary"}
+              onClick={() => editor?.chain().focus().toggleUnderline().run()}
+              disabled={toolbarDisabled}
             />
           </Tooltip>
           <div className="k-toolbar-separator"></div>
@@ -209,22 +212,22 @@ const RichTextEditor = (props: RichTextEditorProps) => {
             <IconButton
               icon={faListUl}
               aria-label="Bullet list"
-              aria-pressed={editorState.isBulletedList}
+              aria-pressed={editorState?.isBulletedList}
               size={size}
-              variant={editorState.isBulletedList ? "primary" : "secondary"}
-              onClick={() => editor.chain().focus().toggleBulletList().run()}
-              disabled={showHtml || disabled}
+              variant={editorState?.isBulletedList ? "primary" : "secondary"}
+              onClick={() => editor?.chain().focus().toggleBulletList().run()}
+              disabled={toolbarDisabled}
             />
           </Tooltip>
           <Tooltip content="Numbered List" position="top">
             <IconButton
               icon={faListOl}
               aria-label="Numbered list"
-              aria-pressed={editorState.isNumberedList}
+              aria-pressed={editorState?.isNumberedList}
               size={size}
-              variant={editorState.isNumberedList ? "primary" : "secondary"}
-              onClick={() => editor.chain().focus().toggleOrderedList().run()}
-              disabled={showHtml || disabled}
+              variant={editorState?.isNumberedList ? "primary" : "secondary"}
+              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+              disabled={toolbarDisabled}
             />
           </Tooltip>
           <div className="k-toolbar-separator"></div>
@@ -236,7 +239,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
               variant="secondary"
               onClick={() => {
                 editor
-                  .chain()
+                  ?.chain()
                   .focus()
                   .selectAll()
                   .clearNodes()
@@ -244,7 +247,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
                   .setTextSelection(0)
                   .run();
               }}
-              disabled={showHtml || disabled}
+              disabled={toolbarDisabled}
             />
           </Tooltip>
           <div className="k-toolbar-separator"></div>
@@ -258,7 +261,7 @@ const RichTextEditor = (props: RichTextEditorProps) => {
               size={size}
               variant={showHtml ? "primary" : "secondary"}
               onClick={() => setShowHtml(!showHtml)}
-              disabled={disabled}
+              disabled={!editor || disabled}
             />
           </Tooltip>
         </div>

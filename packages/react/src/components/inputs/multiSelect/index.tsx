@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useRef, useEffect, useId, useMemo } from "react";
 import DropdownArrowButton from "../dropdownArrowButton/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useOutsideClick from "../../../hooks/useOutsideClick.js";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { useState, useRef, useEffect, useId } from "react";
 import FieldShell from "../../forms/fieldShell/index.js";
 import { DropDownSection } from "./dropDown.js";
 import { PropsWithSize } from "../../types.js";
+import { itemKeys } from "./utils.js";
 import "./styles.css";
 
 interface MultiSelectProps<T> extends PropsWithSize {
@@ -167,31 +168,27 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
     props.onChange([]);
   };
 
-  const selectedItems = useMemo(() => {
-    return value.map((v) => {
-      const key = Math.random().toString(36).slice(2);
-      return (
-        <div key={key} className="k-multiselect-selected-item">
-          <span className="k-multiselect-selected-item-label">
-            {String(v[props.labelKey])}
-          </span>
-          {!disabled && (
-            <button
-              type="button"
-              className="k-multiselect-selected-item-remove"
-              aria-label={`Remove ${String(v[props.labelKey])}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleOptionToggle(v);
-              }}
-            >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-          )}
-        </div>
-      );
-    });
-  }, [value]);
+  const selectedKeys = itemKeys(value, props.labelKey);
+  const selectedItems = value.map((v, index) => (
+    <div key={selectedKeys[index]} className="k-multiselect-selected-item">
+      <span className="k-multiselect-selected-item-label">
+        {String(v[props.labelKey])}
+      </span>
+      {!disabled && (
+        <button
+          type="button"
+          className="k-multiselect-selected-item-remove"
+          aria-label={`Remove ${String(v[props.labelKey])}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOptionToggle(v);
+          }}
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
+      )}
+    </div>
+  ));
 
   return (
     <div ref={containerRef}>

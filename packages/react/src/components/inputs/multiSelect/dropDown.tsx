@@ -5,7 +5,7 @@ import IconButton from "../../buttons/iconButton/index.js";
 import Tooltip from "../../feedback/tooltip/index.js";
 import { PropsWithSize } from "../../types.js";
 import Input from "../input/index.js";
-import { useMemo } from "react";
+import { itemKeys } from "./utils.js";
 import {
   faCheckDouble,
   faXmark,
@@ -28,16 +28,16 @@ interface DropDownProps<T> extends PropsWithSize {
 export const DropDownSection = <T,>(props: DropDownProps<T>) => {
   const { size = "md", value = [] } = props;
 
-  const list = useMemo(() => {
-    return props.filteredOptions.length > 0 ? (
-      props.filteredOptions.map((option) => {
+  const optionKeys = itemKeys(props.filteredOptions, props.labelKey);
+  const list =
+    props.filteredOptions.length > 0 ? (
+      props.filteredOptions.map((option, index) => {
         const isSelected = value.find(
           (v) => v[props.labelKey] === option[props.labelKey]
         );
-        const key = Math.random().toString(36).slice(2);
         return (
           <li
-            key={key}
+            key={optionKeys[index]}
             className={`k-multiselect-option k-multiselect-option-${size} ${
               isSelected ? "k-multiselect-option-selected" : ""
             }`}
@@ -62,7 +62,6 @@ export const DropDownSection = <T,>(props: DropDownProps<T>) => {
           : "No options found"}
       </li>
     );
-  }, [props.filteredOptions, value]);
 
   return (
     <div className={`k-multiselect-dropdown k-multiselect-dropdown-${size}`}>

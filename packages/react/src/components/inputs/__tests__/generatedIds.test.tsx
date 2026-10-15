@@ -31,19 +31,13 @@ const fields: Field[] = [
     () => <MultiSelect label="Field" options={[]} labelKey="name" />,
   ],
   ["FileUpload", () => <FileUpload label="Field" onFileSelect={() => {}} />],
-];
-
-// TipTap's editor is null during a server render, which RichTextEditor doesn't
-// handle yet, so it's only checked on the client.
-const richText: Field = [
-  "RichTextEditor",
-  () => <RichTextEditor label="Field" />,
+  ["RichTextEditor", () => <RichTextEditor label="Field" />],
 ];
 
 const ids = (root: Element) =>
   Array.from(root.querySelectorAll("[id]"), (el) => el.id);
 
-describe.each([...fields, richText])("%s generated id", (_name, element) => {
+describe.each(fields)("%s generated id", (_name, element) => {
   it("is stable across re-renders", () => {
     const { container, rerender } = render(element());
     const before = ids(container);
