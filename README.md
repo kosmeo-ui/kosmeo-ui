@@ -17,6 +17,7 @@ UI packages for React apps.
 npm install
 npm run build                 # every package, through Nx
 npm run check                 # type-check
+npm run demo                  # demo app (apps/demo) on the Vite dev server
 ```
 
 Before committing:
