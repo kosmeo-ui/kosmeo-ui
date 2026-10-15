@@ -75,6 +75,12 @@ interface InputProps extends PropsWithSize {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   /** **_Optional_** function that is called when the input is clicked */
   onClick?: React.MouseEventHandler<HTMLInputElement>;
+  /** **_Optional_** `combobox` when the input drives a popup list of suggestions */
+  role?: "combobox";
+  /** **_Optional_** with `role="combobox"`, whether its popup is showing */
+  "aria-expanded"?: boolean;
+  /** **_Optional_** with `role="combobox"`, how suggestions relate to what's typed */
+  "aria-autocomplete"?: "list" | "inline" | "both" | "none";
   /** **_Optional_** accessible name when there's no visible `label` */
   "aria-label"?: string;
   /** **_Optional_** id of the element (e.g. a listbox) this input controls */
@@ -196,6 +202,9 @@ const Input = (props: InputProps) => {
           onBlur={props.onBlur}
           onClick={props.onClick}
           onKeyDown={props.onKeyDown}
+          role={props.role}
+          aria-expanded={props["aria-expanded"]}
+          aria-autocomplete={props["aria-autocomplete"]}
           aria-label={props["aria-label"]}
           aria-controls={props["aria-controls"]}
           aria-activedescendant={props["aria-activedescendant"]}
