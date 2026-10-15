@@ -110,6 +110,14 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
     comboboxRef.current?.focus();
   };
 
+  // Closes when focus moves to something outside, such as on Tab. A null
+  // relatedTarget (a click on nothing focusable) is left to useOutsideClick,
+  // so a click inside the dropdown doesn't close it.
+  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+    const next = e.relatedTarget;
+    if (next && !containerRef.current?.contains(next)) setIsOpen(false);
+  };
+
   const handleComboboxKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (disabled || isOpen) return;
     if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
@@ -227,7 +235,7 @@ const MultiSelect = <T,>(props: MultiSelectProps<T>) => {
   ));
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} onBlur={handleBlur}>
       <FieldShell
         label={props.label}
         required={required}

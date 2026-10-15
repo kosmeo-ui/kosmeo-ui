@@ -313,5 +313,35 @@ describe("MultiSelect", () => {
       expect(screen.queryAllByRole("option")).toHaveLength(0);
       expect(screen.getByRole("status")).toHaveTextContent("No options found");
     });
+
+    it("closes when focus moves outside it", async () => {
+      render(
+        <>
+          <MultiSelect label="Fruit" options={fruits} labelKey="name" />
+          <button>Next field</button>
+        </>
+      );
+      screen.getByRole("combobox").focus();
+      await userEvent.keyboard("{Enter}");
+
+      await userEvent.tab();
+      expect(screen.getByRole("button", { name: "Select all" })).toHaveFocus();
+      expect(screen.getByRole("listbox")).toBeInTheDocument();
+
+      await userEvent.tab();
+      expect(screen.getByRole("button", { name: "Next field" })).toHaveFocus();
+      expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+      expect(screen.getByRole("combobox")).toHaveAttribute(
+        "aria-expanded",
+        "false"
+      );
+    });
+
+    it("stays open when a non-focusable part of the dropdown is clicked", async () => {
+      render(<MultiSelect label="Fruit" options={fruits} labelKey="name" />);
+      await open();
+      await userEvent.click(document.querySelector(".k-multiselect-dropdown")!);
+      expect(screen.getByRole("listbox")).toBeInTheDocument();
+    });
   });
 });
