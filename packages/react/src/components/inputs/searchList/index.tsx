@@ -5,9 +5,9 @@ import useDebouncedValue from "../../../hooks/useDebouncedValue.js";
 import useScrollIntoView from "../../../hooks/useScrollIntoView.js";
 import useListKeyboard from "../../../hooks/useListKeyboard.js";
 import useOutsideClick from "../../../hooks/useOutsideClick.js";
+import { useEffect, useId, useState, useRef } from "react";
 import { UseQueryResult } from "@tanstack/react-query";
 import Spinner from "../../feedback/spinner/index.js";
-import { useEffect, useState, useRef } from "react";
 import Portal from "../../overlays/portal/index.js";
 import { PropsWithSize } from "../../types.js";
 import Input from "../input/index.js";
@@ -68,6 +68,8 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const listboxId = `${useId()}-listbox`;
+  const optionId = (index: number) => `${listboxId}-option-${index}`;
   const { anchorRef: inputWrapperRef, position: dropdownPos } =
     useFloatingPosition({ isOpen });
 
@@ -127,18 +129,26 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
     setHighlightedIndex(-1);
   };
 
-  const activeOptions =
-    searchValue === "" && inputValue.length < 3
-      ? props.initialOptions
-      : query.data;
+  const isLoading = isTyping || query.isLoading;
+  const showsInitial = searchValue === "" && inputValue.length < 3;
+  // The options on screen; the keyboard works only through these, never
+  // through stale results hidden behind the spinner.
+  const options =
+    (isLoading
+      ? undefined
+      : showsInitial
+        ? props.initialOptions
+        : query.data) ?? [];
+  const showList = isOpen && !!dropdownPos;
+  const hasOptions = options.length > 0;
 
   const handleKeyDown = useListKeyboard({
-    isOpen: isOpen && !!activeOptions,
-    length: activeOptions?.length ?? 0,
+    isOpen: isOpen && hasOptions,
+    length: options.length,
     highlightedIndex,
     setHighlightedIndex,
     onSelect: (index) => {
-      if (activeOptions?.[index]) handleOptionClick(activeOptions[index]);
+      if (options[index]) handleOptionClick(options[index]);
     },
     onClose: () => setIsOpen(false),
   });
@@ -167,110 +177,93 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
 
   optionRefs.current = [];
 
-  const dropdownList =
-    isOpen && dropdownPos ? (
-      <ul
-        ref={listRef}
-        className={`k-search-list-dropdown k-search-list-dropdown-portal ${
-          longDropDown
-            ? "k-search-list-dropdown-large"
-            : "k-search-list-dropdown-small"
-        }`}
-        style={{
-          position: "fixed",
-          top: dropdownPos.top,
-          left: dropdownPos.left,
-          width: dropdownPos.width,
-        }}
-      >
-        {isTyping || query.isLoading ? (
-          <li className="k-search-list-loading">
-            <Spinner size="sm" />
-          </li>
-        ) : searchValue === "" && inputValue.length < 3 ? (
-          props.initialOptions && props.initialOptions.length > 0 ? (
-            <>
-              {props.initialOptions.map((option, index) => {
-                const rendered = props.renderOption
-                  ? props.renderOption(option)
-                  : null;
-                return (
-                  <li
-                    ref={(el) => {
-                      optionRefs.current[index] = el;
-                    }}
-                    key={index}
-                    className={`k-search-list-option k-search-list-option-${size} ${
-                      index === highlightedIndex
-                        ? "k-search-list-option-highlighted"
-                        : ""
-                    }`}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleOptionClick(option, e);
-                    }}
-                    onMouseOver={() => setHighlightedIndex(index)}
-                  >
-                    {rendered ? rendered.node : String(option[props.labelKey])}
-                  </li>
-                );
-              })}
-              <li className={`k-search-list-info k-search-list-info-${size}`}>
-                Type to filter
+  const status = isLoading ? (
+    <Spinner size="sm" />
+  ) : showsInitial ? (
+    "Start typing to search"
+  ) : (
+    "No results found"
+  );
+
+  const dropdownList = showList ? (
+    <ul
+      ref={listRef}
+      // With no options the popup only holds a status message.
+      {...(hasOptions
+        ? {
+            id: listboxId,
+            role: "listbox",
+            "aria-label": props.label ?? props.placeholder ?? "Type to search",
+          }
+        : { role: "presentation" })}
+      className={`k-search-list-dropdown k-search-list-dropdown-portal ${
+        longDropDown
+          ? "k-search-list-dropdown-large"
+          : "k-search-list-dropdown-small"
+      }`}
+      style={{
+        position: "fixed",
+        top: dropdownPos.top,
+        left: dropdownPos.left,
+        width: dropdownPos.width,
+      }}
+    >
+      {hasOptions ? (
+        <>
+          {options.map((option, index) => {
+            const rendered = props.renderOption
+              ? props.renderOption(option)
+              : null;
+            return (
+              <li
+                ref={(el) => {
+                  optionRefs.current[index] = el;
+                }}
+                key={index}
+                id={optionId(index)}
+                role="option"
+                aria-selected={index === highlightedIndex}
+                className={`k-search-list-option k-search-list-option-${size} ${
+                  index === highlightedIndex
+                    ? "k-search-list-option-highlighted"
+                    : ""
+                }`}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleOptionClick(option, e);
+                }}
+                onMouseOver={() => setHighlightedIndex(index)}
+              >
+                {rendered ? rendered.node : String(option[props.labelKey])}
               </li>
-            </>
-          ) : (
-            <li
-              className={`k-search-list-no-results k-search-list-no-results-${size}`}
-            >
-              Start typing to search
-            </li>
-          )
-        ) : query.data && query.data.length > 0 ? (
-          <>
-            {query.data.map((option, index) => {
-              const rendered = props.renderOption
-                ? props.renderOption(option)
-                : null;
-              return (
-                <li
-                  ref={(el) => {
-                    optionRefs.current[index] = el;
-                  }}
-                  key={index}
-                  className={`k-search-list-option k-search-list-option-${size} ${
-                    index === highlightedIndex
-                      ? "k-search-list-option-highlighted"
-                      : ""
-                  }`}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    handleOptionClick(option, e);
-                  }}
-                  onMouseOver={() => setHighlightedIndex(index)}
-                >
-                  {rendered ? rendered.node : String(option[props.labelKey])}
-                </li>
-              );
-            })}
-            <li className={`k-search-list-info k-search-list-info-${size}`}>
-              Continue typing to filter
-            </li>
-          </>
-        ) : (
+            );
+          })}
+          {/* A visual hint; a listbox may only contain options. */}
           <li
-            className={`k-search-list-no-results k-search-list-no-results-${size}`}
+            className={`k-search-list-info k-search-list-info-${size}`}
+            aria-hidden="true"
           >
-            No results found
+            {showsInitial ? "Type to filter" : "Continue typing to filter"}
           </li>
-        )}
-      </ul>
-    ) : null;
+        </>
+      ) : isLoading ? (
+        <li className="k-search-list-loading">{status}</li>
+      ) : (
+        <li
+          role="status"
+          className={`k-search-list-no-results k-search-list-no-results-${size}`}
+        >
+          {status}
+        </li>
+      )}
+    </ul>
+  ) : null;
 
   return (
     <div className="k-search-list-container" ref={dropdownRef}>
       <div ref={inputWrapperRef}>
         <Input
+          id={props.id}
           label={props.label}
           required={required}
           disabled={disabled}
@@ -278,6 +271,7 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
           onChange={(e) => {
             const newValue = e.target.value;
             setInputValue(newValue);
+            setHighlightedIndex(-1);
           }}
           onKeyDown={handleKeyDown}
           onFocus={handleInputFocus}
@@ -286,6 +280,15 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
           dropDown={true}
           isOpen={isOpen}
           size={size}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={showList}
+          aria-controls={showList && hasOptions ? listboxId : undefined}
+          aria-activedescendant={
+            showList && hasOptions && highlightedIndex > -1
+              ? optionId(highlightedIndex)
+              : undefined
+          }
         />
       </div>
       <Portal>{dropdownList}</Portal>
