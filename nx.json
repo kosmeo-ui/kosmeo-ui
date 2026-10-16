@@ -12,7 +12,10 @@
     "production": [
       "default",
       "!{projectRoot}/**/*.spec.ts",
-      "!{projectRoot}/**/*.test.ts"
+      "!{projectRoot}/**/*.test.ts",
+      "!{projectRoot}/**/__tests__/**",
+      "!{projectRoot}/vitest.*.ts",
+      "!{projectRoot}/tsconfig.spec.json"
     ]
   },
   "targetDefaults": {
@@ -33,6 +36,13 @@
       "inputs": [
         "default",
         "^default"
+      ],
+      "cache": true
+    },
+    "test": {
+      "inputs": [
+        "default",
+        "^production"
       ],
       "cache": true
     }

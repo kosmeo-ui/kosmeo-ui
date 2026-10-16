@@ -21,6 +21,18 @@ button.k-badge {
   opacity: 0.85;
 }
 
+.k-badge-action {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
 .k-badge-start-icon {
   display: inline-flex;
   align-items: center;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import "./styles.css";
 
 interface SwitchProps {
@@ -21,8 +22,8 @@ const Switch = (props: SwitchProps) => {
     size = "md",
   } = props;
 
-  const inputId =
-    props.id || `switch-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const inputId = props.id || `switch-${generatedId}`;
 
   return (
     <div className={`k-switch-container k-switch-${labelLocation}`}>

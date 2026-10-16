@@ -41,6 +41,7 @@
     "build": "nx run-many -t build",
     "demo": "npm run dev -w @kosmeo-ui/demo",
     "check": "nx run-many -t check",
-    "version-plan": "nx release plan"
+    "version-plan": "nx release plan",
+    "test": "nx run-many -t test"
   }
 }

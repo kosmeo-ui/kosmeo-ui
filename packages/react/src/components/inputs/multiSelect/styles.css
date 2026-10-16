@@ -263,3 +263,8 @@
   font-style: italic;
   padding: 1rem;
 }
+
+.k-multiselect-option-highlighted {
+  background-color: var(--background-color-hover);
+  box-shadow: inset 0 0 0 0.125rem var(--border-color-active);
+}

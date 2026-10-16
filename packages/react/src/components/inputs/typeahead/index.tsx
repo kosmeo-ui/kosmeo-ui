@@ -1,10 +1,10 @@
 "use client";
 
 import useFloatingPosition from "../../../hooks/useFloatingPosition.js";
+import { useEffect, useId, useRef, useState, ReactNode } from "react";
 import useScrollIntoView from "../../../hooks/useScrollIntoView.js";
 import useListKeyboard from "../../../hooks/useListKeyboard.js";
 import useOutsideClick from "../../../hooks/useOutsideClick.js";
-import { useEffect, useRef, useState, ReactNode } from "react";
 import Portal from "../../overlays/portal/index.js";
 import { PropsWithSize } from "../../types.js";
 import Input from "../input/index.js";
@@ -111,6 +111,8 @@ const Typeahead = <T,>(props: TypeaheadProps<T>) => {
   const isSelectingOption = useRef(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const listboxId = `${useId()}-listbox`;
+  const optionId = (index: number) => `${listboxId}-option-${index}`;
   const { anchorRef: inputWrapperRef, position: dropdownPos } =
     useFloatingPosition({ isOpen });
 
@@ -198,6 +200,9 @@ const Typeahead = <T,>(props: TypeaheadProps<T>) => {
     displayCount,
     filteredOptions.length,
     displayedOptions,
+    // The list mounts a render after opening, once it has a position; without
+    // this, nothing else may change then and the observer never attaches.
+    !!dropdownPos,
   ]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -284,62 +289,78 @@ const Typeahead = <T,>(props: TypeaheadProps<T>) => {
   // Reset the refs array before each render
   optionRefs.current = [];
 
-  const dropdownList =
-    isOpen && dropdownPos ? (
-      <ul
-        ref={listRef}
-        className={`k-typeahead-options-list k-typeahead-options-list-portal ${
-          longDropDown
-            ? "k-typeahead-options-list-large"
-            : "k-typeahead-options-list-small"
-        }`}
-        style={{
-          position: "fixed",
-          top: dropdownPos.top,
-          left: dropdownPos.left,
-          width: dropdownPos.width,
-        }}
-      >
-        {displayedOptions.length > 0 ? (
-          <>
-            {displayedOptions.map((option, index) => (
+  const hasOptions = displayedOptions.length > 0;
+  const showList = isOpen && !!dropdownPos;
+  const dropdownList = showList ? (
+    <ul
+      ref={listRef}
+      // With no options the popup only holds a status message.
+      {...(hasOptions
+        ? {
+            id: listboxId,
+            role: "listbox",
+            "aria-label": props.label ?? props.placeholder,
+          }
+        : { role: "presentation" })}
+      className={`k-typeahead-options-list k-typeahead-options-list-portal ${
+        longDropDown
+          ? "k-typeahead-options-list-large"
+          : "k-typeahead-options-list-small"
+      }`}
+      style={{
+        position: "fixed",
+        top: dropdownPos.top,
+        left: dropdownPos.left,
+        width: dropdownPos.width,
+      }}
+    >
+      {hasOptions ? (
+        <>
+          {displayedOptions.map((option, index) => (
+            <li
+              ref={(el) => {
+                optionRefs.current[index] = el;
+              }}
+              key={index}
+              id={optionId(index)}
+              role="option"
+              aria-selected={index === highlightedIndex}
+              className={`k-typeahead-option k-typeahead-option-${size} ${
+                index === highlightedIndex
+                  ? "k-typeahead-option-highlighted"
+                  : ""
+              }`}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                handleOptionClick(option, e);
+              }}
+              onMouseOver={() => setHighlightedIndex(index)}
+            >
+              {getOptionContent(option)}
+            </li>
+          ))}
+          {props.lazyLoad &&
+            displayedOptions.length < filteredOptions.length && (
               <li
-                ref={(el) => {
-                  optionRefs.current[index] = el;
-                }}
-                key={index}
-                className={`k-typeahead-option k-typeahead-option-${size} ${
-                  index === highlightedIndex
-                    ? "k-typeahead-option-highlighted"
-                    : ""
-                }`}
-                onMouseDown={(e) => {
-                  e.preventDefault();
-                  handleOptionClick(option, e);
-                }}
-                onMouseOver={() => setHighlightedIndex(index)}
+                className="k-typeahead-sentinel k-typeahead-loading"
+                aria-hidden="true"
               >
-                {getOptionContent(option)}
+                Loading more...
               </li>
-            ))}
-            {props.lazyLoad &&
-              displayedOptions.length < filteredOptions.length && (
-                <li className="k-typeahead-sentinel k-typeahead-loading">
-                  Loading more...
-                </li>
-              )}
-          </>
-        ) : (
-          <li
-            className={`k-typeahead-no-results-item k-typeahead-option-${size}`}
-          >
-            {props.options.length === 0
-              ? "No options available"
-              : "No matches found"}
-          </li>
-        )}
-      </ul>
-    ) : null;
+            )}
+        </>
+      ) : (
+        <li
+          role="status"
+          className={`k-typeahead-no-results-item k-typeahead-option-${size}`}
+        >
+          {props.options.length === 0
+            ? "No options available"
+            : "No matches found"}
+        </li>
+      )}
+    </ul>
+  ) : null;
 
   return (
     <div className={`k-typeahead-dropdown-container`} ref={dropdownRef}>
@@ -358,6 +379,15 @@ const Typeahead = <T,>(props: TypeaheadProps<T>) => {
           isOpen={isOpen}
           disabled={disabled}
           dropDown={true}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={showList}
+          aria-controls={showList && hasOptions ? listboxId : undefined}
+          aria-activedescendant={
+            showList && highlightedIndex > -1
+              ? optionId(highlightedIndex)
+              : undefined
+          }
         />
       </div>
       <Portal>{dropdownList}</Portal>

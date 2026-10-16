@@ -17,6 +17,8 @@ source layout.
   multi-line — `npm run sort-imports`), ESLint, `tsc`. Run
   `npm run format && npm run sort-imports && npm run lint` before committing.
 - **Every change to a released package needs a version plan** (`npm run version-plan`).
+- **Tests**: Vitest + Testing Library, in a `__tests__` folder beside the code (`npm test`). See
+  `packages/react/CLAUDE.md`.
 - **ESM only.** Every package is `"type": "module"`, and relative imports are fully specified
   (`./button/index.js`): webpack, and so Next.js, rejects anything shorter in an ESM package.
   `moduleResolution: "NodeNext"` makes `tsc` enforce it.

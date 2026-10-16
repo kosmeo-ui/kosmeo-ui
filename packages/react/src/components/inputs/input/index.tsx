@@ -1,8 +1,8 @@
 "use client";
 
 import { faEye, faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { ReactNode, useCallback, useId, useRef, useState } from "react";
 import DropdownArrowButton from "../dropdownArrowButton/index.js";
-import { ReactNode, useCallback, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FieldShell from "../../forms/fieldShell/index.js";
 import { PropsWithSize } from "../../types.js";
@@ -75,6 +75,18 @@ interface InputProps extends PropsWithSize {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   /** **_Optional_** function that is called when the input is clicked */
   onClick?: React.MouseEventHandler<HTMLInputElement>;
+  /** **_Optional_** `combobox` when the input drives a popup list of suggestions */
+  role?: "combobox";
+  /** **_Optional_** with `role="combobox"`, whether its popup is showing */
+  "aria-expanded"?: boolean;
+  /** **_Optional_** with `role="combobox"`, how suggestions relate to what's typed */
+  "aria-autocomplete"?: "list" | "inline" | "both" | "none";
+  /** **_Optional_** accessible name when there's no visible `label` */
+  "aria-label"?: string;
+  /** **_Optional_** id of the element (e.g. a listbox) this input controls */
+  "aria-controls"?: string;
+  /** **_Optional_** id of the option highlighted in the controlled element, while focus stays in the input */
+  "aria-activedescendant"?: string;
   /** **_Optional_** shows an × button at the end of a non-empty field; clear the value here. Sits at the right edge, so don't combine with `suffix` or `type="password"` */
   onClear?: () => void;
 }
@@ -116,8 +128,8 @@ const Input = (props: InputProps) => {
     inputRef.current?.focus();
   };
 
-  const inputId =
-    props.id || `input-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const inputId = props.id || `input-${generatedId}`;
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -190,6 +202,12 @@ const Input = (props: InputProps) => {
           onBlur={props.onBlur}
           onClick={props.onClick}
           onKeyDown={props.onKeyDown}
+          role={props.role}
+          aria-expanded={props["aria-expanded"]}
+          aria-autocomplete={props["aria-autocomplete"]}
+          aria-label={props["aria-label"]}
+          aria-controls={props["aria-controls"]}
+          aria-activedescendant={props["aria-activedescendant"]}
           className={inputClasses}
         />
         {showClear && (

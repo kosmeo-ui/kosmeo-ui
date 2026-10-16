@@ -22,7 +22,7 @@ const RadioGroup = <T extends string = string>(props: RadioGroupProps<T>) => {
   const { disabled = false, required = false } = props;
 
   return (
-    <OptionsGroup label={props.label} required={required}>
+    <OptionsGroup label={props.label} required={required} role="radiogroup">
       {props.options.map((option, index) => (
         <label key={index} className="k-options-group-option">
           <input
@@ -32,6 +32,7 @@ const RadioGroup = <T extends string = string>(props: RadioGroupProps<T>) => {
             checked={props.value === option.value}
             onChange={() => props.onChange(option.value)}
             disabled={disabled}
+            required={required}
           />
           {option.label}
         </label>

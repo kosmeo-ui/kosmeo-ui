@@ -1,6 +1,7 @@
 "use client";
 
 import MandatoryAsterisk from "../../forms/requiredAsterisk/index.js";
+import { useId } from "react";
 import "./styles.css";
 
 interface CheckboxProps {
@@ -30,8 +31,8 @@ const Checkbox = (props: CheckboxProps) => {
     readOnly = false,
   } = props;
 
-  const inputId =
-    props.id || `checkbox-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const inputId = props.id || `checkbox-${generatedId}`;
 
   // Browsers ignore `readonly` on checkboxes, so a click (or Space) is
   // cancelled here instead; aria-readonly tells assistive tech why.

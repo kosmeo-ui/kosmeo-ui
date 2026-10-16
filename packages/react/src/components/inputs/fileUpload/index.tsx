@@ -4,7 +4,7 @@ import MandatoryAsterisk from "../../forms/requiredAsterisk/index.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PropsWithSize, PropsWithVariant } from "../../types.js";
 import IconButton from "../../buttons/iconButton/index.js";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Button from "../../buttons/button/index.js";
 import Modal from "../../overlays/modal/index.js";
 import "./styles.css";
@@ -101,8 +101,8 @@ const FileUpload = (props: FileUploadProps) => {
     maxSize: string;
   }>({ files: [], maxSize: "" });
 
-  const componentId =
-    props.id || `fileupload-${Math.random().toString(36).substring(2, 9)}`;
+  const generatedId = useId();
+  const componentId = props.id || `fileupload-${generatedId}`;
   const directoryId = `${componentId}-dir`;
 
   // `webkitdirectory` isn't in React's DOM type map; set it imperatively.
