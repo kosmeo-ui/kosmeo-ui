@@ -111,11 +111,6 @@ component's tests sit in a `__tests__` folder inside its own folder
 a mock `AxiosInstance`. `__tests__` is excluded from the build `tsconfig.json`,
 from `dist/` and from the published tarball.
 
-- Query by role and accessible name (`getByRole("button", { name: "Save" })`),
-  and drive interaction with `userEvent` — imported as
-  `import { userEvent } from "@testing-library/user-event"`, since the default
-  import mistypes under NodeNext.
-- Test behaviour through props and the DOM; assert `k-` classes only where the
-  class is the contract (variant/size mapping).
-- jsdom toggles a checkbox whose click is cancelled instead of restoring it, so
-  for `preventDefault`ed checkboxes assert the cancellation, not `checked`.
+How to write them — queries, assertions, harnesses, hooks, hydration checks, fake
+timers, and what to do when a test finds a bug — is in the `testing` skill
+([../../.claude/skills/testing/SKILL.md](../../.claude/skills/testing/SKILL.md)).
