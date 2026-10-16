@@ -73,8 +73,9 @@ const RichTextEditor = (props: RichTextEditorProps) => {
   };
 
   const editor = useEditor({
-    // A server render has no editor, so the first client render mustn't
-    // either, or hydration mismatches. TipTap creates it in an effect.
+    // TipTap would create the editor during render outside Next.js but after
+    // mount inside it (warning in dev). Always after mount, so `editor` starts
+    // null everywhere and the null handling below has one code path.
     immediatelyRender: false,
     extensions: [
       StarterKit,
@@ -142,12 +143,8 @@ const RichTextEditor = (props: RichTextEditorProps) => {
       const cleanedNew = cleanHtml(newValue) || "";
 
       if (cleanedCurrent !== cleanedNew) {
-        // Temporarily mark as not initialized to prevent onChange from firing
-        // during external content sync
-        setIsInitialized(false);
-        editor.commands.setContent(newValue);
-        // Re-enable after a short delay to allow content to settle
-        setTimeout(() => setIsInitialized(true), 0);
+        // An outside value isn't an edit, so don't echo it back to onChange.
+        editor.commands.setContent(newValue, { emitUpdate: false });
       }
 
       const textContent = editor.state.doc.textContent;

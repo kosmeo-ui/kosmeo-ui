@@ -113,10 +113,7 @@ describe("RichTextEditor", () => {
       expect(screen.getByRole("textbox")).toHaveTextContent("Hi there");
     });
 
-    // Known bug: TipTap 3's setContent emits an update by default, and the
-    // isInitialized guard is state, so it's still true when that update fires.
-    // Flip to `it` once the sync passes `{ emitUpdate: false }`.
-    it.fails("takes a new value without reporting it as an edit", async () => {
+    it("takes a new value without reporting it as an edit", async () => {
       const onChange = vi.fn();
       const { rerender } = render(
         <RichTextEditor label="Notes" value="<p>Hi</p>" onChange={onChange} />
