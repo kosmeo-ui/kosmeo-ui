@@ -1,4 +1,5 @@
 import RowActions, { RowActionsProps } from "../index.js";
+import Table from "../../../data-display/table/index.js";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -96,7 +97,66 @@ describe("RowActions", () => {
     });
   });
 
-  it.todo(
-    "decide whether RowActions stops its actions' clicks reaching a clickable row — currently it does not, so a column without disableRowClick fires onRowClick too"
-  );
+  describe("in a clickable row, without disableRowClick", () => {
+    const actionColumn = (onEdit: (person: Person) => void) => ({
+      title: "Actions",
+      cellElement: (person: Person) => (
+        <RowActions>
+          <button onClick={() => onEdit(person)}>Edit {person.name}</button>
+        </RowActions>
+      ),
+    });
+
+    it.each([
+      [
+        "DataTable",
+        (onRowClick: () => void) =>
+          render(
+            <DataTable<Person>
+              columns={[actionColumn(vi.fn())]}
+              rows={[{ index: 0, data: { name: "Ada" } }]}
+              onRowClick={onRowClick}
+            />
+          ),
+      ],
+      [
+        "Table",
+        (onRowClick: () => void) =>
+          render(
+            <Table<Person>
+              columns={[actionColumn(vi.fn())]}
+              rows={[{ name: "Ada" }]}
+              onRowClick={onRowClick}
+            />
+          ),
+      ],
+    ])(
+      "keeps an action's click from reaching a %s row",
+      async (_, renderIn) => {
+        const user = userEvent.setup();
+        const onRowClick = vi.fn();
+        renderIn(onRowClick);
+
+        await user.click(screen.getByRole("button", { name: "Edit Ada" }));
+
+        expect(onRowClick).not.toHaveBeenCalled();
+      }
+    );
+
+    it("still calls the action", async () => {
+      const user = userEvent.setup();
+      const onEdit = vi.fn();
+      render(
+        <DataTable<Person>
+          columns={[actionColumn(onEdit)]}
+          rows={[{ index: 0, data: { name: "Ada" } }]}
+          onRowClick={vi.fn()}
+        />
+      );
+
+      await user.click(screen.getByRole("button", { name: "Edit Ada" }));
+
+      expect(onEdit).toHaveBeenCalledExactlyOnceWith({ name: "Ada" });
+    });
+  });
 });

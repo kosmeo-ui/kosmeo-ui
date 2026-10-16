@@ -21,7 +21,12 @@ const RowActions = ({
     `k-row-actions-${align}`,
     `k-row-actions-gap-${gap}`,
   ].join(" ");
-  return <div className={classes}>{children}</div>;
+  // Actions sit inside clickable rows; a click on one is not a row click.
+  return (
+    <div className={classes} onClick={(e) => e.stopPropagation()}>
+      {children}
+    </div>
+  );
 };
 
 export default RowActions;
