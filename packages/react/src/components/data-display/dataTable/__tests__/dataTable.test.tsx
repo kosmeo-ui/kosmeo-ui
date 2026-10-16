@@ -129,9 +129,7 @@ describe("DataTable", () => {
     expect(screen.getByRole("cell", { name: expected })).toBeVisible();
   });
 
-  // Bug: parseDataKey keeps looping on the "" or ".name" left after "[n]",
-  // so the bracket notation types.ts documents throws instead of rendering.
-  it.fails.each([
+  it.each([
     ["an array index", "tags[1]", "code"],
     ["a key inside an array entry", "pets[0].name", "Rex"],
   ])("renders a cell from %s", (_, dataKey, expected) => {

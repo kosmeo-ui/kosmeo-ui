@@ -18,13 +18,15 @@ const parseDataKey = (dataKey: string, data: any) => {
       const index = dataKey.substring(bracketIndex + 1, dataKey.indexOf("]"));
       value = value[key][parseInt(index)];
       dataKey = dataKey.substring(dataKey.indexOf("]") + 1);
-      more = true;
+      if (dataKey.startsWith(".")) dataKey = dataKey.substring(1);
+      more = dataKey !== "";
     } else if (bracketIndex < dotIndex) {
       const key = dataKey.substring(0, bracketIndex);
       const index = dataKey.substring(bracketIndex + 1, dataKey.indexOf("]"));
       value = value[key][parseInt(index)];
       dataKey = dataKey.substring(dataKey.indexOf("]") + 1);
-      more = true;
+      if (dataKey.startsWith(".")) dataKey = dataKey.substring(1);
+      more = dataKey !== "";
     } else {
       const key = dataKey.substring(0, dotIndex);
       value = value[key];
