@@ -92,4 +92,19 @@ describe("useInfiniteCursor", () => {
     await waitFor(() => expect(result.current.data).toHaveLength(5));
     expect(get).toHaveBeenCalledTimes(2);
   });
+
+  it("asks for the next page once when asked twice in one tick", async () => {
+    const axios = server();
+    const { result } = setup(axios);
+    await waitFor(() => expect(result.current.data).toHaveLength(3));
+    const calls = axios.get.mock.calls.length;
+
+    // No re-render between the two calls, so neither sees the other's request.
+    act(() => {
+      result.current.onQueryChange("limit=3&offset=3");
+      result.current.onQueryChange("limit=3&offset=3");
+    });
+    await waitFor(() => expect(result.current.data).toHaveLength(5));
+    expect(axios.get).toHaveBeenCalledTimes(calls + 1);
+  });
 });

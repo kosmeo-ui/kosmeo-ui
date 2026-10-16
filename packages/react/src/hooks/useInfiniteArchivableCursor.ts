@@ -98,7 +98,10 @@ const useInfiniteArchivableCursor = <T extends { id: number | string }>(
     // value it passes is meaningless for cursor mode — just fetch the next page.
     if (normalized === lastQueryRef.current) {
       const q = queryRef.current;
-      if (q.hasNextPage && !q.isFetchingNextPage) q.fetchNextPage();
+      // cancelRefetch: false joins a request already in flight. The default
+      // cancels and resends it, and isFetchingNextPage can't stop that: it's
+      // read from a render, so two calls in one tick both see it false.
+      if (q.hasNextPage) q.fetchNextPage({ cancelRefetch: false });
       return;
     }
     lastQueryRef.current = normalized;
