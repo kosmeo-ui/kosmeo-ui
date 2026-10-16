@@ -977,9 +977,7 @@ describe("InfiniteScroll", () => {
       ).toBeDisabled();
     });
 
-    // Bug: a row's remove button ignores its row and clears the whole list
-    // (listFilterTag.tsx handleRemove removes by the "Add new values" text).
-    it.fails("removes only the value of the row clicked", async () => {
+    it("removes only the value of the row clicked", async () => {
       const user = userEvent.setup();
       setup(withFilters(skus("a1,b2")));
       await user.click(button("Edit SKUs"));

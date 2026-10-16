@@ -30,16 +30,19 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
   const [modalFilter, setModalFilter] = useState<string>("");
   const [modalAddValues, setModalAddValues] = useState<string>("");
 
-  const handleRemove = useCallback(() => {
-    const newFilters = props.filters?.map((f) => {
-      if (f.type !== "LIST") return f;
-      if (f.filterId !== props.filter.filterId) return f;
-      if (!modalAddValues) return { ...f, list: "" };
-      const newValues = f.list.split(",").filter((v) => v !== modalAddValues);
-      return { ...f, list: newValues.join(",") };
-    });
-    props.handleNewFilters(newFilters);
-  }, [props.filters, props.filter.filterId, modalAddValues]);
+  const handleRemove = useCallback(
+    (value?: string) => {
+      const newFilters = props.filters?.map((f) => {
+        if (f.type !== "LIST") return f;
+        if (f.filterId !== props.filter.filterId) return f;
+        if (value === undefined) return { ...f, list: "" };
+        const newValues = f.list.split(",").filter((v) => v !== value);
+        return { ...f, list: newValues.join(",") };
+      });
+      props.handleNewFilters(newFilters);
+    },
+    [props.filters, props.filter.filterId]
+  );
 
   const handleAddValues = () => {
     const newFilters = props.filters?.map((f) => {
@@ -100,7 +103,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
               icon={faXmark}
               size="sm"
               variant="danger"
-              onClick={handleRemove}
+              onClick={() => handleRemove(value)}
               aria-label={`Remove ${value}`}
             />
           </div>
@@ -112,7 +115,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
 
   return (
     <div className="k-lft-buttons">
-      <Badge onRemove={handleRemove}>
+      <Badge onRemove={() => handleRemove()}>
         {props.filter.title}: {tagValue}
       </Badge>
       <IconButton
