@@ -224,24 +224,18 @@ describe("PhoneInput", () => {
       expect(onChange).toHaveBeenLastCalledWith("+12015550123");
     });
 
-    // Bug: the pasted number's own country code is dropped for the selected
-    // country's, so a UK number is reported as "+12071838750".
-    it.fails(
-      "reports a number from another country in its own code",
-      async () => {
-        const user = userEvent.setup();
-        const onChange = vi.fn();
-        render(<Harness onChange={onChange} />);
-        await user.click(field());
+    it("reports a number from another country in its own code", async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(<Harness onChange={onChange} />);
+      await user.click(field());
 
-        await user.paste("+44 20 7183 8750");
+      await user.paste("+44 20 7183 8750");
 
-        expect(onChange).toHaveBeenLastCalledWith("+442071838750");
-      }
-    );
+      expect(onChange).toHaveBeenLastCalledWith("+442071838750");
+    });
 
-    // Bug: same as above; the country button stays on the United States.
-    it.fails("switches to a pasted number's country", async () => {
+    it("switches to a pasted number's country", async () => {
       const user = userEvent.setup();
       render(<Harness />);
       await user.click(field());

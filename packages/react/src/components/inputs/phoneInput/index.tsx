@@ -121,8 +121,10 @@ const PhoneInput = (props: PhoneInputProps) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(raw);
     const nationalDigits = formatter.getNationalNumber();
+    const nextCountry = formatter.getCountry() ?? country;
+    setCountry(nextCountry);
     setDisplay(formatted);
-    emit(nationalDigits, country);
+    emit(nationalDigits, nextCountry);
   };
 
   const handleCountrySelect = (cc: CountryCode) => {
