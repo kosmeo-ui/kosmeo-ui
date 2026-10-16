@@ -156,6 +156,7 @@ const SearchSelect = <T,>(props: SearchSelectProps<T>) => {
             setInputValue(e.target.value);
             setFiltering(true);
             setIsOpen(true);
+            setHighlightedIndex(-1);
           }}
           onKeyDown={handleKeyDown}
           onFocus={() => setIsOpen(true)}

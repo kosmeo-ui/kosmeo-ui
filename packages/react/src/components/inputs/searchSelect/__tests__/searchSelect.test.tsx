@@ -332,22 +332,17 @@ describe("SearchSelect", () => {
       expect(onSelect).not.toHaveBeenCalled();
     });
 
-    // Bug: typing does not reset highlightedIndex, so after the list
-    // shrinks the highlight can sit past its end and ArrowUp stays there.
-    it.fails(
-      "highlights an option with ArrowUp after the list shrinks",
-      async () => {
-        const user = newUser();
-        const { input, onSelect } = setup();
-        await user.click(input);
-        await user.keyboard("{ArrowDown}{ArrowDown}{ArrowDown}");
-        await user.type(input, "an");
+    it("highlights an option with ArrowUp after the list shrinks", async () => {
+      const user = newUser();
+      const { input, onSelect } = setup();
+      await user.click(input);
+      await user.keyboard("{ArrowDown}{ArrowDown}{ArrowDown}");
+      await user.type(input, "an");
 
-        await user.keyboard("{ArrowUp}{Enter}");
+      await user.keyboard("{ArrowUp}{Enter}");
 
-        expect(onSelect).toHaveBeenCalledWith(banana);
-      }
-    );
+      expect(onSelect).toHaveBeenCalledWith(banana);
+    });
   });
 
   describe("leaving without a pick", () => {
