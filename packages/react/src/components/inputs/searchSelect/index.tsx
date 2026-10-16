@@ -51,6 +51,7 @@ const SearchSelect = <T,>(props: SearchSelectProps<T>) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const blurTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const { anchorRef: inputWrapperRef, position: dropdownPos } =
     useFloatingPosition({ isOpen });
 
@@ -74,6 +75,7 @@ const SearchSelect = <T,>(props: SearchSelectProps<T>) => {
   };
 
   useOutsideClick([dropdownRef, listRef], restore);
+  useEffect(() => () => clearTimeout(blurTimerRef.current), []);
   useScrollIntoView(optionRefs, highlightedIndex, isOpen);
 
   const choose = (option: T) => {
@@ -159,9 +161,12 @@ const SearchSelect = <T,>(props: SearchSelectProps<T>) => {
             setHighlightedIndex(-1);
           }}
           onKeyDown={handleKeyDown}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => {
+            clearTimeout(blurTimerRef.current);
+            setIsOpen(true);
+          }}
           onBlur={() => {
-            setTimeout(restore, 100);
+            blurTimerRef.current = setTimeout(restore, 100);
           }}
           placeholder={props.placeholder || "Select..."}
           dropDown={true}

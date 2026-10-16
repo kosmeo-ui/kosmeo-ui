@@ -400,22 +400,17 @@ describe("SearchSelect", () => {
       expect(shown()).toEqual([]);
     });
 
-    // Bug: the blur's 100ms restore timer is never cancelled, so it closes
-    // the list and drops the typed text even after focus has come back.
-    it.fails(
-      "stays open when focus returns before the blur delay ends",
-      async () => {
-        const user = newUser();
-        const { input } = setup();
-        await user.type(input, "ch");
-        await user.tab();
+    it("stays open when focus returns before the blur delay ends", async () => {
+      const user = newUser();
+      const { input } = setup();
+      await user.type(input, "ch");
+      await user.tab();
 
-        await user.click(input);
+      await user.click(input);
 
-        await settle();
-        expect(shown()).toEqual(["Cherry"]);
-      }
-    );
+      await settle();
+      expect(shown()).toEqual(["Cherry"]);
+    });
   });
 
   it("shows a new value from the parent", () => {
