@@ -153,6 +153,9 @@ describe("FileUpload", () => {
     [1536, "1.5 KB"],
     [1024 ** 2, "1 MB"],
     [1024 ** 3, "1 GB"],
+    [1024 ** 4, "1 TB"],
+    [1.5 * 1024 ** 4, "1.5 TB"],
+    [1024 ** 5, "1024 TB"],
   ])("shows a %i-byte file as %s", (size, shown) => {
     render(
       <FileUpload
@@ -163,10 +166,6 @@ describe("FileUpload", () => {
 
     expect(screen.getByText(`(${shown})`)).toBeVisible();
   });
-
-  it.todo(
-    "decide how to show a file of 1 TB or more — currently its size reads as (1 undefined)"
-  );
 
   describe("initial files", () => {
     it("lists the initial files", () => {
