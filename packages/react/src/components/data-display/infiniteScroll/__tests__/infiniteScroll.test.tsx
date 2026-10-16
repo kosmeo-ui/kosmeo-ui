@@ -591,9 +591,7 @@ describe("InfiniteScroll", () => {
       });
     });
 
-    // Bug: two selected options make two tags with the same key, so React
-    // warns of duplicate keys (tags/index.tsx).
-    it.fails("adds to the picked options in multi-select", async () => {
+    it("adds to the picked options in multi-select", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status([1], true)));
       await user.click(button("Status"));
@@ -807,9 +805,7 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText("Status: Closed")).toBeVisible();
     });
 
-    // Bug: every tag of one filter gets the filter's id as its key, so React
-    // warns of duplicate keys (tags/index.tsx).
-    it.fails("shows a tag for each selected option", () => {
+    it("shows a tag for each selected option", () => {
       setup(withFilters(status([1, 3], true)));
 
       expect(screen.getByText("Status: Pending")).toBeVisible();
@@ -893,9 +889,7 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText("Price Start: 0")).toBeVisible();
     });
 
-    // Bug: the start and end tags share the filter's id as their key, so
-    // React warns of duplicate keys (tags/index.tsx).
-    it.fails("shows tags for both ends of a range", () => {
+    it("shows tags for both ends of a range", () => {
       setup(withFilters(price(5, 9)));
 
       expect(screen.getByText("Price End: 9")).toBeVisible();

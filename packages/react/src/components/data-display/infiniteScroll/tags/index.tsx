@@ -20,7 +20,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
       for (const selectedFilter of selectedFilters) {
         tags.push(
           <SelectFilterTag
-            key={f.filterId}
+            key={`${f.filterId}-${selectedFilter.id}`}
             filter={f}
             filterOption={selectedFilter}
             filters={props.filters}
@@ -32,7 +32,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
       if (f.startValue) {
         tags.push(
           <RangeFilterTag
-            key={f.filterId}
+            key={`${f.filterId}-start`}
             filter={f}
             filters={props.filters}
             filterValue="startValue"
@@ -43,7 +43,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
       if (f.endValue) {
         tags.push(
           <RangeFilterTag
-            key={f.filterId}
+            key={`${f.filterId}-end`}
             filter={f}
             filters={props.filters}
             filterValue="endValue"
