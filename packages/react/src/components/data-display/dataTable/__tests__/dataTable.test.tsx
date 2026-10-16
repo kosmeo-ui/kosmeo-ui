@@ -82,9 +82,7 @@ describe("DataTable", () => {
     ).toEqual(["Name", "City"]);
   });
 
-  // Bug: DataTable never reads `hidden`, which types.ts documents as
-  // omitting the column (Table honours it).
-  it.fails("leaves out a hidden column's header", () => {
+  it("leaves out a hidden column's header", () => {
     setup({
       columns: [...columns, { title: "Secret", dataKey: "name", hidden: true }],
     });
