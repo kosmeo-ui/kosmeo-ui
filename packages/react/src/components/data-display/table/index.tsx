@@ -1,7 +1,7 @@
 "use client";
 
+import parseDataKey, { cellText } from "../dataTable/utils/parseDataKey.js";
 import type { TableColumn, TableRow } from "../dataTable/types.js";
-import parseDataKey from "../dataTable/utils/parseDataKey.js";
 import { ReactNode } from "react";
 import "./styles.css";
 
@@ -110,7 +110,7 @@ const Table = <TData,>({
                   const content = c.cellElement
                     ? c.cellElement(row, i)
                     : c.dataKey
-                      ? (parseDataKey(c.dataKey, row) as ReactNode)
+                      ? cellText(parseDataKey(c.dataKey, row))
                       : null;
                   return (
                     <td

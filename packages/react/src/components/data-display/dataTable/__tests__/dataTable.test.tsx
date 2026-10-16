@@ -136,6 +136,22 @@ describe("DataTable", () => {
     expect(screen.getByRole("cell", { name: expected })).toBeVisible();
   });
 
+  it.each([
+    ["a null value", "age", { ...ada, age: null }],
+    ["an empty string", "city", { ...ada, city: "" }],
+    ["a missing field", "nickname", ada],
+    ["a missing nested field", "address.zip", ada],
+    ["a missing parent object", "owner.name", ada],
+    ["an index past the end", "pets[3].name", ada],
+  ])("renders an em dash for %s", (_, dataKey, person) => {
+    setup({
+      columns: [{ title: "Value", dataKey }],
+      rows: toRows([person as Person]),
+    });
+
+    expect(screen.getByRole("cell", { name: "—" })).toBeVisible();
+  });
+
   it("renders a cell from cellElement, given the row data and its index", () => {
     setup({
       columns: [

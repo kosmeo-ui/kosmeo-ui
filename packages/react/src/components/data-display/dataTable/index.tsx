@@ -1,8 +1,8 @@
 "use client";
 
 import { TableColumn, TableLeadingColumn, TableRow } from "./types.js";
+import parseDataKey, { cellText } from "./utils/parseDataKey.js";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import parseDataKey from "./utils/parseDataKey.js";
 import { useMemo, type RefObject } from "react";
 import "../table/styles.css";
 import "./styles.css";
@@ -111,7 +111,7 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
       const content = c.cellElement
         ? c.cellElement(row.data, row.index)
         : c.dataKey
-          ? parseDataKey(c.dataKey, row.data)
+          ? cellText(parseDataKey(c.dataKey, row.data))
           : undefined;
       cells.push(
         <td

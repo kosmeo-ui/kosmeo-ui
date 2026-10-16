@@ -103,18 +103,29 @@ describe("Table", () => {
     expect(screen.getByRole("cell", { name: "0" })).toBeVisible();
   });
 
-  it("renders an empty cell for a null value", () => {
+  it("renders a cell from consecutive array indexes", () => {
+    const row = { ...ada, grid: [["a", "b"]] };
+
     setup({
-      columns: [{ title: "Age", dataKey: "age" }],
-      rows: [{ ...ada, age: null }],
+      columns: [{ title: "Value", dataKey: "grid[0][1]" }],
+      rows: [row],
     });
 
-    expect(screen.getByRole("cell")).toBeEmptyDOMElement();
+    expect(screen.getByRole("cell", { name: "b" })).toBeVisible();
   });
 
-  it.todo(
-    "decide what a dataKey cell shows when the row lacks that field — currently render throws `Invalid dataKey`"
-  );
+  it.each([
+    ["a null value", "age", { ...ada, age: null }],
+    ["an empty string", "city", { ...ada, city: "" }],
+    ["a missing field", "nickname", ada],
+    ["a missing nested field", "address.zip", ada],
+    ["a missing parent object", "owner.name", ada],
+    ["an index past the end", "pets[3].name", ada],
+  ])("renders an em dash for %s", (_, dataKey, row) => {
+    setup({ columns: [{ title: "Value", dataKey }], rows: [row as Person] });
+
+    expect(screen.getByRole("cell", { name: "—" })).toBeVisible();
+  });
 
   it("renders a cell from cellElement, given the row and its index", () => {
     setup({
