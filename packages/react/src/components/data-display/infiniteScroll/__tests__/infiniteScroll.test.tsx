@@ -864,9 +864,7 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText(text)).toBeVisible();
     });
 
-    // Bug: a range with no rangeType (a text input) tags its value as
-    // undefined, so the tag reads "Code Start: " (rangeFilterTag.tsx tagValue).
-    it.fails("shows the value of a range with no rangeType", () => {
+    it("shows the value of a range with no rangeType", () => {
       setup(
         withFilters({
           type: "RANGE",
