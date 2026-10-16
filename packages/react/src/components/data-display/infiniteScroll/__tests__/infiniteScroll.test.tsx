@@ -681,9 +681,7 @@ describe("InfiniteScroll", () => {
       });
     });
 
-    // Bug: clearing a NUMBER field sets parseInt("") — NaN — as the bound,
-    // so the query sends filter[price_gte]=NaN.
-    it.fails("drops a cleared number bound on Apply", async () => {
+    it("drops a cleared number bound on Apply", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(price(5)));
       await user.click(button("Price"));

@@ -85,9 +85,9 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
 
   const handleStartChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let newValue: RangeValue;
+      let newValue: RangeValue | undefined;
       if (props.filter.rangeType === "NUMBER") {
-        newValue = parseInt(e.target.value);
+        newValue = e.target.value === "" ? undefined : parseInt(e.target.value);
       } else if (props.filter.rangeType === "DATE") {
         const res = DateTime.fromISO(e.target.value).toUTC().toISO();
         if (!res) throw new Error("Invalid date");
@@ -109,9 +109,9 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
 
   const handleEndChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let newValue: RangeValue;
+      let newValue: RangeValue | undefined;
       if (props.filter.rangeType === "NUMBER") {
-        newValue = parseInt(e.target.value);
+        newValue = e.target.value === "" ? undefined : parseInt(e.target.value);
       } else if (props.filter.rangeType === "DATE") {
         const res = DateTime.fromISO(e.target.value).toUTC().toISO();
         if (!res) throw new Error("Invalid date");
