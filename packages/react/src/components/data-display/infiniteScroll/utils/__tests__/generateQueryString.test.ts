@@ -150,9 +150,7 @@ describe("generateQueryString", () => {
     });
   });
 
-  // Bug: a range field the user clears is "" and is still sent, as an empty
-  // filter[price_gte]= — hasPendingChanges treats "" as unset.
-  it.fails("leaves out a cleared range bound", () => {
+  it("leaves out a cleared range bound", () => {
     expect(query({ filters: [range("", 10)] })).toEqual({
       limit: "25",
       offset: "0",
