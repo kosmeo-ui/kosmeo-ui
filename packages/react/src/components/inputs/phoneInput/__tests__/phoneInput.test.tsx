@@ -124,9 +124,7 @@ describe("PhoneInput", () => {
       expect(field()).toHaveValue(display);
     });
 
-    // Bug: a number libphonenumber assigns no country (one this field emits
-    // for typed "5555555555") shows in international form, "+1 555 555 5555".
-    it.fails("shows a number with no assigned country as typed", () => {
+    it("shows a number with no assigned country as typed", () => {
       render(<Harness initialValue="+15555555555" />);
 
       expect(field()).toHaveValue("(555) 555-5555");

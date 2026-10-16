@@ -89,6 +89,8 @@ const PhoneInput = (props: PhoneInputProps) => {
     if (parsed?.country) {
       setCountry(parsed.country);
       setDisplay(parsed.formatNational());
+    } else if (parsed) {
+      setDisplay(parsed.formatNational());
     } else {
       const formatter = new AsYouType(country);
       setDisplay(formatter.input(value));
