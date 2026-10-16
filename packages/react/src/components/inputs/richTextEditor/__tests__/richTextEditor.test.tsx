@@ -1,7 +1,7 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
-import { renderToString } from "react-dom/server";
+import { hydrate, serverRender } from "../../__tests__/hydration.js";
+import { render, screen, waitFor } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { hydrateRoot } from "react-dom/client";
 import RichTextEditor from "../index.js";
 
 const toolbar = () =>
@@ -11,12 +11,9 @@ const toolbar = () =>
 
 describe("RichTextEditor", () => {
   it("server-renders with the toolbar disabled", () => {
-    const html = renderToString(
+    const container = serverRender(
       <RichTextEditor label="Notes" value="<p>Hi</p>" />
     );
-    const container = document.createElement("div");
-    container.innerHTML = html;
-
     expect(container.querySelector("label")).toHaveTextContent("Notes");
     const bold = container.querySelector('button[aria-label="Bold"]');
     expect(bold).toBeDisabled();
@@ -24,16 +21,12 @@ describe("RichTextEditor", () => {
 
   it("hydrates without a mismatch, then mounts the editor", async () => {
     const element = <RichTextEditor label="Notes" value="<p>Hi</p>" />;
-    const container = document.createElement("div");
-    container.innerHTML = renderToString(element);
-    document.body.append(container);
+    const container = serverRender(element);
 
-    const consoleError = vi.spyOn(console, "error");
-    const onRecoverableError = vi.fn();
-    await act(async () => {
-      hydrateRoot(container, element, { onRecoverableError });
-    });
-
+    const { consoleError, onRecoverableError } = await hydrate(
+      container,
+      element
+    );
     expect(consoleError).not.toHaveBeenCalled();
     expect(onRecoverableError).not.toHaveBeenCalled();
     await waitFor(() =>
@@ -41,7 +34,6 @@ describe("RichTextEditor", () => {
         "Hi"
       )
     );
-    container.remove();
   });
 
   it("enables the toolbar once the editor exists", async () => {
@@ -64,5 +56,91 @@ describe("RichTextEditor", () => {
       )
     );
     for (const button of toolbar()) expect(button).toBeDisabled();
+  });
+
+  describe("editing", () => {
+    const ready = () =>
+      waitFor(() => {
+        for (const button of toolbar()) expect(button).toBeEnabled();
+      });
+
+    it("applies a list from the toolbar and reports the change", async () => {
+      const onChange = vi.fn();
+      render(
+        <RichTextEditor label="Notes" value="<p>Hi</p>" onChange={onChange} />
+      );
+      await ready();
+
+      await userEvent.click(
+        screen.getByRole("button", { name: "Bullet list" })
+      );
+      expect(onChange).toHaveBeenLastCalledWith("<ul><li><p>Hi</p></li></ul>");
+      expect(
+        screen.getByRole("button", { name: "Bullet list" })
+      ).toHaveAttribute("aria-pressed", "true");
+    });
+
+    it("marks Bold pressed once toggled", async () => {
+      render(<RichTextEditor label="Notes" value="<p>Hi</p>" />);
+      await ready();
+      const bold = screen.getByRole("button", { name: "Bold" });
+      expect(bold).toHaveAttribute("aria-pressed", "false");
+
+      await userEvent.click(bold);
+      expect(bold).toHaveAttribute("aria-pressed", "true");
+    });
+
+    it("shows the HTML source in place of the editor", async () => {
+      render(
+        <RichTextEditor
+          label="Notes"
+          value="<p>Hi <strong>there</strong></p>"
+        />
+      );
+      await ready();
+
+      await userEvent.click(screen.getByRole("button", { name: "Show HTML" }));
+      // The source view puts each tag on its own line.
+      expect(document.querySelector(".k-html-section")?.textContent).toBe(
+        "<p>Hi <strong>there</strong>\n</p>"
+      );
+      expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+      expect(screen.getByRole("button", { name: "Bold" })).toBeDisabled();
+
+      await userEvent.click(
+        screen.getByRole("button", { name: "Show editor" })
+      );
+      expect(screen.getByRole("textbox")).toHaveTextContent("Hi there");
+    });
+
+    // Known bug: TipTap 3's setContent emits an update by default, and the
+    // isInitialized guard is state, so it's still true when that update fires.
+    // Flip to `it` once the sync passes `{ emitUpdate: false }`.
+    it.fails("takes a new value without reporting it as an edit", async () => {
+      const onChange = vi.fn();
+      const { rerender } = render(
+        <RichTextEditor label="Notes" value="<p>Hi</p>" onChange={onChange} />
+      );
+      await ready();
+
+      rerender(
+        <RichTextEditor label="Notes" value="<p>Bye</p>" onChange={onChange} />
+      );
+      await waitFor(() =>
+        expect(screen.getByRole("textbox")).toHaveTextContent("Bye")
+      );
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it("counts characters", async () => {
+      render(
+        <RichTextEditor label="Notes" value="<p>Hello</p>" showCharCount />
+      );
+      await waitFor(() =>
+        expect(
+          document.querySelector(".k-richtext-char-count")
+        ).toHaveTextContent("5")
+      );
+    });
   });
 });

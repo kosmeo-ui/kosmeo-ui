@@ -1,10 +1,9 @@
 import RichTextEditor from "../richTextEditor/index.js";
-import { act, render } from "@testing-library/react";
-import { renderToString } from "react-dom/server";
-import { describe, expect, it, vi } from "vitest";
+import { hydrate, serverRender } from "./hydration.js";
 import MultiSelect from "../multiSelect/index.js";
+import { render } from "@testing-library/react";
 import FileUpload from "../fileUpload/index.js";
-import { hydrateRoot } from "react-dom/client";
+import { describe, expect, it } from "vitest";
 import TextArea from "../textArea/index.js";
 import Checkbox from "../checkbox/index.js";
 import Select from "../select/index.js";
@@ -50,22 +49,16 @@ describe.each(fields)("%s generated id", (_name, element) => {
 
 describe.each(fields)("%s server render", (_name, element) => {
   it("matches between server and client render", async () => {
-    const container = document.createElement("div");
-    container.innerHTML = renderToString(element());
-    document.body.append(container);
+    const container = serverRender(element());
     const serverIds = ids(container);
 
-    // React 19 reports an attribute mismatch only as a console error, and
-    // keeps the server's attribute in the DOM.
-    const consoleError = vi.spyOn(console, "error");
-    const onRecoverableError = vi.fn();
-    await act(async () => {
-      hydrateRoot(container, element(), { onRecoverableError });
-    });
+    const { consoleError, onRecoverableError } = await hydrate(
+      container,
+      element()
+    );
     expect(consoleError).not.toHaveBeenCalled();
     expect(onRecoverableError).not.toHaveBeenCalled();
     expect(ids(container)).toEqual(serverIds);
-    container.remove();
   });
 });
 

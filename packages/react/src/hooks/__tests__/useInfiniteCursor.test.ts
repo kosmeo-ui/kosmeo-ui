@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createWrapper, mockAxios } from "./queryWrapper.js";
 import useInfiniteCursor from "../useInfiniteCursor.js";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import type { AxiosInstance } from "axios";
 
 type Row = { id: number };
 
@@ -24,7 +25,7 @@ const server = () =>
         };
   });
 
-const setup = (axios = server()) =>
+const setup = (axios: { instance: AxiosInstance } = server()) =>
   renderHook(
     () =>
       useInfiniteCursor<Row>({
@@ -68,5 +69,27 @@ describe("useInfiniteCursor", () => {
     await waitFor(() =>
       expect(axios.get).toHaveBeenLastCalledWith("/rows?limit=3&sort=name")
     );
+  });
+
+  it("asks for the next page once while it's loading", async () => {
+    let release!: () => void;
+    const pages = server();
+    const get = vi.fn(async (url: string) => {
+      // The second page waits until the test releases it.
+      if (url.includes("cursor="))
+        await new Promise<void>((resolve) => (release = resolve));
+      return pages.get(url);
+    });
+    const { result } = setup({ instance: { get } as unknown as AxiosInstance });
+    await waitFor(() => expect(result.current.data).toHaveLength(3));
+
+    // Scroll events keep asking while the next page is still loading.
+    act(() => result.current.onQueryChange("limit=3&offset=3"));
+    await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+    act(() => result.current.onQueryChange("limit=3&offset=3"));
+    act(() => release());
+
+    await waitFor(() => expect(result.current.data).toHaveLength(5));
+    expect(get).toHaveBeenCalledTimes(2);
   });
 });

@@ -17,7 +17,9 @@ describe("Checkbox", () => {
   });
 
   it("can be named with aria-label", () => {
-    render(<Checkbox aria-label="Select row" checked={false} />);
+    render(
+      <Checkbox aria-label="Select row" checked={false} onChange={() => {}} />
+    );
     expect(
       screen.getByRole("checkbox", { name: "Select row" })
     ).toBeInTheDocument();

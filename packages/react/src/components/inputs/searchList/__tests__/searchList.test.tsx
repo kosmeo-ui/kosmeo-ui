@@ -1,7 +1,7 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { UseQueryResult } from "@tanstack/react-query";
-import { describe, expect, it, vi } from "vitest";
 import SearchList from "../index.js";
 import { useState } from "react";
 
@@ -62,14 +62,32 @@ const setup = ({
       onSelect={onSelect}
     />
   );
-  return { onSelect, input: screen.getByRole("combobox", { name: "City" }) };
+  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  return {
+    user,
+    onSelect,
+    input: screen.getByRole("combobox", { name: "City" }),
+  };
 };
 
-/** Types past the 500ms debounce, until results replace the spinner. */
-const search = async (input: HTMLElement, text: string) => {
-  await userEvent.type(input, text);
-  await waitFor(() => expect(screen.getByRole("listbox")).toBeInTheDocument());
+/** Runs out SearchList's 500ms search debounce. */
+const settle = () => act(() => vi.advanceTimersByTimeAsync(500));
+
+/** Types a search and waits out the debounce, so its results show. */
+const search = async (
+  user: ReturnType<typeof userEvent.setup>,
+  input: HTMLElement,
+  text: string
+) => {
+  await user.type(input, text);
+  await settle();
+  expect(screen.getByRole("listbox")).toBeInTheDocument();
 };
+
+// shouldAdvanceTime keeps the clock ticking for Testing Library's own
+// setTimeout(0) waits, which it only fast-forwards under Jest.
+beforeEach(() => vi.useFakeTimers({ shouldAdvanceTime: true }));
+afterEach(() => vi.useRealTimers());
 
 describe("SearchList", () => {
   it("is a list-autocomplete combobox named by its label", () => {
@@ -80,8 +98,8 @@ describe("SearchList", () => {
   });
 
   it("offers initial options in a listbox on focus", async () => {
-    const { input } = setup({ initialOptions: [cities[2]] });
-    await userEvent.click(input);
+    const { user, input } = setup({ initialOptions: [cities[2]] });
+    await user.click(input);
 
     const listbox = screen.getByRole("listbox", { name: "City" });
     expect(input).toHaveAttribute("aria-expanded", "true");
@@ -92,8 +110,8 @@ describe("SearchList", () => {
   });
 
   it("prompts with a status when there's nothing to offer yet", async () => {
-    const { input } = setup();
-    await userEvent.click(input);
+    const { user, input } = setup();
+    await user.click(input);
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Start typing to search"
@@ -101,8 +119,8 @@ describe("SearchList", () => {
   });
 
   it("lists search results", async () => {
-    const { input } = setup();
-    await search(input, "bos");
+    const { user, input } = setup();
+    await search(user, input, "bos");
     expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual([
       "Boston",
       "Bossier City",
@@ -110,15 +128,15 @@ describe("SearchList", () => {
   });
 
   it("picks a result from the keyboard", async () => {
-    const { input, onSelect } = setup();
-    await search(input, "bos");
-    await userEvent.keyboard("{ArrowDown}{ArrowDown}");
+    const { user, input, onSelect } = setup();
+    await search(user, input, "bos");
+    await user.keyboard("{ArrowDown}{ArrowDown}");
 
     const bossier = screen.getByRole("option", { name: "Bossier City" });
     expect(input).toHaveAttribute("aria-activedescendant", bossier.id);
     expect(bossier).toHaveAttribute("aria-selected", "true");
 
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(onSelect).toHaveBeenLastCalledWith(cities[1], undefined);
     expect(input).toHaveValue("Bossier City");
     expect(input).toHaveAttribute("aria-expanded", "false");
@@ -126,23 +144,22 @@ describe("SearchList", () => {
   });
 
   it("announces when nothing matches", async () => {
-    const { input } = setup();
-    await userEvent.type(input, "zzz");
-    await waitFor(() =>
-      expect(screen.getByRole("status")).toHaveTextContent("No results found")
-    );
+    const { user, input } = setup();
+    await user.type(input, "zzz");
+    await settle();
+    expect(screen.getByRole("status")).toHaveTextContent("No results found");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
   it("can't pick hidden results while loading", async () => {
-    const { input, onSelect } = setup({ loading: true });
-    await userEvent.type(input, "bos");
+    const { user, input, onSelect } = setup({ loading: true });
+    await user.type(input, "bos");
     // Past the debounce, the query is loading but still holds the last results.
-    await act(() => new Promise((resolve) => setTimeout(resolve, 600)));
+    await settle();
     expect(screen.getByRole("status", { name: "Loading..." })).toBeVisible();
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
 
-    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await user.keyboard("{ArrowDown}{Enter}");
     expect(input).not.toHaveAttribute("aria-activedescendant");
     expect(onSelect).not.toHaveBeenCalledWith(
       expect.objectContaining({ id: 1 }),
@@ -151,13 +168,22 @@ describe("SearchList", () => {
   });
 
   it("drops the highlight when the search changes", async () => {
-    const { input } = setup();
-    await search(input, "bos");
-    await userEvent.keyboard("{ArrowDown}{ArrowDown}");
-    await userEvent.type(input, "t");
+    const { user, input } = setup();
+    await search(user, input, "bos");
+    await user.keyboard("{ArrowDown}{ArrowDown}");
+    await user.type(input, "t");
 
     // "bost" leaves one result, so the old second-row highlight is gone.
-    await waitFor(() => expect(screen.getAllByRole("option")).toHaveLength(1));
+    await settle();
+    expect(screen.getAllByRole("option")).toHaveLength(1);
     expect(input).not.toHaveAttribute("aria-activedescendant");
+  });
+
+  it("closes on Escape", async () => {
+    const { user, input } = setup();
+    await search(user, input, "bos");
+    await user.keyboard("{Escape}");
+    expect(input).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 });

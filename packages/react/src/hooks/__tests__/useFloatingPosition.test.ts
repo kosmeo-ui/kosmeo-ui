@@ -1,5 +1,5 @@
 import useFloatingPosition, { FloatingSide } from "../useFloatingPosition.js";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 
 const rect = (left: number, top: number, width: number, height: number) =>
@@ -38,9 +38,14 @@ const setup = (
   return hook;
 };
 
+const { innerWidth, innerHeight } = window;
 beforeEach(() => {
   window.innerWidth = 1000;
   window.innerHeight = 800;
+});
+afterEach(() => {
+  window.innerWidth = innerWidth;
+  window.innerHeight = innerHeight;
 });
 
 describe("useFloatingPosition", () => {
@@ -86,5 +91,18 @@ describe("useFloatingPosition", () => {
 
     rerender({ isOpen: false });
     expect(result.current.position).toBeNull();
+  });
+
+  it("clamps inside the right and bottom edges too", () => {
+    const { result } = setup(
+      "bottom",
+      rect(990, 790, 20, 20),
+      rect(0, 0, 80, 40),
+      { clampViewport: true }
+    );
+    expect(result.current.position).toMatchObject({
+      left: 1000 - 80 - 8,
+      top: 800 - 40 - 8,
+    });
   });
 });

@@ -1,7 +1,8 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { createWrapper, mockAxios } from "./queryWrapper.js";
+import { describe, expect, it, vi } from "vitest";
 import usePaginated from "../usePaginated.js";
-import { describe, expect, it } from "vitest";
+import type { AxiosInstance } from "axios";
 
 type Row = { id: number };
 
@@ -14,7 +15,10 @@ const server = (total = 23) =>
     return { data: rows.slice(offset, offset + limit), total };
   });
 
-const setup = (params?: Record<string, string>, axios = server()) =>
+const setup = (
+  params?: Record<string, string>,
+  axios: { instance: AxiosInstance } = server()
+) =>
   renderHook(
     ({ params }) =>
       usePaginated<Row>({
@@ -100,5 +104,33 @@ describe("usePaginated", () => {
     await waitFor(() => expect(result.current.error?.message).toBe("boom"));
     expect(result.current.data).toEqual([]);
     expect(result.current.pageCount).toBe(1);
+  });
+
+  it("keeps the previous page on screen while the next one loads", async () => {
+    let release!: () => void;
+    const get = vi.fn(
+      async (_url: string, config: { params: Record<string, number> }) => {
+        // Every page after the first waits until the test releases it.
+        if (config.params.offset > 0)
+          await new Promise<void>((resolve) => (release = resolve));
+        const rows = Array.from({ length: 23 }, (_, i) => ({ id: i + 1 }));
+        const { limit, offset } = config.params;
+        return {
+          data: { data: rows.slice(offset, offset + limit), total: 23 },
+        };
+      }
+    );
+    const { result } = setup(undefined, {
+      instance: { get } as unknown as AxiosInstance,
+    });
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    act(() => result.current.setPage(2));
+    await waitFor(() => expect(result.current.isFetching).toBe(true));
+    expect(result.current.data[0]?.id).toBe(1);
+    expect(result.current.isLoading).toBe(false);
+
+    act(() => release());
+    await waitFor(() => expect(result.current.data[0]?.id).toBe(11));
   });
 });

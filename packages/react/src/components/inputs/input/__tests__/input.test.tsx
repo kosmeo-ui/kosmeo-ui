@@ -58,7 +58,7 @@ describe("Input", () => {
   });
 
   it("shows a character count for text inputs", () => {
-    render(<Input label="Bio" value="hello" max={10} showCharCount />);
+    render(<Input label="Bio" value="hello" max={10} showCharCount readOnly />);
     expect(screen.getByText("5 / 10")).toBeInTheDocument();
   });
 

@@ -63,4 +63,11 @@ describe("ConfirmationModal", () => {
     await userEvent.keyboard("{Escape}");
     expect(p.handleHide).not.toHaveBeenCalled();
   });
+
+  it("ignores Enter until the confirmation text matches", async () => {
+    const p = props({ confirmationText: "acme" });
+    render(<ConfirmationModal {...p} />);
+    await userEvent.type(screen.getByLabelText(/to confirm/), "acm{Enter}");
+    expect(p.handleConfirm).not.toHaveBeenCalled();
+  });
 });

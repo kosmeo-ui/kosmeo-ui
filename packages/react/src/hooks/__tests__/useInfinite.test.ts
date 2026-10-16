@@ -76,4 +76,21 @@ describe("useInfinite", () => {
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2]));
     expect(axios.get).toHaveBeenLastCalledWith("/rows?limit=2&offset=0");
   });
+
+  it("drops rows a later page repeats", async () => {
+    // The second page repeats id 2, as when rows shift between requests.
+    const axios = mockAxios((url) => {
+      const offset = Number(
+        new URL(url, "http://x").searchParams.get("offset")
+      );
+      return offset === 0
+        ? { data: [{ id: 1 }, { id: 2 }], total: 3, hasMore: true }
+        : { data: [{ id: 2 }, { id: 3 }], total: 3, hasMore: false };
+    });
+    const { result } = setup(axios);
+    await waitFor(() => expect(result.current.data).toHaveLength(2));
+
+    act(() => result.current.onQueryChange("limit=2&offset=2"));
+    await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2, 3]));
+  });
 });

@@ -106,4 +106,17 @@ describe("Pagination", () => {
     await userEvent.selectOptions(screen.getByLabelText("Rows per page"), "50");
     expect(onPageSizeChange).toHaveBeenCalledWith(50);
   });
+
+  it("ends the summary at the total on a partial last page", () => {
+    render(
+      <Pagination
+        page={10}
+        pageCount={10}
+        onPageChange={() => {}}
+        total={240}
+        pageSize={25}
+      />
+    );
+    expect(screen.getByText("226–240 of 240")).toBeInTheDocument();
+  });
 });

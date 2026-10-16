@@ -67,4 +67,19 @@ describe("useLocalStorage", () => {
     });
     expect(result.current[0]).toBeNull();
   });
+
+  it("ignores other tabs' changes to other keys", () => {
+    const { result } = renderHook(() => useLocalStorage<number>("k", 1));
+
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: "other",
+          newValue: "7",
+          storageArea: localStorage,
+        })
+      );
+    });
+    expect(result.current[0]).toBe(1);
+  });
 });
