@@ -34,7 +34,9 @@ export const hasActiveFilters = (
 ): boolean => {
   for (const filter of pendingFilters) {
     if (filter.type === "RANGE") {
-      if (filter.startValue || filter.endValue) return true;
+      if (filter.startValue !== undefined && filter.startValue !== "")
+        return true;
+      if (filter.endValue !== undefined && filter.endValue !== "") return true;
     } else if (filter.type === "SEARCH") {
       if (filter.value) return true;
     } else if (filter.type === "LIST") {

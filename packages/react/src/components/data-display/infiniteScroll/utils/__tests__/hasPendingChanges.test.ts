@@ -224,9 +224,7 @@ describe("hasActiveFilters", () => {
     expect(hasActiveFilters([search(""), select(), list("a")])).toBe(true);
   });
 
-  // Bug: a NUMBER range bound of 0 is falsy, so Reset stays disabled for it
-  // although the query sends filter[price_gte]=0.
-  it.fails.each<[string, GeneratedRangeFilter]>([
+  it.each<[string, GeneratedRangeFilter]>([
     ["start", range(0)],
     ["end", range(undefined, 0)],
   ])("is true for a range %s of 0", (_name, filter) => {

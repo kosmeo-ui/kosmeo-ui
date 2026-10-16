@@ -29,7 +29,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
         );
       }
     } else if (f.type === "RANGE") {
-      if (f.startValue) {
+      if (f.startValue !== undefined && f.startValue !== "") {
         tags.push(
           <RangeFilterTag
             key={`${f.filterId}-start`}
@@ -40,7 +40,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
           />
         );
       }
-      if (f.endValue) {
+      if (f.endValue !== undefined && f.endValue !== "") {
         tags.push(
           <RangeFilterTag
             key={`${f.filterId}-end`}

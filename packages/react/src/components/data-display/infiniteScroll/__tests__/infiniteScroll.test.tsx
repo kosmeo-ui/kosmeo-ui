@@ -879,9 +879,7 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText("Code Start: m")).toBeVisible();
     });
 
-    // Bug: a bound of 0 is falsy, so it gets no tag (tags/index.tsx) though
-    // the query filters on it.
-    it.fails("shows a tag for a range start of 0", () => {
+    it("shows a tag for a range start of 0", () => {
       setup(withFilters(price(0)));
 
       expect(screen.getByText("Price Start: 0")).toBeVisible();
