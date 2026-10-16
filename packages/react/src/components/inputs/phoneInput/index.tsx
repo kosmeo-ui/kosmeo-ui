@@ -81,6 +81,7 @@ const PhoneInput = (props: PhoneInputProps) => {
 
   useEffect(() => {
     if (value === lastEmittedRef.current) return;
+    lastEmittedRef.current = value;
     if (!value) {
       setDisplay("");
       return;

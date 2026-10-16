@@ -140,9 +140,7 @@ describe("PhoneInput", () => {
       expect(field()).toHaveValue("");
     });
 
-    // Bug: a value shown from props is never recorded as last emitted, so a
-    // reset to "" matches the initial "" and the old number stays.
-    it.fails("empties the field when the parent clears the value", () => {
+    it("empties the field when the parent clears the value", () => {
       const { rerender } = render(
         <PhoneInput label="Phone" value="+12015550123" onChange={() => {}} />
       );
