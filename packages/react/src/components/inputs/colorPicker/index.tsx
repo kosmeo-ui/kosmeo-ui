@@ -66,6 +66,7 @@ const ColorPicker = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
+            required={required}
           />
         </div>
       </div>

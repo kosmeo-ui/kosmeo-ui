@@ -96,9 +96,7 @@ describe("ColorPicker", () => {
       expect(screen.getByText("*")).toBeVisible();
     });
 
-    // Bug: required only draws the aria-hidden asterisk; the hex field is
-    // never marked required, so assistive tech and form validation miss it.
-    it.fails("marks the hex field required", () => {
+    it("marks the hex field required", () => {
       render(
         <ColorPicker label="Brand" value="" required onChange={() => {}} />
       );
