@@ -14,7 +14,10 @@ import Input from "../input/index.js";
 import "./styles.css";
 
 interface SearchListProps<T> extends PropsWithSize {
-  /** **_Optional_** the selected value for this component */
+  /**
+   * **_Optional_** the selected value, for a controlled SearchList (`null`
+   * for none). Leave it out and SearchList keeps track of the pick itself.
+   */
   value?: T | null;
   /** The useQuery function that is used to retrieve the data from the server */
   queryFn: (
@@ -63,6 +66,10 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
     props.value ? String(props.value[props.labelKey]) : ""
   );
   const [searchValue, setSearchValue] = useState<string>("");
+  // Without a `value` prop, the pick is held here instead.
+  const isControlled = props.value !== undefined;
+  const [ownValue, setOwnValue] = useState<T | null>(null);
+  const selected = isControlled ? props.value : ownValue;
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -93,12 +100,13 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
 
   useEffect(() => {
     if (inputValue.length === 0) {
+      setOwnValue(null);
       props.onSelect(null);
       if (!isOpen) setSearchValue("");
       return;
     }
     if (inputValue.length < 3) return;
-    if (props.value && inputValue === String(props.value[props.labelKey])) {
+    if (selected && inputValue === String(selected[props.labelKey])) {
       setSearchValue("");
       setIsOpen(false);
       return;
@@ -111,7 +119,7 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
       setSearchValue("");
       return;
     }
-    if (props.value && debouncedInput === String(props.value[props.labelKey])) {
+    if (selected && debouncedInput === String(selected[props.labelKey])) {
       setSearchValue("");
       return;
     }
@@ -124,6 +132,7 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
 
   const handleOptionClick = (option: T, event?: React.MouseEvent) => {
     setInputValue(String(option[props.labelKey]));
+    if (!isControlled) setOwnValue(option);
     props.onSelect(option, event);
     setIsOpen(false);
     setHighlightedIndex(-1);
@@ -166,9 +175,9 @@ const SearchList = <T,>(props: SearchListProps<T>) => {
   const handleInputBlur = () => {
     setTimeout(() => {
       if (isOpen) return;
-      if (props.value) {
-        setInputValue(String(props.value[props.labelKey]));
-        props.onSelect(props.value);
+      if (selected) {
+        setInputValue(String(selected[props.labelKey]));
+        props.onSelect(selected);
       } else {
         setInputValue("");
       }

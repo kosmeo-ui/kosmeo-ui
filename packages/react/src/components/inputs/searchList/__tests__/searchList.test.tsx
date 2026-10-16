@@ -186,4 +186,53 @@ describe("SearchList", () => {
     expect(input).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
+
+  describe("uncontrolled, with no value prop", () => {
+    const setupUncontrolled = () => {
+      const onSelect = vi.fn();
+      render(
+        <SearchList<City>
+          label="City"
+          labelKey="name"
+          searchKey="name"
+          queryFn={searchCities()}
+          onSelect={onSelect}
+        />
+      );
+      return {
+        onSelect,
+        user: userEvent.setup({ advanceTimers: vi.advanceTimersByTime }),
+        input: screen.getByRole("combobox", { name: "City" }),
+      };
+    };
+
+    it("stays closed after a pick", async () => {
+      const { user, input, onSelect } = setupUncontrolled();
+      await search(user, input, "bos");
+      await user.keyboard("{ArrowDown}{Enter}");
+      // The picked label must not count as a new search once debounced.
+      await settle();
+
+      expect(onSelect).toHaveBeenLastCalledWith(cities[0], undefined);
+      expect(input).toHaveValue("Boston");
+      expect(input).toHaveAttribute("aria-expanded", "false");
+      expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+    });
+
+    it("forgets the pick when the input is cleared", async () => {
+      const { user, input, onSelect } = setupUncontrolled();
+      await search(user, input, "bos");
+      await user.keyboard("{ArrowDown}{Enter}");
+      await settle();
+
+      await user.clear(input);
+      await settle();
+      expect(onSelect).toHaveBeenLastCalledWith(null);
+      // Typing the old label again is a fresh search, not the selection.
+      await search(user, input, "Boston");
+      expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual([
+        "Boston",
+      ]);
+    });
+  });
 });
