@@ -1,3 +1,29 @@
+## 0.3.0 (2026-10-16)
+
+### 🚀 Features
+
+- MultiSelect is accessible: its trigger is a combobox named by the field label, Enter/Space/ArrowDown open it, the options are a multi-select listbox navigable with the arrow keys and Enter, and Escape closes it and returns focus. Input accepts `aria-label`, `aria-controls` and `aria-activedescendant`. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- Typeahead is an ARIA combobox: its input reports the open state and the highlighted option, and the suggestions are a listbox named by the field label. Input accepts `role="combobox"`, `aria-expanded` and `aria-autocomplete`. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+
+### 🩹 Fixes
+
+- RichTextEditor no longer crashes when server-rendered or under Next.js: the editor is created after mount, and the toolbar stays disabled until it exists. MultiSelect keys its chips and options by value (or label), so they keep their DOM and focus across renders, and they reflect the latest `disabled` and `onChange`. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- MultiSelect closes its dropdown when focus moves outside it, such as on Tab. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- The required asterisk is hidden from assistive tech, so field names no longer end in "*". RadioGroup is a named `radiogroup` with `aria-required` and required radios, CheckboxGroup is a named `group` whose name says when it's required, and a required RichTextEditor sets `aria-required`. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- SearchList is an ARIA combobox: its input reports the open state and the highlighted option, results are a listbox named by the field label, and prompts are status messages. The keyboard only reaches results on screen, never ones hidden behind the loading spinner, and the highlight resets as the search changes. The `id` prop now reaches the input. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- A Badge that is both clickable and removable renders its action and remove buttons side by side, instead of a button inside a button (invalid HTML, and a hydration error). ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- RichTextEditor no longer calls `onChange` when its `value` prop changes: syncing an outside value isn't an edit. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- Typeahead with `showAll` and `lazyLoad` loads more options as the list scrolls, instead of stopping at the first page. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- `useInfiniteCursor` and `useInfiniteArchivableCursor` send one request when the next page is asked for again before the first arrives, instead of cancelling and resending it. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- SearchList works without a `value` prop: it keeps track of the pick itself, so the list stays closed after a selection and blur restores the picked label. Passing `value` (or `null`) keeps it controlled, as before. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- Unit tests (Vitest + Testing Library) for hooks and core components; test files are kept out of dist and the published tarball. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+- Input, TextArea, Select, Checkbox, Switch, MultiSelect, FileUpload and RichTextEditor generate their default `id` with `useId`, so it stays stable across renders and matches between server and client. ([#6](https://github.com/kosmeo-ui/kosmeo-ui/pull/6))
+
+### ❤️ Thank You
+
+- Cameron Perera
+- Claude Opus 5.5
+
 ## 0.2.0 (2026-10-15)
 
 ### 🚀 Features
