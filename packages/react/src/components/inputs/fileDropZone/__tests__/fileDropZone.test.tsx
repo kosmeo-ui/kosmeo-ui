@@ -234,9 +234,7 @@ describe("FileDropZone", () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
-  // Bug: the input's id is hardcoded, so every zone's "Browse Files" label
-  // opens the first zone's picker.
-  it.fails("browses into its own zone when there are two", async () => {
+  it("browses into its own zone when there are two", async () => {
     const user = userEvent.setup();
     const onSecond = vi.fn();
     render(
