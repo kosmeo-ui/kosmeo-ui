@@ -71,6 +71,7 @@ const ListFilter = (props: InfiniteScrollListFilterProps) => {
           onChange={handleChange}
           type="text"
           onKeyDown={handleKeydown}
+          aria-label={`${props.filter.title} values`}
         />
         <Button size="sm" disabled={!allowSubmit} onClick={handleSubmit}>
           Add Filter

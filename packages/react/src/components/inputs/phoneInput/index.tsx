@@ -192,6 +192,7 @@ const PhoneInput = (props: PhoneInputProps) => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search country or code"
+              aria-label="Search country or code"
             />
           </div>
           <ul className="k-phone-input-list" role="listbox">

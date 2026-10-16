@@ -203,6 +203,7 @@ const FileUpload = (props: FileUploadProps) => {
               <IconButton
                 icon={faTrash}
                 onClick={() => handleRemoveFile(index)}
+                aria-label={`Remove ${file.name}`}
                 variant="danger"
                 size={size}
               />
@@ -215,7 +216,7 @@ const FileUpload = (props: FileUploadProps) => {
   return (
     <div className={"k-file-upload-container"}>
       {props.label && (
-        <label className="k-file-upload-label-text">
+        <label htmlFor={componentId} className="k-file-upload-label-text">
           {props.label}
           {required && <MandatoryAsterisk />}
         </label>

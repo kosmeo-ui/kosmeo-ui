@@ -94,13 +94,14 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
         headerElement: (t) => (
           <span className="k-lft-modal-table-header">{t}</span>
         ),
-        cellElement: () => (
+        cellElement: (value) => (
           <div className="k-lft-modal-table-remove-button">
             <IconButton
               icon={faXmark}
               size="sm"
               variant="danger"
               onClick={handleRemove}
+              aria-label={`Remove ${value}`}
             />
           </div>
         ),
@@ -126,6 +127,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
           <Input
             size="sm"
             placeholder="Search"
+            aria-label="Search values"
             value={modalFilter}
             onChange={(e) => setModalFilter(e.target.value)}
           />
@@ -133,6 +135,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
             <Input
               size="sm"
               placeholder="Add new values"
+              aria-label="Add new values"
               value={modalAddValues}
               onChange={(e) => setModalAddValues(e.target.value)}
             />
@@ -141,6 +144,7 @@ const ListFilterTag = (props: InfiniteScrollListFilterTagProps) => {
               icon={faPlus}
               disabled={!allowAdd}
               onClick={handleAddValues}
+              aria-label="Add values"
             />
           </Row>
           <div className="k-lft-modal-table-container">

@@ -338,6 +338,8 @@ const InfiniteScroll = <TData extends object>(
       <div
         ref={infiniteScrollTableRef}
         className="k-infinite-scroll-table-container"
+        role="region"
+        aria-label={props.menu.title}
         onScroll={handleScroll}
       >
         {props.columns && (

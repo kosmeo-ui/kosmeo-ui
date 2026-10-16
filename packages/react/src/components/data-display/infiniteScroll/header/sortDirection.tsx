@@ -28,6 +28,7 @@ const SortDirection = (props: DirectionSortProps) => {
       align="right"
       size="sm"
       label={props.sortDirection === "asc" ? "Ascending" : "Descending"}
+      aria-label={`Sort direction: ${props.sortDirection === "asc" ? "Ascending" : "Descending"}`}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
     >
