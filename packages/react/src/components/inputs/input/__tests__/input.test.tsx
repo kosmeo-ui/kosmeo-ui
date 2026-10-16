@@ -5,61 +5,115 @@ import { useState } from "react";
 import Input from "../index.js";
 
 describe("Input", () => {
-  it("associates the label with the input", () => {
+  it("is named by its label", () => {
     render(<Input label="Name" />);
-    expect(screen.getByLabelText("Name")).toHaveClass("k-input", "k-input-md");
+
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeVisible();
+  });
+
+  it("is medium-sized by default", () => {
+    render(<Input label="Name" />);
+
+    expect(screen.getByRole("textbox", { name: "Name" })).toHaveClass(
+      "k-input k-input-md",
+      { exact: true }
+    );
   });
 
   it("marks required fields", () => {
     render(<Input label="Name" required />);
-    expect(screen.getByRole("textbox")).toBeRequired();
+
+    expect(screen.getByRole("textbox", { name: "Name" })).toBeRequired();
   });
 
   it("calls onChange as the user types", async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(<Input label="Name" onChange={onChange} />);
-    await userEvent.type(screen.getByLabelText("Name"), "abc");
+
+    await user.type(screen.getByRole("textbox", { name: "Name" }), "abc");
+
     expect(onChange).toHaveBeenCalledTimes(3);
   });
 
-  it("shows error instead of helper text", () => {
-    const { rerender } = render(<Input helperText="Help" />);
-    expect(screen.getByText("Help")).toBeInTheDocument();
+  it("shows helper text", () => {
+    render(<Input helperText="Help" />);
 
-    rerender(<Input helperText="Help" error="Bad" />);
-    expect(screen.getByText("Bad")).toBeInTheDocument();
+    expect(screen.getByText("Help")).toBeVisible();
+  });
+
+  it("shows an error", () => {
+    render(<Input helperText="Help" error="Bad" />);
+
+    expect(screen.getByText("Bad")).toBeVisible();
+  });
+
+  it("hides helper text while there is an error", () => {
+    render(<Input helperText="Help" error="Bad" />);
+
     expect(screen.queryByText("Help")).not.toBeInTheDocument();
   });
 
-  it("toggles password visibility", async () => {
-    render(<Input label="Password" type="password" />);
-    const input = screen.getByLabelText("Password");
-    expect(input).toHaveAttribute("type", "password");
+  describe("password", () => {
+    it("is masked by default", () => {
+      render(<Input label="Password" type="password" />);
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Show password" })
-    );
-    expect(input).toHaveAttribute("type", "text");
+      expect(screen.getByLabelText("Password")).toHaveAttribute(
+        "type",
+        "password"
+      );
+    });
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Hide password" })
-    );
-    expect(input).toHaveAttribute("type", "password");
+    it("is revealed by the show button", async () => {
+      const user = userEvent.setup();
+      render(<Input label="Password" type="password" />);
+
+      await user.click(screen.getByRole("button", { name: "Show password" }));
+
+      expect(screen.getByLabelText("Password")).toHaveAttribute("type", "text");
+    });
+
+    it("is masked again by the hide button", async () => {
+      const user = userEvent.setup();
+      render(<Input label="Password" type="password" />);
+      await user.click(screen.getByRole("button", { name: "Show password" }));
+
+      await user.click(screen.getByRole("button", { name: "Hide password" }));
+
+      expect(screen.getByLabelText("Password")).toHaveAttribute(
+        "type",
+        "password"
+      );
+    });
   });
 
-  it("renders prefix and suffix addons", () => {
-    render(<Input prefix="$" suffix="USD" />);
-    expect(screen.getByText("$")).toHaveClass("k-input-addon-prefix");
-    expect(screen.getByText("USD")).toHaveClass("k-input-addon-suffix");
-    expect(screen.getByRole("textbox")).toHaveClass(
-      "k-input-with-prefix",
-      "k-input-with-suffix"
-    );
+  describe("addons", () => {
+    it.each([
+      ["prefix", "$"],
+      ["suffix", "USD"],
+    ] as const)("renders the %s addon", (side, text) => {
+      render(<Input label="Price" {...{ [side]: text }} />);
+
+      expect(screen.getByText(text)).toHaveClass(
+        `k-input-addon k-input-addon-${side} k-input-addon-md`,
+        { exact: true }
+      );
+    });
+
+    it("styles the input for both addons", () => {
+      render(<Input label="Price" prefix="$" suffix="USD" />);
+
+      expect(screen.getByRole("textbox", { name: "Price" })).toHaveClass(
+        "k-input k-input-md k-input-with-addon k-input-with-prefix k-input-with-suffix",
+        { exact: true }
+      );
+    });
   });
 
   it("shows a character count for text inputs", () => {
     render(<Input label="Bio" value="hello" max={10} showCharCount readOnly />);
-    expect(screen.getByText("5 / 10")).toBeInTheDocument();
+
+    expect(screen.getByText("5 / 10")).toBeVisible();
   });
 
   describe("onClear", () => {
@@ -75,26 +129,41 @@ describe("Input", () => {
       );
     };
 
-    it("clears the value and keeps focus in the field", async () => {
+    it("clears the value", async () => {
+      const user = userEvent.setup();
       render(<Clearable />);
-      await userEvent.click(screen.getByRole("button", { name: "Clear" }));
 
-      const input = screen.getByLabelText("Search");
-      expect(input).toHaveValue("");
-      expect(input).toHaveFocus();
+      await user.click(screen.getByRole("button", { name: "Clear" }));
+
+      expect(screen.getByRole("textbox", { name: "Search" })).toHaveValue("");
+    });
+
+    it("keeps focus in the field", async () => {
+      const user = userEvent.setup();
+      render(<Clearable />);
+
+      await user.click(screen.getByRole("button", { name: "Clear" }));
+
+      expect(screen.getByRole("textbox", { name: "Search" })).toHaveFocus();
+    });
+
+    it("removes the clear button once the field is empty", async () => {
+      const user = userEvent.setup();
+      render(<Clearable />);
+
+      await user.click(screen.getByRole("button", { name: "Clear" }));
+
       expect(
         screen.queryByRole("button", { name: "Clear" })
       ).not.toBeInTheDocument();
     });
 
-    it("is hidden when disabled or read-only", () => {
-      const { rerender } = render(
-        <Input value="x" onClear={() => {}} disabled />
-      );
-      expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
+    it.each(["disabled", "readOnly"])("is hidden when %s", (prop) => {
+      render(<Input value="x" onClear={() => {}} {...{ [prop]: true }} />);
 
-      rerender(<Input value="x" onClear={() => {}} readOnly />);
-      expect(screen.queryByRole("button", { name: "Clear" })).toBeNull();
+      expect(
+        screen.queryByRole("button", { name: "Clear" })
+      ).not.toBeInTheDocument();
     });
   });
 });

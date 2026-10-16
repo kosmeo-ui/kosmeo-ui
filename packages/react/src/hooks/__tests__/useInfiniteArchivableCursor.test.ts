@@ -32,6 +32,7 @@ describe("useInfiniteArchivableCursor", () => {
         "limit=10&filter%5BincludeArchived%5D=true&filter%5BincludeArchived_op%5D=eq"
       )
     );
+
     await waitFor(() =>
       expect(axios.get).toHaveBeenLastCalledWith(
         "/projects?limit=10&includeArchived=true"
@@ -46,6 +47,7 @@ describe("useInfiniteArchivableCursor", () => {
     act(() =>
       result.current.onQueryChange("limit=10&filter%5BincludeArchived%5D=false")
     );
+
     await waitFor(() =>
       expect(axios.get).toHaveBeenLastCalledWith("/projects?limit=10")
     );
@@ -73,6 +75,7 @@ describe("useInfiniteArchivableCursor", () => {
       result.current.onQueryChange("limit=1&offset=1");
       result.current.onQueryChange("limit=1&offset=1");
     });
+
     await waitFor(() => expect(result.current.data).toHaveLength(2));
     expect(axios.get).toHaveBeenCalledTimes(2);
   });

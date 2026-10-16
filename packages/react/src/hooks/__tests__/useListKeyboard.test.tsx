@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import useListKeyboard from "../useListKeyboard.js";
 import { expect, it, vi } from "vitest";
 import { useState } from "react";
@@ -7,13 +8,13 @@ const Harness = ({
   isOpen = true,
   length = 3,
   selectOnTab,
-  onSelect,
+  onSelect = () => {},
   onClose = () => {},
 }: {
   isOpen?: boolean;
   length?: number;
   selectOnTab?: boolean;
-  onSelect: (index: number) => void;
+  onSelect?: (index: number) => void;
   onClose?: () => void;
 }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
@@ -35,68 +36,96 @@ const Harness = ({
   );
 };
 
-const highlighted = () =>
-  Number(screen.getByLabelText("list").dataset.highlighted);
-const press = (key: string) =>
-  fireEvent.keyDown(screen.getByLabelText("list"), { key });
+const input = () => screen.getByRole("textbox", { name: "list" });
 
-it("moves the highlight with the arrow keys, clamped to the list", () => {
-  render(<Harness onSelect={vi.fn()} />);
+it.each([
+  ["highlights the first item on ArrowDown", "{ArrowDown}", "0"],
+  [
+    "stops at the last item",
+    "{ArrowDown}{ArrowDown}{ArrowDown}{ArrowDown}",
+    "2",
+  ],
+  [
+    "stops at the first item",
+    "{ArrowDown}{ArrowDown}{ArrowDown}{ArrowDown}{ArrowUp}{ArrowUp}{ArrowUp}",
+    "0",
+  ],
+])("%s", async (_name, keys, expected) => {
+  const user = userEvent.setup();
+  render(<Harness />);
+  await user.click(input());
 
-  press("ArrowDown");
-  expect(highlighted()).toBe(0);
-  press("ArrowDown");
-  press("ArrowDown");
-  press("ArrowDown");
-  expect(highlighted()).toBe(2);
-  press("ArrowUp");
-  press("ArrowUp");
-  press("ArrowUp");
-  expect(highlighted()).toBe(0);
+  await user.keyboard(keys);
+
+  expect(input()).toHaveAttribute("data-highlighted", expected);
 });
 
-it("selects the highlighted item on Enter, and nothing when none is", () => {
+it("selects nothing on Enter when no item is highlighted", async () => {
+  const user = userEvent.setup();
   const onSelect = vi.fn();
   render(<Harness onSelect={onSelect} />);
+  await user.click(input());
 
-  press("Enter");
+  await user.keyboard("{Enter}");
+
   expect(onSelect).not.toHaveBeenCalled();
+});
 
-  press("ArrowDown");
-  press("ArrowDown");
-  press("Enter");
+it("selects the highlighted item on Enter", async () => {
+  const user = userEvent.setup();
+  const onSelect = vi.fn();
+  render(<Harness onSelect={onSelect} />);
+  await user.click(input());
+  await user.keyboard("{ArrowDown}{ArrowDown}");
+
+  await user.keyboard("{Enter}");
+
   expect(onSelect).toHaveBeenCalledWith(1);
 });
 
-it("closes and clears the highlight on Escape", () => {
+it("closes and clears the highlight on Escape", async () => {
+  const user = userEvent.setup();
   const onClose = vi.fn();
-  render(<Harness onSelect={vi.fn()} onClose={onClose} />);
+  render(<Harness onClose={onClose} />);
+  await user.click(input());
+  await user.keyboard("{ArrowDown}");
 
-  press("ArrowDown");
-  press("Escape");
+  await user.keyboard("{Escape}");
+
   expect(onClose).toHaveBeenCalled();
-  expect(highlighted()).toBe(-1);
+  expect(input()).toHaveAttribute("data-highlighted", "-1");
 });
 
-it("selects the first item on Tab when selectOnTab is set", () => {
+it("selects the first item on Tab when selectOnTab is set", async () => {
+  const user = userEvent.setup();
   const onSelect = vi.fn();
   render(<Harness onSelect={onSelect} selectOnTab />);
-  press("Tab");
+  await user.click(input());
+
+  await user.keyboard("{Tab}");
+
   expect(onSelect).toHaveBeenCalledWith(0);
 });
 
-it("ignores Tab without selectOnTab", () => {
+it("ignores Tab without selectOnTab", async () => {
+  const user = userEvent.setup();
   const onSelect = vi.fn();
   render(<Harness onSelect={onSelect} />);
-  press("Tab");
+  await user.click(input());
+
+  await user.keyboard("{Tab}");
+
   expect(onSelect).not.toHaveBeenCalled();
 });
 
-it("ignores keys while closed", () => {
+it("ignores keys while closed", async () => {
+  const user = userEvent.setup();
   const onSelect = vi.fn();
   render(<Harness onSelect={onSelect} isOpen={false} selectOnTab />);
-  press("ArrowDown");
-  press("Tab");
-  expect(highlighted()).toBe(-1);
+  await user.click(input());
+
+  await user.keyboard("{ArrowDown}{Tab}");
+
+  expect(input()).toHaveAttribute("data-highlighted", "-1");
   expect(onSelect).not.toHaveBeenCalled();
 });

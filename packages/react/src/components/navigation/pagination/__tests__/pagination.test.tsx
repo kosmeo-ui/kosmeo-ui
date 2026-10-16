@@ -9,89 +9,100 @@ const pageButtons = () =>
     .map((b) => b.textContent);
 
 describe("Pagination", () => {
-  it("is a labelled navigation landmark marking the current page", () => {
+  it("is a navigation landmark named Pagination", () => {
     render(<Pagination page={2} pageCount={3} onPageChange={() => {}} />);
+
     expect(
       screen.getByRole("navigation", { name: "Pagination" })
-    ).toBeInTheDocument();
+    ).toBeVisible();
+  });
+
+  it("marks the current page", () => {
+    render(<Pagination page={2} pageCount={3} onPageChange={() => {}} />);
+
     expect(screen.getByRole("button", { name: "Page 2" })).toHaveAttribute(
       "aria-current",
       "page"
     );
+  });
+
+  it("lists every page when they all fit", () => {
+    render(<Pagination page={2} pageCount={3} onPageChange={() => {}} />);
+
     expect(pageButtons()).toEqual(["1", "2", "3"]);
   });
 
   it("shows gaps for long ranges", () => {
     render(<Pagination page={5} pageCount={10} onPageChange={() => {}} />);
+
     expect(pageButtons()).toEqual(["1", "4", "5", "6", "10"]);
   });
 
-  it("navigates with previous, next and page buttons", async () => {
+  it.each([
+    ["Previous page", 1],
+    ["Next page", 3],
+    ["Page 3", 3],
+  ])("reports the page %s goes to from page 2", async (name, expected) => {
+    const user = userEvent.setup();
     const onPageChange = vi.fn();
     render(<Pagination page={2} pageCount={3} onPageChange={onPageChange} />);
 
-    await userEvent.click(
-      screen.getByRole("button", { name: "Previous page" })
-    );
-    expect(onPageChange).toHaveBeenLastCalledWith(1);
-    await userEvent.click(screen.getByRole("button", { name: "Next page" }));
-    expect(onPageChange).toHaveBeenLastCalledWith(3);
-    await userEvent.click(screen.getByRole("button", { name: "Page 3" }));
-    expect(onPageChange).toHaveBeenLastCalledWith(3);
+    await user.click(screen.getByRole("button", { name }));
+
+    expect(onPageChange).toHaveBeenCalledExactlyOnceWith(expected);
   });
 
   it("doesn't report the current page", async () => {
+    const user = userEvent.setup();
     const onPageChange = vi.fn();
     render(<Pagination page={2} pageCount={3} onPageChange={onPageChange} />);
-    await userEvent.click(screen.getByRole("button", { name: "Page 2" }));
+
+    await user.click(screen.getByRole("button", { name: "Page 2" }));
+
     expect(onPageChange).not.toHaveBeenCalled();
   });
 
-  it("disables previous on the first page and next on the last", () => {
-    const { rerender } = render(
-      <Pagination page={1} pageCount={3} onPageChange={() => {}} />
-    );
-    expect(
-      screen.getByRole("button", { name: "Previous page" })
-    ).toBeDisabled();
+  it.each([
+    [1, "Previous page"],
+    [3, "Next page"],
+  ])("disables on page %i of 3: %s", (page, name) => {
+    render(<Pagination page={page} pageCount={3} onPageChange={() => {}} />);
 
-    rerender(<Pagination page={3} pageCount={3} onPageChange={() => {}} />);
-    expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled();
+    expect(screen.getByRole("button", { name })).toBeDisabled();
   });
 
   it("clamps an out-of-range page", () => {
     render(<Pagination page={9} pageCount={3} onPageChange={() => {}} />);
+
     expect(screen.getByRole("button", { name: "Page 3" })).toHaveAttribute(
       "aria-current",
       "page"
     );
   });
 
-  it("summarises the visible range", () => {
-    const { rerender } = render(
-      <Pagination
-        page={3}
-        pageCount={10}
-        onPageChange={() => {}}
-        total={240}
-        pageSize={25}
-      />
-    );
-    expect(screen.getByText("51–75 of 240")).toBeInTheDocument();
+  it.each([
+    [3, 10, 240, "51–75 of 240"],
+    [10, 10, 240, "226–240 of 240"],
+    [1, 0, 0, "No results"],
+  ])(
+    "summarises page %i of %i with %i items as %s",
+    (page, pageCount, total, summary) => {
+      render(
+        <Pagination
+          page={page}
+          pageCount={pageCount}
+          onPageChange={() => {}}
+          total={total}
+          pageSize={25}
+        />
+      );
 
-    rerender(
-      <Pagination
-        page={1}
-        pageCount={0}
-        onPageChange={() => {}}
-        total={0}
-        pageSize={25}
-      />
-    );
-    expect(screen.getByText("No results")).toBeInTheDocument();
-  });
+      expect(screen.getByText(summary)).toBeVisible();
+    }
+  );
 
   it("changes the page size", async () => {
+    const user = userEvent.setup();
     const onPageSizeChange = vi.fn();
     render(
       <Pagination
@@ -103,20 +114,9 @@ describe("Pagination", () => {
         onPageSizeChange={onPageSizeChange}
       />
     );
-    await userEvent.selectOptions(screen.getByLabelText("Rows per page"), "50");
-    expect(onPageSizeChange).toHaveBeenCalledWith(50);
-  });
 
-  it("ends the summary at the total on a partial last page", () => {
-    render(
-      <Pagination
-        page={10}
-        pageCount={10}
-        onPageChange={() => {}}
-        total={240}
-        pageSize={25}
-      />
-    );
-    expect(screen.getByText("226–240 of 240")).toBeInTheDocument();
+    await user.selectOptions(screen.getByLabelText("Rows per page"), "50");
+
+    expect(onPageSizeChange).toHaveBeenCalledWith(50);
   });
 });

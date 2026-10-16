@@ -23,31 +23,57 @@ const App = ({ enabled }: { enabled: boolean }) => (
   </>
 );
 
-it("focuses the first focusable element when enabled", () => {
+it("focuses the first focusable element when rendered enabled", () => {
   render(<App enabled />);
+
   expect(screen.getByRole("button", { name: "First" })).toHaveFocus();
 });
 
-it("wraps Tab and Shift+Tab inside the container", async () => {
+it("focuses the first focusable element when it becomes enabled", async () => {
+  const user = userEvent.setup();
+  const { rerender } = render(<App enabled={false} />);
+  await user.click(screen.getByRole("button", { name: "Outside" }));
+
+  rerender(<App enabled />);
+
+  expect(screen.getByRole("button", { name: "First" })).toHaveFocus();
+});
+
+it("skips disabled elements on Tab", async () => {
   const user = userEvent.setup();
   render(<App enabled />);
 
   await user.tab();
-  expect(screen.getByRole("button", { name: "Last" })).toHaveFocus();
-  await user.tab();
-  expect(screen.getByRole("button", { name: "First" })).toHaveFocus();
-  await user.tab({ shift: true });
+
   expect(screen.getByRole("button", { name: "Last" })).toHaveFocus();
 });
 
-it("restores the previous focus when disabled", () => {
-  const { rerender } = render(<App enabled={false} />);
-  const outside = screen.getByRole("button", { name: "Outside" });
-  outside.focus();
+it("wraps Tab from the last element to the first", async () => {
+  const user = userEvent.setup();
+  render(<App enabled />);
+  await user.tab();
 
-  rerender(<App enabled />);
+  await user.tab();
+
   expect(screen.getByRole("button", { name: "First" })).toHaveFocus();
+});
+
+it("wraps Shift+Tab from the first element to the last", async () => {
+  const user = userEvent.setup();
+  render(<App enabled />);
+
+  await user.tab({ shift: true });
+
+  expect(screen.getByRole("button", { name: "Last" })).toHaveFocus();
+});
+
+it("restores the previous focus when disabled", async () => {
+  const user = userEvent.setup();
+  const { rerender } = render(<App enabled={false} />);
+  await user.click(screen.getByRole("button", { name: "Outside" }));
+  rerender(<App enabled />);
 
   rerender(<App enabled={false} />);
-  expect(outside).toHaveFocus();
+
+  expect(screen.getByRole("button", { name: "Outside" })).toHaveFocus();
 });

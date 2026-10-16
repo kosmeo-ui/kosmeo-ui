@@ -9,23 +9,35 @@ const options = [
 ];
 
 describe("Select", () => {
-  it("renders the options with the label", () => {
+  it("is named by its label and shows the value", () => {
     render(<Select label="Fruit" options={options} value="a" />);
-    const select = screen.getByLabelText("Fruit");
-    expect(select).toHaveValue("a");
+
+    expect(screen.getByRole("combobox", { name: "Fruit" })).toHaveValue("a");
+  });
+
+  it("renders an option for each entry", () => {
+    render(<Select label="Fruit" options={options} value="a" />);
+
     expect(screen.getAllByRole("option")).toHaveLength(2);
   });
 
   it("calls onChange with the chosen value", async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(
       <Select label="Fruit" options={options} value="a" onChange={onChange} />
     );
-    await userEvent.selectOptions(screen.getByLabelText("Fruit"), "b");
+
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: "Fruit" }),
+      "b"
+    );
+
     expect(onChange).toHaveBeenCalledWith("b");
   });
 
   it("reports undefined when the placeholder is chosen", async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(
       <Select
@@ -36,7 +48,12 @@ describe("Select", () => {
         onChange={onChange}
       />
     );
-    await userEvent.selectOptions(screen.getByLabelText("Fruit"), "");
+
+    await user.selectOptions(
+      screen.getByRole("combobox", { name: "Fruit" }),
+      ""
+    );
+
     expect(onChange).toHaveBeenCalledWith(undefined);
   });
 
@@ -44,18 +61,23 @@ describe("Select", () => {
     render(
       <Select options={options} placeholder="Pick one" required value="" />
     );
+
     expect(screen.getByRole("option", { name: "Pick one" })).toBeDisabled();
   });
 
   it("syncs the parent to the first option when the value matches none", () => {
     const onChange = vi.fn();
+
     render(<Select options={options} value="zzz" onChange={onChange} />);
+
     expect(onChange).toHaveBeenCalledWith("a");
   });
 
   it("leaves an empty value alone when there's a placeholder", () => {
     const onChange = vi.fn();
+
     render(<Select options={options} placeholder="Pick" onChange={onChange} />);
+
     expect(onChange).not.toHaveBeenCalled();
   });
 });

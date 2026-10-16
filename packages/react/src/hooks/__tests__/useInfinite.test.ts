@@ -36,19 +36,29 @@ const ids = (rows: Row[]) => rows.map((r) => r.id);
 describe("useInfinite", () => {
   it("loads the first page with the total", async () => {
     const { result } = setup();
+
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2]));
     expect(result.current.total).toBe(5);
     expect(result.current.hasMore).toBe(true);
   });
 
-  it("appends later pages", async () => {
+  it("appends the next page", async () => {
     const { result } = setup();
     await waitFor(() => expect(result.current.data).toHaveLength(2));
 
     act(() => result.current.onQueryChange("limit=2&offset=2"));
+
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2, 3, 4]));
+  });
+
+  it("appends the last page and reports there are no more", async () => {
+    const { result } = setup();
+    await waitFor(() => expect(result.current.data).toHaveLength(2));
+    act(() => result.current.onQueryChange("limit=2&offset=2"));
+    await waitFor(() => expect(result.current.data).toHaveLength(4));
 
     act(() => result.current.onQueryChange("limit=2&offset=4"));
+
     await waitFor(() =>
       expect(ids(result.current.data)).toEqual([1, 2, 3, 4, 5])
     );
@@ -62,6 +72,7 @@ describe("useInfinite", () => {
     await waitFor(() => expect(result.current.data).toHaveLength(4));
 
     act(() => result.current.onQueryChange("limit=3&offset=0"));
+
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2, 3]));
   });
 
@@ -73,6 +84,7 @@ describe("useInfinite", () => {
     await waitFor(() => expect(result.current.data).toHaveLength(4));
 
     act(() => result.current.reload());
+
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2]));
     expect(axios.get).toHaveBeenLastCalledWith("/rows?limit=2&offset=0");
   });
@@ -91,6 +103,7 @@ describe("useInfinite", () => {
     await waitFor(() => expect(result.current.data).toHaveLength(2));
 
     act(() => result.current.onQueryChange("limit=2&offset=2"));
+
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2, 3]));
   });
 });

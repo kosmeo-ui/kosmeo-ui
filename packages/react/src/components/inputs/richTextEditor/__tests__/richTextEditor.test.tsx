@@ -1,116 +1,210 @@
 import { hydrate, serverRender } from "../../__tests__/hydration.js";
-import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import RichTextEditor from "../index.js";
+import {
+  getDefaultNormalizer,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 
-const toolbar = () =>
-  ["Bold", "Italic", "Underline", "Bullet list", "Numbered list"].map((name) =>
-    screen.getByRole("button", { name })
-  );
+const toolbarNames = [
+  "Bold",
+  "Italic",
+  "Underline",
+  "Bullet list",
+  "Numbered list",
+];
+
+/** Waits for TipTap to create the editor, which enables the toolbar. */
+const ready = () =>
+  waitFor(() => {
+    for (const name of toolbarNames)
+      expect(screen.getByRole("button", { name })).toBeEnabled();
+  });
 
 describe("RichTextEditor", () => {
-  it("server-renders with the toolbar disabled", () => {
-    const container = serverRender(
-      <RichTextEditor label="Notes" value="<p>Hi</p>" />
-    );
-    expect(container.querySelector("label")).toHaveTextContent("Notes");
-    const bold = container.querySelector('button[aria-label="Bold"]');
-    expect(bold).toBeDisabled();
-  });
+  describe("server rendering", () => {
+    it("server-renders its label", () => {
+      serverRender(<RichTextEditor label="Notes" value="<p>Hi</p>" />);
 
-  it("hydrates without a mismatch, then mounts the editor", async () => {
-    const element = <RichTextEditor label="Notes" value="<p>Hi</p>" />;
-    const container = serverRender(element);
-
-    const { consoleError, onRecoverableError } = await hydrate(
-      container,
-      element
-    );
-    expect(consoleError).not.toHaveBeenCalled();
-    expect(onRecoverableError).not.toHaveBeenCalled();
-    await waitFor(() =>
-      expect(container.querySelector("[contenteditable]")).toHaveTextContent(
-        "Hi"
-      )
-    );
-  });
-
-  it("enables the toolbar once the editor exists", async () => {
-    render(<RichTextEditor label="Notes" />);
-    await waitFor(() => {
-      for (const button of toolbar()) expect(button).toBeEnabled();
+      expect(screen.getByText("Notes")).toBeVisible();
     });
-    expect(screen.getByRole("textbox")).toHaveAttribute(
-      "aria-labelledby",
-      expect.stringMatching(/-label$/)
+
+    it("server-renders with the toolbar disabled", () => {
+      serverRender(<RichTextEditor label="Notes" value="<p>Hi</p>" />);
+
+      expect(screen.getByRole("button", { name: "Bold" })).toBeDisabled();
+    });
+
+    it("hydrates without a mismatch", async () => {
+      const element = <RichTextEditor label="Notes" value="<p>Hi</p>" />;
+      const container = serverRender(element);
+
+      const { consoleError, onRecoverableError } = await hydrate(
+        container,
+        element
+      );
+
+      expect(consoleError).not.toHaveBeenCalled();
+      expect(onRecoverableError).not.toHaveBeenCalled();
+    });
+
+    it("mounts the editor once hydrated", async () => {
+      const element = <RichTextEditor label="Notes" value="<p>Hi</p>" />;
+      const container = serverRender(element);
+
+      await hydrate(container, element);
+
+      await waitFor(() =>
+        expect(
+          screen.getByRole("textbox", { name: "Notes" })
+        ).toHaveTextContent("Hi")
+      );
+    });
+  });
+
+  it.each(toolbarNames)("enables %s once the editor exists", async (name) => {
+    render(<RichTextEditor label="Notes" />);
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name })).toBeEnabled()
     );
   });
 
-  it("keeps the toolbar disabled when the editor is disabled", async () => {
+  it("names the editor by its label", async () => {
+    render(<RichTextEditor label="Notes" />);
+
+    expect(await screen.findByRole("textbox", { name: "Notes" })).toBeVisible();
+  });
+
+  it("makes the editor read-only when disabled", async () => {
     render(<RichTextEditor label="Notes" disabled />);
+
     await waitFor(() =>
       expect(screen.getByRole("textbox")).toHaveAttribute(
         "contenteditable",
         "false"
       )
     );
-    for (const button of toolbar()) expect(button).toBeDisabled();
   });
 
-  describe("editing", () => {
-    const ready = () =>
-      waitFor(() => {
-        for (const button of toolbar()) expect(button).toBeEnabled();
-      });
+  it.each(toolbarNames)(
+    "keeps %s disabled when the editor is disabled",
+    async (name) => {
+      render(<RichTextEditor label="Notes" disabled />);
+      await screen.findByRole("textbox");
 
-    it("applies a list from the toolbar and reports the change", async () => {
+      expect(screen.getByRole("button", { name })).toBeDisabled();
+    }
+  );
+
+  describe("editing", () => {
+    it("reports the change when a list is applied from the toolbar", async () => {
+      const user = userEvent.setup();
       const onChange = vi.fn();
       render(
         <RichTextEditor label="Notes" value="<p>Hi</p>" onChange={onChange} />
       );
       await ready();
 
-      await userEvent.click(
-        screen.getByRole("button", { name: "Bullet list" })
-      );
+      await user.click(screen.getByRole("button", { name: "Bullet list" }));
+
       expect(onChange).toHaveBeenLastCalledWith("<ul><li><p>Hi</p></li></ul>");
+    });
+
+    it("marks Bullet list pressed once applied", async () => {
+      const user = userEvent.setup();
+      render(<RichTextEditor label="Notes" value="<p>Hi</p>" />);
+      await ready();
+
+      await user.click(screen.getByRole("button", { name: "Bullet list" }));
+
       expect(
         screen.getByRole("button", { name: "Bullet list" })
       ).toHaveAttribute("aria-pressed", "true");
     });
 
-    it("marks Bold pressed once toggled", async () => {
+    it("shows Bold unpressed on plain text", async () => {
       render(<RichTextEditor label="Notes" value="<p>Hi</p>" />);
-      await ready();
-      const bold = screen.getByRole("button", { name: "Bold" });
-      expect(bold).toHaveAttribute("aria-pressed", "false");
 
-      await userEvent.click(bold);
-      expect(bold).toHaveAttribute("aria-pressed", "true");
+      await ready();
+
+      expect(screen.getByRole("button", { name: "Bold" })).toHaveAttribute(
+        "aria-pressed",
+        "false"
+      );
     });
 
-    it("shows the HTML source in place of the editor", async () => {
-      render(
-        <RichTextEditor
-          label="Notes"
-          value="<p>Hi <strong>there</strong></p>"
-        />
-      );
+    it("marks Bold pressed once toggled", async () => {
+      const user = userEvent.setup();
+      render(<RichTextEditor label="Notes" value="<p>Hi</p>" />);
       await ready();
 
-      await userEvent.click(screen.getByRole("button", { name: "Show HTML" }));
-      // The source view puts each tag on its own line.
-      expect(document.querySelector(".k-html-section")?.textContent).toBe(
-        "<p>Hi <strong>there</strong>\n</p>"
-      );
-      expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Bold" })).toBeDisabled();
+      await user.click(screen.getByRole("button", { name: "Bold" }));
 
-      await userEvent.click(
-        screen.getByRole("button", { name: "Show editor" })
+      expect(screen.getByRole("button", { name: "Bold" })).toHaveAttribute(
+        "aria-pressed",
+        "true"
       );
-      expect(screen.getByRole("textbox")).toHaveTextContent("Hi there");
+    });
+
+    describe("HTML source view", () => {
+      const renderReady = async () => {
+        render(
+          <RichTextEditor
+            label="Notes"
+            value="<p>Hi <strong>there</strong></p>"
+          />
+        );
+        await ready();
+      };
+
+      it("shows the HTML source", async () => {
+        const user = userEvent.setup();
+        await renderReady();
+
+        await user.click(screen.getByRole("button", { name: "Show HTML" }));
+
+        // The source view puts each tag on its own line.
+        expect(
+          screen.getByText("<p>Hi <strong>there</strong>\n</p>", {
+            normalizer: getDefaultNormalizer({
+              trim: false,
+              collapseWhitespace: false,
+            }),
+          })
+        ).toBeVisible();
+      });
+
+      it("hides the editor", async () => {
+        const user = userEvent.setup();
+        await renderReady();
+
+        await user.click(screen.getByRole("button", { name: "Show HTML" }));
+
+        expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+      });
+
+      it("disables formatting", async () => {
+        const user = userEvent.setup();
+        await renderReady();
+
+        await user.click(screen.getByRole("button", { name: "Show HTML" }));
+
+        expect(screen.getByRole("button", { name: "Bold" })).toBeDisabled();
+      });
+
+      it("returns to the editor", async () => {
+        const user = userEvent.setup();
+        await renderReady();
+        await user.click(screen.getByRole("button", { name: "Show HTML" }));
+
+        await user.click(screen.getByRole("button", { name: "Show editor" }));
+
+        expect(screen.getByRole("textbox")).toHaveTextContent("Hi there");
+      });
     });
 
     it("takes a new value without reporting it as an edit", async () => {
@@ -126,6 +220,7 @@ describe("RichTextEditor", () => {
       await waitFor(() =>
         expect(screen.getByRole("textbox")).toHaveTextContent("Bye")
       );
+
       expect(onChange).not.toHaveBeenCalled();
     });
 
@@ -133,11 +228,8 @@ describe("RichTextEditor", () => {
       render(
         <RichTextEditor label="Notes" value="<p>Hello</p>" showCharCount />
       );
-      await waitFor(() =>
-        expect(
-          document.querySelector(".k-richtext-char-count")
-        ).toHaveTextContent("5")
-      );
+
+      await waitFor(() => expect(screen.getByText("5")).toBeVisible());
     });
   });
 });

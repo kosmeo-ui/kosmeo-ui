@@ -40,7 +40,9 @@ const setup = (axios: { instance: AxiosInstance } = server()) =>
 describe("useInfiniteCursor", () => {
   it("loads the first page", async () => {
     const axios = server();
+
     const { result } = setup(axios);
+
     await waitFor(() => expect(result.current.data).toHaveLength(3));
     expect(result.current.hasMore).toBe(true);
     expect(result.current.total).toBe(0);
@@ -53,6 +55,7 @@ describe("useInfiniteCursor", () => {
     await waitFor(() => expect(result.current.data).toHaveLength(3));
 
     act(() => result.current.onQueryChange("limit=3&offset=3"));
+
     await waitFor(() =>
       expect(result.current.data.map((r) => r.id)).toEqual([1, 2, 3, 4, 5])
     );
@@ -66,6 +69,7 @@ describe("useInfiniteCursor", () => {
     await waitFor(() => expect(result.current.data).toHaveLength(3));
 
     act(() => result.current.onQueryChange("limit=3&offset=0&sort=name"));
+
     await waitFor(() =>
       expect(axios.get).toHaveBeenLastCalledWith("/rows?limit=3&sort=name")
     );
@@ -82,10 +86,10 @@ describe("useInfiniteCursor", () => {
     });
     const { result } = setup({ instance: { get } as unknown as AxiosInstance });
     await waitFor(() => expect(result.current.data).toHaveLength(3));
-
-    // Scroll events keep asking while the next page is still loading.
     act(() => result.current.onQueryChange("limit=3&offset=3"));
     await waitFor(() => expect(get).toHaveBeenCalledTimes(2));
+
+    // Scroll events keep asking while the next page is still loading.
     act(() => result.current.onQueryChange("limit=3&offset=3"));
     act(() => release());
 
@@ -104,6 +108,7 @@ describe("useInfiniteCursor", () => {
       result.current.onQueryChange("limit=3&offset=3");
       result.current.onQueryChange("limit=3&offset=3");
     });
+
     await waitFor(() => expect(result.current.data).toHaveLength(5));
     expect(axios.get).toHaveBeenCalledTimes(calls + 1);
   });
