@@ -186,24 +186,19 @@ describe("Dropdown", () => {
       expect(onOpenChange).toHaveBeenCalledWith(false);
     });
 
-    // Bug: useOutsideClick calls setIsOpen(false) on every outside mousedown,
-    // so a closed controlled Dropdown reports a change that did not happen.
-    it.fails(
-      "does not report a change on a click outside while closed",
-      async () => {
-        const user = userEvent.setup();
-        const onOpenChange = vi.fn();
-        render(
-          <>
-            <Harness onOpenChange={onOpenChange} />
-            <p>Elsewhere</p>
-          </>
-        );
+    it("does not report a change on a click outside while closed", async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      render(
+        <>
+          <Harness onOpenChange={onOpenChange} />
+          <p>Elsewhere</p>
+        </>
+      );
 
-        await user.click(screen.getByText("Elsewhere"));
+      await user.click(screen.getByText("Elsewhere"));
 
-        expect(onOpenChange).not.toHaveBeenCalled();
-      }
-    );
+      expect(onOpenChange).not.toHaveBeenCalled();
+    });
   });
 });
