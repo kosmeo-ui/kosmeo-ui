@@ -60,25 +60,44 @@ const Badge = ({
         }
       : undefined;
 
-  const content = (
+  const label = (
     <>
       {startIcon && <span className="k-badge-start-icon">{startIcon}</span>}
       <span className="k-badge-content">{children}</span>
-      {onRemove && (
-        <button
-          type="button"
-          aria-label="Remove"
-          className="k-badge-remove"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove();
-          }}
-        >
-          <FontAwesomeIcon icon={faXmark} />
-        </button>
-      )}
     </>
   );
+
+  const removeButton = onRemove && (
+    <button
+      type="button"
+      aria-label="Remove"
+      className="k-badge-remove"
+      onClick={(e) => {
+        e.stopPropagation();
+        onRemove();
+      }}
+    >
+      <FontAwesomeIcon icon={faXmark} />
+    </button>
+  );
+
+  // Clickable and removable: two sibling buttons in a span, since a button
+  // can't contain another.
+  if (onClick && onRemove) {
+    return (
+      <span className={classes} style={inlineStyle}>
+        <button
+          type="button"
+          aria-label={ariaLabel}
+          className="k-badge-action"
+          onClick={onClick}
+        >
+          {label}
+        </button>
+        {removeButton}
+      </span>
+    );
+  }
 
   if (onClick) {
     return (
@@ -89,14 +108,15 @@ const Badge = ({
         style={inlineStyle}
         onClick={onClick}
       >
-        {content}
+        {label}
       </button>
     );
   }
 
   return (
     <span className={classes} style={inlineStyle}>
-      {content}
+      {label}
+      {removeButton}
     </span>
   );
 };

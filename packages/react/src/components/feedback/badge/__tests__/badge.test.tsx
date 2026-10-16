@@ -40,17 +40,27 @@ describe("Badge", () => {
     expect(onClick).toHaveBeenCalled();
   });
 
-  it("removes without triggering the badge's own click", async () => {
+  it("keeps the action and remove buttons separate when both are set", async () => {
     const onClick = vi.fn();
     const onRemove = vi.fn();
     render(
-      <Badge onClick={onClick} onRemove={onRemove}>
+      <Badge onClick={onClick} onRemove={onRemove} ariaLabel="Filter by new">
         New
       </Badge>
     );
-    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
+    const action = screen.getByRole("button", { name: "Filter by new" });
+    const remove = screen.getByRole("button", { name: "Remove" });
+    // A button inside a button is invalid HTML and breaks hydration.
+    expect(action).not.toContainElement(remove);
+    expect(remove).not.toContainElement(action);
+    expect(action.parentElement).toHaveClass("k-badge", "k-badge-clickable");
+
+    await userEvent.click(remove);
     expect(onRemove).toHaveBeenCalled();
     expect(onClick).not.toHaveBeenCalled();
+
+    await userEvent.click(action);
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it("colours a custom badge with contrasting text", () => {
@@ -70,5 +80,18 @@ describe("Badge", () => {
     expect(() => render(<Badge variant="custom">Oops</Badge>)).toThrow(
       /requires a `color` prop/
     );
+  });
+
+  it("keeps a remove click from reaching a clickable parent", async () => {
+    const onRowClick = vi.fn();
+    const onRemove = vi.fn();
+    render(
+      <div onClick={onRowClick}>
+        <Badge onRemove={onRemove}>Tag</Badge>
+      </div>
+    );
+    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
+    expect(onRemove).toHaveBeenCalled();
+    expect(onRowClick).not.toHaveBeenCalled();
   });
 });
