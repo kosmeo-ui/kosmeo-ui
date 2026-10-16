@@ -135,9 +135,7 @@ describe("hasPendingChanges", () => {
     );
   });
 
-  // Bug: "" and undefined are equal only one way round, so typing into a
-  // filter and deleting it leaves Apply enabled with nothing to apply.
-  it.fails.each<
+  it.each<
     [
       string,
       InfiniteScrollMenuGeneratedFilter,
