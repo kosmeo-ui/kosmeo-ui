@@ -191,9 +191,12 @@ describe("ColorPicker", () => {
       }
     );
 
-    it.todo(
-      'decide whether an empty value shows an error when allowEmpty is false — currently "" shows none either way'
-    );
+    // Decided: an empty value is never an error, whatever allowEmpty says.
+    it("shows no error for an empty value without allowEmpty", () => {
+      render(<ColorPicker label="Brand" value="" onChange={() => {}} />);
+
+      expect(screen.queryByText(DEFAULT_MESSAGE)).not.toBeInTheDocument();
+    });
 
     it("shows a custom invalid message", () => {
       render(

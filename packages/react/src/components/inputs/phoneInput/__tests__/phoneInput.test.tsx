@@ -346,9 +346,19 @@ describe("PhoneInput", () => {
       expect(optionNames()).toEqual(names);
     });
 
-    it.todo(
-      'decide whether a dial-code search matches only codes that start with it — currently "+44" also lists Angola (+244)'
-    );
+    // Decided: a dial-code search matches anywhere in the code, so "+44" also
+    // finds Angola (+244).
+    it("matches a dial code anywhere in a country's code", async () => {
+      const user = userEvent.setup();
+      render(<Harness />);
+      await user.click(countryButton());
+
+      await user.type(searchBox(), "+44");
+
+      expect(optionNames()).toEqual(
+        expect.arrayContaining(["United Kingdom", "Angola"])
+      );
+    });
 
     it("says so when no country matches", async () => {
       const user = userEvent.setup();
