@@ -417,9 +417,7 @@ describe("PhoneInput", () => {
       expect(onChange).toHaveBeenCalledWith("");
     });
 
-    // Bug: the pasted "+1" is kept as national digits, so this reports
-    // "+4412015550123".
-    it.fails("drops a pasted number's country code", async () => {
+    it("drops a pasted number's country code", async () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       render(<Harness onChange={onChange} />);

@@ -133,7 +133,9 @@ const PhoneInput = (props: PhoneInputProps) => {
   const handleCountrySelect = (cc: CountryCode) => {
     setCountry(cc);
     setPickerOpen(false);
-    const digits = display.replace(/\D/g, "");
+    const current = new AsYouType(country);
+    current.input(display);
+    const digits = current.getNationalNumber();
     if (digits) {
       const formatter = new AsYouType(cc);
       const formatted = formatter.input(digits);
