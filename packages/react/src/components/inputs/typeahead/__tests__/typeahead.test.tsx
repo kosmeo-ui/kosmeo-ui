@@ -145,10 +145,7 @@ describe("Typeahead", () => {
       expectPaging();
     });
 
-    // Known bug: with showAll, nothing the observer effect depends on changes
-    // after the list mounts (it waits a render for its position), so the
-    // observer is never attached. Flip to `it` once it is.
-    it.fails("loads more with showAll too", async () => {
+    it("loads more with showAll too", async () => {
       renderMany(true);
       await userEvent.click(screen.getByRole("combobox"));
       expectPaging();

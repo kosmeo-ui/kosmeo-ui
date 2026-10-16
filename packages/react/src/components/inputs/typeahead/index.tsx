@@ -200,6 +200,9 @@ const Typeahead = <T,>(props: TypeaheadProps<T>) => {
     displayCount,
     filteredOptions.length,
     displayedOptions,
+    // The list mounts a render after opening, once it has a position; without
+    // this, nothing else may change then and the observer never attaches.
+    !!dropdownPos,
   ]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
