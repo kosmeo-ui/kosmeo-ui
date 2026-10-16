@@ -137,6 +137,8 @@ const FileUpload = (props: FileUploadProps) => {
           const fileNames = oversizedFiles.map((f) => f.name);
           setOversizedFileInfo({ files: fileNames, maxSize: maxSizeFormatted });
           setShowSizeModal(true);
+          // Rejected files must not stay in the input, or a form would submit them.
+          event.target.value = "";
           return;
         }
       }

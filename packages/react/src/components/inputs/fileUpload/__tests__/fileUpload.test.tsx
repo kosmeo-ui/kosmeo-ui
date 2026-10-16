@@ -456,9 +456,21 @@ describe("FileUpload", () => {
       expect(screen.getByText("old.txt")).toBeVisible();
     });
 
-    it.todo(
-      "decide whether rejecting an oversized pick empties the input — currently the input still holds the rejected file while the list shows the previous selection"
-    );
+    it("empties the input when it rejects an oversized pick", async () => {
+      const user = userEvent.setup();
+      render(
+        <FileUpload
+          onFileSelect={() => {}}
+          label="Attachments"
+          maxSize={1024}
+        />
+      );
+      const input = screen.getByLabelText(/^Attachments/);
+
+      await user.upload(input, file("big.txt", 2048));
+
+      expect(input).toHaveValue("");
+    });
 
     it("closes the error", async () => {
       const user = userEvent.setup();
