@@ -50,7 +50,14 @@ A util test needs only this file. Before writing a component or hook test, read
    it. Skip this for a case that already fails because it caught a bug; that failure
    is the proof. A test that stays green under the break is testing something else:
    fix the test (a debounce or a pending request is the usual culprit — the act lands
-   before the code under test runs).
+   before the code under test runs). Keep the original in memory or in a backup path
+   no one else uses — parallel agents share the scratchpad, and a shared
+   `backup.tsx` has restored one component's source over another's. Vitest prints
+   `FAIL` lines to stderr, so a script reading results captures `2>&1`. A break whose
+   only effect is an error thrown inside an event handler cannot go red: React and
+   jsdom swallow it into the log. Say so, rather than writing a test that cannot fail.
+   When a case is marked `it.fails`, run it once as `it` to see why it fails — a
+   duplicate-key warning tripping the `console.error` guard counts as a failure too.
 7. **An expected `console.error` is mocked:**
    `vi.spyOn(console, "error").mockImplementation(() => {})`. Any other
    `console.error` fails the test (see "What the config already does").
@@ -67,14 +74,19 @@ These apply whenever a test renders. A util test renders nothing and skips them.
    element. The only exceptions:
    - the modal backdrop (`.k-modal-overlay`), a click target with no role by design;
    - the root of a purely presentational element whose classes or inline style are
-     the contract and which has no role (Badge's `<span>`), reached from its text with
-     `getByText("New").parentElement` — only to assert those classes or that style;
+     the contract and which has no role (Badge's `<span>`, a table's scroll container),
+     reached with `.parentElement` from its text or from a child found by role — only
+     to assert those classes or that style;
    - checks over the markup itself, such as collecting every `[id]` in server-rendered
      HTML (see "Server rendering and hydration").
 2. **If an element cannot be found by role or label, fix the component**, not the
    query. An unnamed control is an accessibility bug: a `<label>` pointing at a `<div>`
-   names nothing (MultiSelect needed `role="combobox"` and `aria-labelledby`), and an
-   icon-only button needs `aria-label`. A mouse-only control hidden from assistive tech
+   names nothing (MultiSelect needed `role="combobox"` and `aria-labelledby`), an
+   icon-only button needs `aria-label`, and a field named only by its `placeholder` has
+   no accessible name (Testing Library does not use it) — give it `aria-label`. A
+   trigger named after its current choice ("25", "Descending") collides with that
+   option; name it for what it controls ("Results per page: 25"). A mouse-only control
+   hidden from assistive tech
    (`aria-hidden`, `tabIndex={-1}`, as MultiSelect's chip × buttons) still gets an
    `aria-label`, and is found with `getByLabelText("Remove Apple")`:
    `getByRole(…, { name, hidden: true })` cannot match it, because Testing Library
@@ -88,9 +100,10 @@ These apply whenever a test renders. A util test renders nothing and skips them.
 5. **`const user = userEvent.setup()` at the top of each interactive test**, then
    `await user.click(...)`. Never `fireEvent`, and never the bare `userEvent.click`.
    Import it as `import { userEvent } from "@testing-library/user-event"` — the default
-   import is mistyped under `moduleResolution: "NodeNext"`. Events no user can cause
-   (a `StorageEvent` from another tab) are dispatched with
-   `act(() => window.dispatchEvent(…))`.
+   import is mistyped under `moduleResolution: "NodeNext"`. Events no user-event API
+   can produce are dispatched by hand inside `act`, with a comment saying why: a
+   `StorageEvent` from another tab, a `scroll` after stubbing layout, a `drop` (see
+   "Things that look wrong but are not").
 6. **Classes are asserted only where the class is the component's contract** (a
    `variant` or `size` prop mapping to `k-button-danger`), and then with
    `toHaveClass("a b c", { exact: true })` — order-independent. Never compare
@@ -151,6 +164,13 @@ MUST NOT repeat them per test:
 
 CSS is not loaded: `import "./styles.css"` is a no-op under Vitest, so `toBeVisible`
 sees only `hidden`, inline styles and detached nodes, never class-based `display`.
+`toHaveStyle` compares against `getComputedStyle`, where jsdom turns `rem` into `px`
+(`20rem` reads as `320px`) and drops `vh`; pass a value in `px` or `%` when the test
+is about passing a style through.
+
+**The suite relies on per-file isolation.** MUST NOT run it with `--no-isolate` or a
+shared environment: a file using fake timers leaves React's scheduler holding the
+faked timers, and cleanup stops working in whichever file runs next.
 
 ## Hooks
 
@@ -174,7 +194,9 @@ sees only `hidden`, inline styles and detached nodes, never class-based `display
 
 Every component is `"use client"` but is still server-rendered by Next.js, so a
 component that reads `window`, generates ids or depends on a third-party editor gets a
-hydration test. Use `components/inputs/__tests__/hydration.tsx`:
+hydration test — a row in `components/inputs/__tests__/generatedIds.test.tsx` for an
+input with a generated id, otherwise in the component's own test file. Use
+`components/inputs/__tests__/hydration.tsx`:
 
 - `serverRender(element)` — `renderToString` into a container attached to the
   document; torn down after the test.
@@ -203,9 +225,34 @@ hydration test. Use `components/inputs/__tests__/hydration.tsx`:
 - **`IntersectionObserver`** does not exist in jsdom. Stub it with `vi.stubGlobal`,
   keep the callback, and call it inside `act` to simulate reaching the end of a list.
 - **Accessible names** — the required asterisk is `aria-hidden`, so a required field's
-  name has no `*`. jsdom's name computation drops a leading space in an inline child, so
-  `"Access (required)"` computes as `"Access(required)"`; match it with
-  `/^Access ?\(required\)$/`.
+  accessible name (`getByRole(…, { name })`) has no `*`, but `getByLabelText` matches
+  the label's text content, which does: use `/^Attachments/`. jsdom's name computation
+  drops a leading space in an inline child, so `"Access (required)"` computes as
+  `"Access(required)"`; match it with `/^Access ?\(required\)$/`.
+- **Implicit roles worth knowing** — `<address>` is `group`, `<dt>`/`<dd>` are
+  `term`/`definition`, `<input type="file">` has no role (use its label).
+- **Uploads** — `await user.upload(input, files)`. `applyAccept` is on by default, so a
+  test of a wrong-type file the picker would let through needs
+  `userEvent.setup({ applyAccept: false })`. An empty pick (`[]`) does nothing unless
+  the input already holds files. **`toEqual` treats any two `File`s as equal**, whatever
+  their names or contents — match by name:
+  `expect(onSelect).toHaveBeenCalledWith(names.map((name) => expect.objectContaining({ name })))`.
+- **Drag and drop** — user-event cannot drag, and jsdom has no `DataTransfer`. Dispatch
+  the drop inside `act` with the shape the handler reads:
+  `Object.assign(new Event("drop", { bubbles: true }), { dataTransfer: { files } })`.
+- **Inputs user-event cannot drive** (`type="color"`, `type="range"`) — set the value
+  with the native setter and dispatch `input` inside `act`, in a named helper with a
+  comment (`pickColor`), since React ignores a plain `el.value = …`.
+- **Scroll handlers** — jsdom has no layout, so stub `scrollHeight`, `clientHeight` and
+  `scrollTop` on the element with `Object.defineProperty`, then
+  `act(() => el.dispatchEvent(new Event("scroll")))`. Test the threshold one pixel
+  either side.
+- **Clipboard** — `userEvent.setup()` installs a clipboard stub: read what was copied
+  with `await navigator.clipboard.readText()`, and fake a refusal with
+  `vi.spyOn(navigator.clipboard, "writeText").mockRejectedValue(…)`.
+- **Links** — clicking an `<a href="/path">` makes jsdom log "Not implemented:
+  navigation", which the `console.error` guard fails. Use `href="#…"` when the test is
+  about the click handler.
 - **TipTap (RichTextEditor)** — the editor is created after mount, so wait for the
   toolbar to enable (`waitFor`) before acting on it.
 
@@ -252,8 +299,9 @@ A test that fails against current code because the code is wrong is the suite wo
    the bug; anything else noticed on the way is reported, not fixed.
 3. **Commit the fix separately**, as `fix(react): …` with its own version plan
    (`npm run version-plan`), so it can be reviewed and reverted on its own. If the test
-   commit lands first, mark the failing case `it.fails` with a comment naming the bug,
-   and switch it back to `it` in the fix commit, so every commit stays green.
+   commit lands first, mark the failing case `it.fails` (`it.fails.each` for table
+   rows) with a comment naming the bug, and switch it back to `it` in the fix commit,
+   so every commit stays green.
 4. **If the correct output is a judgement call**, do not pick one: record it as
    `it.todo('decide … — currently …')` with the input and current output, and ask.
 
