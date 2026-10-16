@@ -7,7 +7,7 @@ export interface ColorSwatchProps {
   size?: "sm" | "md" | "lg";
   /** Border around swatch. Defaults to true. */
   bordered?: boolean;
-  /** Accessible label (rendered as title attribute). */
+  /** Accessible label and tooltip. Defaults to the colour value. */
   title?: string;
 }
 
@@ -15,7 +15,7 @@ const ColorSwatch = ({
   color,
   size = "md",
   bordered = true,
-  title,
+  title = color,
 }: ColorSwatchProps) => {
   return (
     <span

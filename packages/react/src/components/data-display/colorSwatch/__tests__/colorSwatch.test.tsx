@@ -40,7 +40,15 @@ describe("ColorSwatch", () => {
     });
   });
 
-  it.todo(
-    'decide the accessible name of a swatch with no title — currently <ColorSwatch color="#ff0000" /> is role="img" with no name'
-  );
+  it("is named by its colour without a title", () => {
+    render(<ColorSwatch color="#ff0000" />);
+
+    expect(screen.getByRole("img", { name: "#ff0000" })).toBeVisible();
+  });
+
+  it("shows its colour as a tooltip without a title", () => {
+    render(<ColorSwatch color="#ff0000" />);
+
+    expect(screen.getByRole("img")).toHaveAttribute("title", "#ff0000");
+  });
 });
