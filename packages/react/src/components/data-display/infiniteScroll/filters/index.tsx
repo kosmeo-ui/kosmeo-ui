@@ -15,6 +15,8 @@ interface InfiniteScrollMenuFiltersProps {
   ) => void;
   /** Applies the pending filters; Enter in a filter's text box calls it. Omit when there's nothing to apply. */
   onApply?: () => void;
+  /** Range filters keep edits as a draft until their menu's Apply button. */
+  rangeApplyInMenu?: boolean;
   children?: ReactNode;
 }
 
@@ -49,6 +51,7 @@ const Filters = (props: InfiniteScrollMenuFiltersProps) => {
           key={filter.filterId}
           filter={filter}
           onFilterChange={handleFilterChange}
+          applyInMenu={props.rangeApplyInMenu}
         />
       );
     } else if (filter.type === "SEARCH") {

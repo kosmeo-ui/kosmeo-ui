@@ -28,10 +28,10 @@ export interface TableFiltersProps {
    */
   onChange: (params: Record<string, string>) => void;
   /**
-   * `"immediate"` (default) applies each change as it's made, waiting for a
-   * pause in typing for search and number filters. `"manual"` collects
-   * changes until Apply is clicked. Enter in a filter's text box applies in
-   * both.
+   * `"immediate"` (default) applies each change as it's made: searches wait
+   * for a pause in typing, and a range (two bounds in one menu) applies from
+   * the menu's own Apply button. `"manual"` collects changes until Apply is
+   * clicked. Enter in a filter's text box applies in both.
    */
   applyMode?: "immediate" | "manual";
 }
@@ -120,6 +120,7 @@ const TableFilters = ({
         pendingFilters={pendingFilters}
         handleNewPendingFilters={setPendingFilters}
         onApply={hasPendingChanges ? handleApply : undefined}
+        rangeApplyInMenu={applyMode === "immediate"}
       >
         <Button
           size="sm"

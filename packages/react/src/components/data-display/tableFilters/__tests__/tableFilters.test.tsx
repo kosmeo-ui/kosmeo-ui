@@ -77,6 +77,27 @@ describe("TableFilters", () => {
     expect(last()).toEqual({});
   });
 
+  it("applies a range from its menu's Apply button, both bounds at once", async () => {
+    const { onChange, last } = setup();
+    await userEvent.click(screen.getByRole("button", { name: /MRR/ }));
+    const [start, end] = document.querySelectorAll<HTMLInputElement>(
+      ".k-filter-menu input[type=number]"
+    );
+    await userEvent.type(start, "100");
+    await userEvent.type(end, "500");
+    await new Promise((r) => setTimeout(r, 500));
+    expect(onChange).toHaveBeenCalledTimes(1);
+
+    await userEvent.click(screen.getByRole("button", { name: "Apply" }));
+    await waitFor(() =>
+      expect(last()).toEqual({
+        "filter[mrr_gte]": "100",
+        "filter[mrr_lte]": "500",
+      })
+    );
+    expect(onChange).toHaveBeenCalledTimes(2);
+  });
+
   it("waits for Apply in manual mode", async () => {
     const { onChange, last } = setup("manual");
     await tick("Active");

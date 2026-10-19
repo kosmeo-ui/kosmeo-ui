@@ -71,20 +71,18 @@ export const clearFilters = (
   });
 
 /**
- * Whether a pending change is in a typed filter (search, or a number or text
- * range): applied immediately, those wait for a pause in typing.
+ * Whether a pending change is in a search box: applied immediately, searches
+ * wait for a pause in typing. (Ranges apply from their menu's Apply button.)
  */
 export const hasTypedFilterChanges = (
   filters: InfiniteScrollMenuGeneratedFilter[],
   pendingFilters: InfiniteScrollMenuGeneratedFilter[]
 ): boolean =>
-  filters.some((filter, i) => {
-    const typed =
-      filter.type === "SEARCH" ||
-      (filter.type === "RANGE" &&
-        (filter.rangeType === "NUMBER" || filter.rangeType === "STRING"));
-    return typed && hasFilterChanges([filter], [pendingFilters[i]]);
-  });
+  filters.some(
+    (filter, i) =>
+      filter.type === "SEARCH" &&
+      hasFilterChanges([filter], [pendingFilters[i]])
+  );
 
 export const hasFilterChanges = (
   filters: InfiniteScrollMenuGeneratedFilter[],

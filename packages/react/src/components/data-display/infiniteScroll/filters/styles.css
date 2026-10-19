@@ -35,6 +35,11 @@
   flex-direction: column;
 }
 
+.k-range-filter-menu-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .k-range-filter-menu-label {
   color: var(--k-text-color-secondary);
   margin-bottom: 0;

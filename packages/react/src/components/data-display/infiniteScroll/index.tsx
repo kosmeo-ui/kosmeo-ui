@@ -85,9 +85,10 @@ interface InfiniteScrollProps<TData> {
   hideNextPageButton?: boolean;
   /**
    * When filter, sort and page-size changes take effect. `"immediate"`
-   * (default) applies each change as it's made, waiting for a pause in typing
-   * for search and number filters. `"manual"` collects changes until Apply is
-   * clicked. In both, Enter in a filter's text box applies at once.
+   * (default) applies each change as it's made: searches wait for a pause in
+   * typing, and a range (two bounds in one menu) applies from the menu's own
+   * Apply button. `"manual"` collects changes until Apply is clicked. In
+   * both, Enter in a filter's text box applies at once.
    */
   applyMode?: "immediate" | "manual";
 }
@@ -341,6 +342,7 @@ const InfiniteScroll = <TData extends object>(
               pendingFilters={pendingFilters}
               handleNewPendingFilters={setPendingFilters}
               onApply={hasPendingChanges ? handleApply : undefined}
+              rangeApplyInMenu={applyMode === "immediate"}
             >
               <Button
                 size="sm"

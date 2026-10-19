@@ -1,4 +1,5 @@
-import { fireEvent, render } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
 import { GeneratedRangeFilter } from "../../types.js";
 import { describe, expect, it, vi } from "vitest";
 import RangeFilter from "../rangeFilter.js";
@@ -79,5 +80,56 @@ describe("RangeFilter", () => {
     expect(onFilterChange).toHaveBeenLastCalledWith(
       expect.objectContaining({ startValue: undefined })
     );
+  });
+});
+
+describe("RangeFilter with applyInMenu", () => {
+  const inputs = (container: HTMLElement) =>
+    container.querySelectorAll<HTMLInputElement>(".k-filter-menu input");
+
+  const setup = () => {
+    const onFilterChange = vi.fn();
+    const utils = render(
+      <RangeFilter
+        filter={filter("NUMBER")}
+        onFilterChange={onFilterChange}
+        applyInMenu
+      />
+    );
+    return { onFilterChange, ...utils };
+  };
+
+  it("reports both bounds together on Apply", async () => {
+    const { onFilterChange, container } = setup();
+    await userEvent.click(screen.getByRole("button", { name: /Range/ }));
+    await userEvent.type(inputs(container)[0], "100");
+    await userEvent.type(inputs(container)[1], "500");
+    expect(onFilterChange).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByRole("button", { name: "Apply" }));
+    expect(onFilterChange).toHaveBeenCalledTimes(1);
+    expect(onFilterChange).toHaveBeenCalledWith(
+      expect.objectContaining({ startValue: 100, endValue: 500 })
+    );
+  });
+
+  it("applies on Enter", async () => {
+    const { onFilterChange, container } = setup();
+    await userEvent.click(screen.getByRole("button", { name: /Range/ }));
+    await userEvent.type(inputs(container)[0], "100{Enter}");
+    expect(onFilterChange).toHaveBeenCalledWith(
+      expect.objectContaining({ startValue: 100 })
+    );
+  });
+
+  it("drops the draft when the menu closes without Apply", async () => {
+    const { onFilterChange, container } = setup();
+    const trigger = screen.getByRole("button", { name: /Range/ });
+    await userEvent.click(trigger);
+    await userEvent.type(inputs(container)[0], "100");
+    await userEvent.click(trigger);
+    expect(onFilterChange).not.toHaveBeenCalled();
+    expect(inputs(container)[0]).toHaveValue(null);
+    expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled();
   });
 });
