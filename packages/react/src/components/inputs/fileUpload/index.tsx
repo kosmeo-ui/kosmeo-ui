@@ -183,13 +183,6 @@ const FileUpload = (props: FileUploadProps) => {
         <div className="k-file-list-header">
           <span>Selected Files ({selectedFiles.length})</span>
           <div className="k-file-list-actions">
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              variant={variant}
-              size={size}
-            >
-              Change File{selectedFiles.length > 1 ? "s" : ""}
-            </Button>
             <Button onClick={handleClearFiles} variant="danger" size={size}>
               Clear All
             </Button>
@@ -249,14 +242,17 @@ const FileUpload = (props: FileUploadProps) => {
 
       {fileListPosition === "above" && fileList}
 
-      {selectedFiles.length === 0 && (
+      {/* A custom renderFiles brings its own controls once files are chosen. */}
+      {(selectedFiles.length === 0 || !props.renderFiles) && (
         <div className="k-file-upload-empty-actions">
           <label
             htmlFor={componentId}
             className={`k-button k-button-${variant} k-button-${size} k-button-center k-file-upload-button`}
           >
-            <FontAwesomeIcon icon={faUpload} /> Upload{" "}
-            {multiple ? "Files" : "File"}
+            <FontAwesomeIcon icon={faUpload} />{" "}
+            {selectedFiles.length === 0
+              ? `Upload ${multiple ? "Files" : "File"}`
+              : `Change File${selectedFiles.length > 1 ? "s" : ""}`}
           </label>
           {props.allowDirectory && (
             <label

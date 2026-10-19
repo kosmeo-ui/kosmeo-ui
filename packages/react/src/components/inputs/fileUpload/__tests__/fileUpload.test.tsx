@@ -202,11 +202,12 @@ describe("FileUpload", () => {
     it.each([
       [1, "Change File"],
       [2, "Change Files"],
-    ])("names the change button for %i file(s)", (count, name) => {
+    ])("names the change control for %i file(s)", (count, name) => {
       const seed = Array.from({ length: count }, (_, i) => file(`${i}.txt`));
       render(<FileUpload onFileSelect={() => {}} initialFiles={seed} />);
 
-      expect(screen.getByRole("button", { name })).toBeVisible();
+      // Like Upload, Change is a <label> for the hidden file input.
+      expect(screen.getByText(name)).toBeVisible();
     });
 
     it("opens the picker from the change button", async () => {
@@ -221,7 +222,7 @@ describe("FileUpload", () => {
       );
       screen.getByLabelText("Attachments").addEventListener("click", onPick);
 
-      await user.click(screen.getByRole("button", { name: "Change File" }));
+      await user.click(screen.getByText("Change File"));
 
       expect(onPick).toHaveBeenCalledTimes(1);
     });
@@ -318,8 +319,26 @@ describe("FileUpload", () => {
       expect(input).toHaveValue("");
     });
 
-    it.todo(
-      "decide what fileListPosition places the list relative to — currently the upload button is hidden whenever the list shows, so above and below render the same order"
+    it.each([
+      ["above", Node.DOCUMENT_POSITION_FOLLOWING],
+      ["below", Node.DOCUMENT_POSITION_PRECEDING],
+    ] as const)(
+      "puts the file list %s the upload controls",
+      (position, changeControlIs) => {
+        render(
+          <FileUpload
+            onFileSelect={() => {}}
+            initialFiles={[file("a.txt")]}
+            fileListPosition={position}
+          />
+        );
+
+        const list = screen.getByText("Selected Files (1)");
+        const change = screen.getByText("Change File");
+        expect(list.compareDocumentPosition(change) & changeControlIs).not.toBe(
+          0
+        );
+      }
     );
   });
 
