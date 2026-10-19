@@ -2,6 +2,7 @@ import {
   InfiniteScrollMenuGeneratedFilter,
   InfiniteScrollMenuLimitOption,
   InfiniteScrollMenuSortDataKey,
+  RangeValue,
   SortDirection,
 } from "../types.js";
 
@@ -29,12 +30,18 @@ export const hasPendingChanges = (params: PendingChangesParams): boolean => {
   );
 };
 
+/** A range bound is set unless it's missing or empty; `0` is a real bound. */
+export const hasRangeValue = (
+  value: RangeValue | undefined
+): value is RangeValue => value !== undefined && value !== "";
+
 export const hasActiveFilters = (
   pendingFilters: InfiniteScrollMenuGeneratedFilter[]
 ): boolean => {
   for (const filter of pendingFilters) {
     if (filter.type === "RANGE") {
-      if (filter.startValue || filter.endValue) return true;
+      if (hasRangeValue(filter.startValue) || hasRangeValue(filter.endValue))
+        return true;
     } else if (filter.type === "SEARCH") {
       if (filter.value) return true;
     } else if (filter.type === "LIST") {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { hasRangeValue } from "../utils/hasPendingChanges.js";
 import Dropdown from "../../../inputs/dropdown/index.js";
 import Input from "../../../inputs/input/index.js";
 import { DateTime } from "luxon";
@@ -20,6 +21,27 @@ interface InfiniteScrollRangeFilterProps {
   filter: GeneratedRangeFilter;
   onFilterChange: (filter: InfiniteScrollMenuGeneratedFilter) => void;
 }
+
+// An empty or unparseable box is no bound, never NaN or a thrown error. A DATE
+// range sends the picked calendar day (yyyy-mm-dd): converting local midnight
+// to UTC moved it off the day the user chose.
+const parseRangeInput = (
+  rangeType: GeneratedRangeFilter["rangeType"],
+  raw: string
+): RangeValue | undefined => {
+  if (raw === "") return undefined;
+  if (rangeType === "NUMBER") {
+    const n = Number(raw);
+    return Number.isNaN(n) ? undefined : n;
+  }
+  if (rangeType === "DATE") {
+    return DateTime.fromISO(raw).isValid ? raw : undefined;
+  }
+  if (rangeType === "DATETIME") {
+    return DateTime.fromISO(raw).toUTC().toISO() ?? undefined;
+  }
+  return raw;
+};
 
 const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
   const [startValue, setStartValue] = useState<RangeValue | undefined>(
@@ -62,7 +84,7 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
   }, [props.filter.rangeType]);
 
   const formattedStartValue = useMemo((): RangeValue => {
-    if (!startValue) return "";
+    if (!hasRangeValue(startValue)) return "";
     if (props.filter.rangeType === "DATE") {
       return DateTime.fromISO(startValue as string).toFormat("yyyy-MM-dd");
     } else if (props.filter.rangeType === "DATETIME") {
@@ -73,7 +95,7 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
   }, [props.filter.rangeType, startValue]);
 
   const formattedEndValue = useMemo((): RangeValue => {
-    if (!endValue) return "";
+    if (!hasRangeValue(endValue)) return "";
     if (props.filter.rangeType === "DATE") {
       return DateTime.fromISO(endValue as string).toFormat("yyyy-MM-dd");
     } else if (props.filter.rangeType === "DATETIME") {
@@ -85,18 +107,7 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
 
   const handleStartChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let newValue: RangeValue;
-      if (props.filter.rangeType === "NUMBER") {
-        newValue = parseInt(e.target.value);
-      } else if (props.filter.rangeType === "DATE") {
-        const res = DateTime.fromISO(e.target.value).toUTC().toISO();
-        if (!res) throw new Error("Invalid date");
-        newValue = res;
-      } else if (props.filter.rangeType === "DATETIME") {
-        const res = DateTime.fromISO(e.target.value).toUTC().toISO();
-        if (!res) throw new Error("Invalid date");
-        newValue = res;
-      } else newValue = e.target.value;
+      const newValue = parseRangeInput(props.filter.rangeType, e.target.value);
       setStartValue(newValue);
       props.onFilterChange({
         ...props.filter,
@@ -109,18 +120,7 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
 
   const handleEndChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      let newValue: RangeValue;
-      if (props.filter.rangeType === "NUMBER") {
-        newValue = parseInt(e.target.value);
-      } else if (props.filter.rangeType === "DATE") {
-        const res = DateTime.fromISO(e.target.value).toUTC().toISO();
-        if (!res) throw new Error("Invalid date");
-        newValue = res;
-      } else if (props.filter.rangeType === "DATETIME") {
-        const res = DateTime.fromISO(e.target.value).toUTC().toISO();
-        if (!res) throw new Error("Invalid date");
-        newValue = res;
-      } else newValue = e.target.value;
+      const newValue = parseRangeInput(props.filter.rangeType, e.target.value);
       setEndValue(newValue);
       props.onFilterChange({
         ...props.filter,

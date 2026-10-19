@@ -251,9 +251,13 @@ const InfiniteScroll = <TData extends object>(
     ]
   );
 
+  // Reset clears what's applied as well as what's pending, so it stays
+  // available while the table is filtered even if the pending edits are empty.
   const hasActiveFilters = useMemo(
-    () => pendingChangesUtil.hasActiveFilters(pendingFilters),
-    [pendingFilters]
+    () =>
+      pendingChangesUtil.hasActiveFilters(pendingFilters) ||
+      pendingChangesUtil.hasActiveFilters(filters),
+    [pendingFilters, filters]
   );
 
   const handleApply = useCallback(() => {
@@ -267,6 +271,18 @@ const InfiniteScroll = <TData extends object>(
     pendingSortDirection,
     pendingLimitOptions,
   ]);
+
+  // Tags show the applied filters, and removing one applies at once. The
+  // pending copy of that filter follows; other pending edits are kept.
+  const handleTagChange = useCallback(
+    (next: InfiniteScrollMenuGeneratedFilter[]) => {
+      setPendingFilters((pending) =>
+        pending.map((p, i) => (next[i] !== filters[i] ? next[i] : p))
+      );
+      setFilters(next);
+    },
+    [filters]
+  );
 
   const handleReset = useCallback(() => {
     const clearedFilters = pendingFilters.map((filter) => {
@@ -310,6 +326,7 @@ const InfiniteScroll = <TData extends object>(
             <Filters
               pendingFilters={pendingFilters}
               handleNewPendingFilters={setPendingFilters}
+              onApply={hasPendingChanges ? handleApply : undefined}
             >
               <Button
                 size="sm"
@@ -327,10 +344,7 @@ const InfiniteScroll = <TData extends object>(
                 Apply
               </Button>
             </Filters>
-            <Tags
-              filters={pendingFilters}
-              handleNewFilters={setPendingFilters}
-            />
+            <Tags filters={filters} handleNewFilters={handleTagChange} />
           </Col>
           <div className="k-infinite-scroll-menu-table-divider" />
         </>

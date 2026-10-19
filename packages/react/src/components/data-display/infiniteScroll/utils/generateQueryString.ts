@@ -1,3 +1,4 @@
+import { hasRangeValue } from "./hasPendingChanges.js";
 import {
   InfiniteScrollMenuGeneratedFilter,
   InfiniteScrollMenuLimitOption,
@@ -47,10 +48,10 @@ const generateQueryString = (params: GenerateQueryStringParams): string => {
       queryParams.set(`filter[${key}]`, filter.value);
       queryParams.set(`filter[${key}_op]`, "contains");
     } else if (filter.type === "RANGE") {
-      if (filter.startValue !== undefined) {
+      if (hasRangeValue(filter.startValue)) {
         queryParams.set(`filter[${key}_gte]`, String(filter.startValue));
       }
-      if (filter.endValue !== undefined) {
+      if (hasRangeValue(filter.endValue)) {
         queryParams.set(`filter[${key}_lte]`, String(filter.endValue));
       }
     } else if (filter.type === "SELECT") {
