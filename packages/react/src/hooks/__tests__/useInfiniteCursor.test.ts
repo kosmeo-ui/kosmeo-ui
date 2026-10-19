@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { api, createWrapper, serve } from "./queryWrapper.js";
 import useInfiniteCursor from "../useInfiniteCursor.js";
 import { describe, expect, it } from "vitest";
+import { HttpResponse } from "msw";
 
 type Row = { id: number };
 
@@ -102,5 +103,56 @@ describe("useInfiniteCursor", () => {
 
     await waitFor(() => expect(result.current.data).toHaveLength(5));
     expect(requests).toHaveLength(2);
+  });
+
+  describe("when a request fails", () => {
+    it.each([
+      [
+        "an error status",
+        () => HttpResponse.json(null, { status: 500 }),
+        "Request failed with status code 500",
+      ],
+      ["a network failure", () => HttpResponse.error(), "Network Error"],
+    ])("reports %s as its error", async (_, respond, message) => {
+      const { result } = setup(respond);
+
+      await waitFor(() => expect(result.current.error?.message).toBe(message));
+    });
+
+    it("offers no more pages after a failed first page", async () => {
+      const { result } = setup(() => HttpResponse.json(null, { status: 500 }));
+
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      expect(result.current.hasMore).toBe(false);
+    });
+
+    it("keeps its rows and offers no more pages after a failed next page", async () => {
+      const { result } = setup((url) =>
+        url.searchParams.get("cursor") === "p2"
+          ? HttpResponse.json(null, { status: 500 })
+          : twoPages(url)
+      );
+      await waitFor(() => expect(result.current.data).toHaveLength(3));
+
+      act(() => result.current.onQueryChange("limit=3&offset=3"));
+
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      expect(result.current.data).toHaveLength(3);
+      expect(result.current.hasMore).toBe(false);
+    });
+
+    it("clears the error once a reload succeeds", async () => {
+      let failing = true;
+      const { result } = setup((url) =>
+        failing ? HttpResponse.json(null, { status: 500 }) : twoPages(url)
+      );
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      failing = false;
+
+      act(() => result.current.reload());
+
+      await waitFor(() => expect(result.current.data).toHaveLength(3));
+      expect(result.current.error).toBeNull();
+    });
   });
 });

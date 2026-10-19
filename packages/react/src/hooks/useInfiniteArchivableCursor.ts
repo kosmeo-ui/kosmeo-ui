@@ -130,13 +130,17 @@ const useInfiniteArchivableCursor = <T extends { id: number | string }>(
   }, [query.data]);
 
   const lastPage = query.data?.pages[query.data.pages.length - 1];
-  const hasMore = lastPage?.hasMore ?? query.hasNextPage ?? false;
+  // After a failure, stop offering pages: reload() retries.
+  const hasMore = query.isError
+    ? false
+    : (lastPage?.hasMore ?? query.hasNextPage ?? false);
 
   return {
     data: allData,
     hasMore,
     isLoading: query.isLoading,
     isReloading: query.isRefetching && allData.length > 0,
+    error: query.error,
     total: 0,
     onQueryChange,
     reload,

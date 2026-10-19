@@ -2,6 +2,7 @@ import useInfiniteArchivableCursor from "../useInfiniteArchivableCursor.js";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { api, createWrapper, serve } from "./queryWrapper.js";
 import { describe, expect, it } from "vitest";
+import { HttpResponse } from "msw";
 
 const onePage = () => ({
   data: [{ id: 1 }],
@@ -76,5 +77,49 @@ describe("useInfiniteArchivableCursor", () => {
 
     await waitFor(() => expect(result.current.data).toHaveLength(2));
     expect(requests).toHaveLength(2);
+  });
+
+  it("reports a failed request as its error", async () => {
+    serve("/projects", () => HttpResponse.json(null, { status: 500 }));
+
+    const { result } = renderHook(
+      () =>
+        useInfiniteArchivableCursor<{ id: number }>({
+          axiosInstance: api(),
+          endpoint: "/projects",
+          queryKey: "projects",
+        }),
+      { wrapper: createWrapper() }
+    );
+
+    await waitFor(() =>
+      expect(result.current.error?.message).toBe(
+        "Request failed with status code 500"
+      )
+    );
+  });
+
+  it("offers no more pages after a failed next page", async () => {
+    serve("/projects", (url) =>
+      url.searchParams.get("cursor") === "p2"
+        ? HttpResponse.json(null, { status: 500 })
+        : { data: [{ id: 1 }], hasMore: true, limit: 1, nextCursor: "p2" }
+    );
+    const { result } = renderHook(
+      () =>
+        useInfiniteArchivableCursor<{ id: number }>({
+          axiosInstance: api(),
+          endpoint: "/projects",
+          queryKey: "projects",
+          initialLimit: 1,
+        }),
+      { wrapper: createWrapper() }
+    );
+    await waitFor(() => expect(result.current.data).toHaveLength(1));
+
+    act(() => result.current.onQueryChange("limit=1&offset=1"));
+
+    await waitFor(() => expect(result.current.error).not.toBeNull());
+    expect(result.current.hasMore).toBe(false);
   });
 });

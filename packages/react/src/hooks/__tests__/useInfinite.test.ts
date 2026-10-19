@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { api, createWrapper, serve } from "./queryWrapper.js";
 import { describe, expect, it } from "vitest";
 import useInfinite from "../useInfinite.js";
+import { HttpResponse } from "msw";
 
 type Row = { id: number };
 
@@ -101,5 +102,56 @@ describe("useInfinite", () => {
     act(() => result.current.onQueryChange("limit=2&offset=2"));
 
     await waitFor(() => expect(ids(result.current.data)).toEqual([1, 2, 3]));
+  });
+
+  describe("when a request fails", () => {
+    it.each([
+      [
+        "an error status",
+        () => HttpResponse.json(null, { status: 500 }),
+        "Request failed with status code 500",
+      ],
+      ["a network failure", () => HttpResponse.error(), "Network Error"],
+    ])("reports %s as its error", async (_, respond, message) => {
+      const { result } = setup(respond);
+
+      await waitFor(() => expect(result.current.error?.message).toBe(message));
+    });
+
+    it("offers no more pages after a failed first page", async () => {
+      const { result } = setup(() => HttpResponse.json(null, { status: 500 }));
+
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      expect(result.current.hasMore).toBe(false);
+    });
+
+    it("keeps its rows and offers no more pages after a failed next page", async () => {
+      const { result } = setup((url) =>
+        url.searchParams.get("offset") === "2"
+          ? HttpResponse.json(null, { status: 500 })
+          : fiveRows(url)
+      );
+      await waitFor(() => expect(result.current.data).toHaveLength(2));
+
+      act(() => result.current.onQueryChange("limit=2&offset=2"));
+
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      expect(result.current.data).toHaveLength(2);
+      expect(result.current.hasMore).toBe(false);
+    });
+
+    it("clears the error once a reload succeeds", async () => {
+      let failing = true;
+      const { result } = setup((url) =>
+        failing ? HttpResponse.json(null, { status: 500 }) : fiveRows(url)
+      );
+      await waitFor(() => expect(result.current.error).not.toBeNull());
+      failing = false;
+
+      act(() => result.current.reload());
+
+      await waitFor(() => expect(result.current.data).toHaveLength(2));
+      expect(result.current.error).toBeNull();
+    });
   });
 });
