@@ -99,15 +99,53 @@ describe("LanguageSelect", () => {
     expect(onChange).toHaveBeenCalledWith(null);
   });
 
-  it("shows None for a language with no entry", () => {
-    render(<Harness initialValue="en" />);
+  it.each([
+    ["en", "English (United States)"],
+    ["EN", "English (United States)"],
+    ["fr", "French (France)"],
+  ])("shows a bare %s as its first locale", (stored, shown) => {
+    render(<Harness initialValue={stored} />);
 
-    expect(select()).toHaveDisplayValue("— None —");
+    expect(select()).toHaveDisplayValue(shown);
   });
 
-  it.todo(
-    'decide whether a stored language with no entry ("en") is cleared on mount — currently onChange(null) fires with no user action'
+  it("shows a code with no locale as the code itself", () => {
+    render(<Harness initialValue="xx" />);
+
+    expect(select()).toHaveDisplayValue("xx");
+  });
+
+  it.each([
+    ["en", true],
+    ["en", false],
+    ["xx", true],
+    ["xx", false],
+  ])(
+    "does not change a stored %s on load (includeNone %s)",
+    (stored, includeNone) => {
+      const onChange = vi.fn();
+
+      render(
+        <Harness
+          initialValue={stored}
+          includeNone={includeNone}
+          onChange={onChange}
+        />
+      );
+
+      expect(onChange).not.toHaveBeenCalled();
+    }
   );
+
+  it("reports a language chosen over a bare stored one", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(<Harness initialValue="en" onChange={onChange} />);
+
+    await user.selectOptions(select(), "English (United Kingdom)");
+
+    expect(onChange).toHaveBeenCalledWith("en-GB");
+  });
 
   it("reports the first language when there is no None to show", () => {
     const onChange = vi.fn();
