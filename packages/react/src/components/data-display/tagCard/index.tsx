@@ -20,8 +20,9 @@ const TagCard = (props: TagCardProps) => {
         <h3>{props.title}</h3>
         {props.tags.length ? (
           <ul className="k-tag-card-list">
-            {props.tags.map((t) => (
-              <li key={t}>
+            {/* Tags can repeat and hold no state, so position is part of the key. */}
+            {props.tags.map((t, i) => (
+              <li key={`${i}-${t}`}>
                 <Badge variant={color} size="md" pill>
                   {t}
                 </Badge>

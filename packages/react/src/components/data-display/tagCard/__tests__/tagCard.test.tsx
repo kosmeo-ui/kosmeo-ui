@@ -44,7 +44,21 @@ describe("TagCard", () => {
     expect(screen.queryByRole("list")).not.toBeInTheDocument();
   });
 
-  it.todo(
-    'decide how duplicate tags render — currently tags={["React", "React"]} renders both and React logs a duplicate-key error (key={t})'
-  );
+  it("renders a repeated tag as many times as it is given", () => {
+    render(<TagCard title="Skills" tags={["React", "React"]} />);
+
+    expect(screen.getAllByRole("listitem")).toHaveLength(2);
+  });
+
+  it("keeps a repeated tag in place when the tags change", () => {
+    const { rerender } = render(
+      <TagCard title="Skills" tags={["React", "Go", "React"]} />
+    );
+
+    rerender(<TagCard title="Skills" tags={["Go", "React"]} />);
+
+    expect(
+      screen.getAllByRole("listitem").map((item) => item.textContent)
+    ).toEqual(["Go", "React"]);
+  });
 });
