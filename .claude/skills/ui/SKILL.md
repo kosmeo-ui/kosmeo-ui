@@ -106,15 +106,16 @@ class and a rule in its own `styles.css`:
 - Class names: `k-` + kebab-case, BEM-ish by suffix — `k-empty-state`,
   `k-empty-state-block`, `k-empty-state-icon`. Modifier classes are generated
   from props (`k-page-gap-${gap}`, `k-form-grid-${columns}col`).
-- No `k-` prefix on CSS custom properties.
+- CSS custom properties are `--k-` prefixed too (`--k-text-color`), and so are
+  `@keyframes` names (`k-spin`, `k-fade-in`): both are global, like classes.
 
 ### Acceptable inline-style cases (rare)
 
 Each exists in the library today:
 
 - **Data-driven color** — `Badge variant="custom" color={hex}` sets
-  `backgroundColor` inline and picks `var(--text-color-light)` or
-  `var(--text-color)` for contrast (`feedback/badge/utils.ts`).
+  `backgroundColor` inline and picks `var(--k-text-color-light)` or
+  `var(--k-text-color)` for contrast (`feedback/badge/utils.ts`).
 - **Runtime measurements** — floating position from `useFloatingPosition`
   (`Tooltip`, `SearchSelect`), table column `width`/`minWidth`/`maxWidth` from
   `TableColumn`.
@@ -128,42 +129,42 @@ Everything else: **add a class, add a rule, use a var**.
 **All colors come from CSS variables defined in `src/styles.css`.** Never write
 hex/rgb/hsl literals or named colors (`white`) in component CSS or inline styles.
 Themes swap by setting `data-theme="dark"` on `<html>` — the consuming app does
-that; the library only defines both token sets. `color-mix(in srgb, var(--x) 15%,
-var(--background-color))` is fine for tints (Badge `subtle` does it).
+that; the library only defines both token sets. `color-mix(in srgb, var(--k-x) 15%,
+var(--k-background-color))` is fine for tints (Badge `subtle` does it).
 
 ### Token families
 
 | Family | Tokens |
 |--------|--------|
-| Primary | `--primary-color`, `-hover`, `-active`, `-dark`, `-background`, `-background-light` |
-| Secondary | `--secondary-color`, `-hover`, `-active`, `-background` |
-| Light | `--light-color`, `-hover`, `-active`, `-background` |
-| Warning | `--warning-color`, `-hover`, `-active`, `-background`, `-background-light`, `-text` |
-| Danger | `--danger-color`, `-hover`, `-active`, `-background` |
-| Success | `--success-color`, `-hover`, `-active`, `-background`, `-background-light` |
-| Surface | `--background-color`, `-dark`, `-light`, `-hover`, `-overlay` |
-| Border / shadow | `--border-color`, `--border-color-active`, `--border-shadow-color-active`, `--shadow-color`, `--shadow-color-hover`, `--shadow-color-active` |
-| Overlay | `--overlay-dark-weak`, `-medium`, `-strong`; `--overlay-light-weak`, `-medium`, `-strong` |
-| Text | `--text-color`, `--text-color-secondary`, `--text-color-light`, `--text-color-link` |
-| Type scale | `--text-size-sm`, `-md`, `-lg`, `-xl`, `-2xl`, `-3xl` |
+| Primary | `--k-primary-color`, `-hover`, `-active`, `-dark`, `-background`, `-background-light` |
+| Secondary | `--k-secondary-color`, `-hover`, `-active`, `-background` |
+| Light | `--k-light-color`, `-hover`, `-active`, `-background` |
+| Warning | `--k-warning-color`, `-hover`, `-active`, `-background`, `-background-light`, `-text` |
+| Danger | `--k-danger-color`, `-hover`, `-active`, `-background` |
+| Success | `--k-success-color`, `-hover`, `-active`, `-background`, `-background-light` |
+| Surface | `--k-background-color`, `-dark`, `-light`, `-hover`, `-overlay`, `-disabled` |
+| Border / shadow | `--k-border-color`, `--k-border-color-hover`, `--k-border-color-disabled`, `--k-border-color-active`, `--k-border-shadow-color-active`, `--k-shadow-color`, `--k-shadow-color-hover`, `--k-shadow-color-active` |
+| Overlay | `--k-overlay-dark-weak`, `-medium`, `-strong`; `--k-overlay-light-weak`, `-medium`, `-strong` |
+| Text | `--k-text-color`, `--k-text-color-secondary`, `--k-text-color-light`, `--k-text-color-link`, `--k-text-color-disabled` |
+| Type scale | `--k-text-size-sm`, `-md`, `-lg`, `-xl`, `-2xl`, `-3xl` |
 
 ### Picking a color
 
 1. **Variant prop first** — `<Button variant="danger">`, `<Badge variant="success">`,
    `<Alert variant="warning">`. The component maps it to tokens.
-2. **CSS var second** — `color: var(--text-color); background: var(--background-color-light);
-   border: 1px solid var(--border-color);`
+2. **CSS var second** — `color: var(--k-text-color); background: var(--k-background-color-light);
+   border: 1px solid var(--k-border-color);`
 3. **New token** — add it to `src/styles.css` under **both** `:root` and
-   `[data-theme="dark"]`, in the matching family. Only reference tokens that
-   exist (`--text-color-muted`, used with a fallback in `detailField`, is not
-   defined).
+   `[data-theme="dark"]`, in the matching family, `--k-` prefixed like every
+   token so it can't collide with an app's own variables. Only reference
+   tokens that exist.
 
 ### DON'T
 
-- `color: #333;` → `var(--text-color)`
-- `background: white;` → `var(--background-color-light)`
-- `rgba(0, 0, 0, 0.1)` shadows → `var(--shadow-color*)` / `var(--overlay-dark-*)`
-- `style={{ color: "#dc3545" }}` → `<Badge variant="danger">` or `var(--danger-color)`
+- `color: #333;` → `var(--k-text-color)`
+- `background: white;` → `var(--k-background-color-light)`
+- `rgba(0, 0, 0, 0.1)` shadows → `var(--k-shadow-color*)` / `var(--k-overlay-dark-*)`
+- `style={{ color: "#dc3545" }}` → `<Badge variant="danger">` or `var(--k-danger-color)`
 
 ## Shared types (`components/types.ts`)
 
@@ -222,7 +223,7 @@ it (add a prop) instead of forking.
 | `RadioGroup` | Radio set | `name`, `options`, `value`, `onChange` |
 | `Switch` | Toggle | `checked`, `onChange`, `label`, `labelLocation`, `isLoading`, `size="sm"\|"md"` |
 | `PhoneInput` | E.164 phone with country | `CountryCode` type re-exported |
-| `DateInput` / `DateTimeInput` / `TimeInput` | Date pickers | ISO strings in and out |
+| `DateInput` / `DateTimeInput` / `TimeInput` | Date pickers | DateInput: `yyyy-mm-dd` out; DateTimeInput: ISO timestamp out; TimeInput: `HH:mm` |
 | `Dropdown` | Anchored popover menu | `label`, `icon`, `align="left"\|"right"`, `renderCaret`, `isOpen`, `onOpenChange` |
 | `ColorPicker` | Hex chooser | For user-supplied data only |
 | `RichTextEditor` | Tiptap WYSIWYG | Don't build custom Markdown UI |
@@ -261,7 +262,8 @@ it (add a prop) instead of forking.
 
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
-| `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu`, `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
+| `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu`, `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `applyMode="immediate"|"manual"` (default immediate: filters apply as they change), `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
+| `TableFilters` | InfiniteScroll's filter bar on its own, for paged or other tables | `filters` (as `menu.filters`), `onChange(params)` (spread into `usePaginated`'s `params`), `applyMode` |
 | `Table` | Static table | `columns`, `rows`, `rowKey`, `onRowClick`, `emptyMessage`, `striped`, `bordered`, `hover`, `maxHeight` |
 | `DataTable` | Table with a leading (selection) column — InfiniteScroll's body | `columns`, `rows` (`TableRow<T>[]`), `leadingColumn`, `onRowClick` |
 | `StatCard` | KPI tile | `label`, `value`, `icon`, `iconVariant`, `trailing`, `href`, `onClick`, `compact` |

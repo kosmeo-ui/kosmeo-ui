@@ -49,7 +49,7 @@ export default EmptyState;
 /* styles.css */
 .k-empty-state-inline {
   font-size: 0.875rem;
-  color: var(--text-color);
+  color: var(--k-text-color);
   opacity: 0.65;
   font-style: italic;
   padding: 0.5rem 0;
@@ -63,7 +63,7 @@ export default EmptyState;
   gap: 0.75rem;
   padding: 2rem 1rem;
   text-align: center;
-  color: var(--text-color);
+  color: var(--k-text-color);
   opacity: 0.75;
 }
 
@@ -210,8 +210,8 @@ const Badge = ({
           backgroundColor: color,
           color:
             getContrastTextColor(color) === "light"
-              ? "var(--text-color-light)"
-              : "var(--text-color)",
+              ? "var(--k-text-color-light)"
+              : "var(--k-text-color)",
         }
       : undefined;
   // …
@@ -233,22 +233,22 @@ export default Badge;
 }
 
 .k-badge-primary {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+  background-color: var(--k-primary-color);
+  color: var(--k-text-color-light);
 }
 
 .k-badge-warning {
-  background-color: var(--warning-color);
-  color: var(--text-color);
+  background-color: var(--k-warning-color);
+  color: var(--k-text-color);
 }
 
 .k-badge-subtle.k-badge-primary {
   background-color: color-mix(
     in srgb,
-    var(--primary-color) 15%,
-    var(--background-color)
+    var(--k-primary-color) 15%,
+    var(--k-background-color)
   );
-  color: var(--primary-color);
+  color: var(--k-primary-color);
 }
 ```
 
@@ -342,23 +342,23 @@ Every token is defined twice: light on `:root`, dark on `[data-theme="dark"]`.
 ```css
 :root {
   /* Primary Colors */
-  --primary-color: #17257d;
-  --primary-color-dark: #1a2332;
-  --primary-color-hover: #2032ac;
-  --primary-color-active: #141f6c;
-  --primary-color-background: #3d52db;
-  --primary-color-background-light: #f0f2ff;
+  --k-primary-color: #17257d;
+  --k-primary-color-dark: #1a2332;
+  --k-primary-color-hover: #2032ac;
+  --k-primary-color-active: #141f6c;
+  --k-primary-color-background: #3d52db;
+  --k-primary-color-background-light: #f0f2ff;
   /* … */
 }
 
 [data-theme="dark"] {
   /* Primary Colors — desaturated, less violent on dark surfaces */
-  --primary-color: #4a5fb5;
-  --primary-color-dark: #0e1119;
-  --primary-color-hover: #5a70c4;
-  --primary-color-active: #3d4f99;
-  --primary-color-background: #4a5fb5;
-  --primary-color-background-light: #1c2240;
+  --k-primary-color: #4a5fb5;
+  --k-primary-color-dark: #0e1119;
+  --k-primary-color-hover: #5a70c4;
+  --k-primary-color-active: #3d4f99;
+  --k-primary-color-background: #4a5fb5;
+  --k-primary-color-background-light: #1c2240;
   /* … */
 }
 ```
@@ -415,19 +415,19 @@ export default MyWidget;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem;
-  background: var(--background-color-light);
-  border: 1px solid var(--border-color);
+  background: var(--k-background-color-light);
+  border: 1px solid var(--k-border-color);
   border-radius: 0.5rem;
-  color: var(--text-color);
+  color: var(--k-text-color);
 }
 
 .k-my-widget-title {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
   font-weight: 600;
 }
 
 .k-my-widget-danger {
-  border-color: var(--danger-color);
+  border-color: var(--k-danger-color);
 }
 ```
 

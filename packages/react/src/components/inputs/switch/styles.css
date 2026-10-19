@@ -15,7 +15,7 @@
 .k-switch-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--k-text-color);
   cursor: pointer;
   user-select: none;
 }
@@ -23,13 +23,13 @@
 .k-switch-track {
   position: relative;
   border-radius: 999px;
-  background-color: var(--border-color);
+  background-color: var(--k-border-color);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
 
 .k-switch-track.k-switch-on {
-  background-color: var(--success-color);
+  background-color: var(--k-success-color);
 }
 
 /* Size: md (default) */
@@ -70,7 +70,7 @@
 .k-switch-thumb {
   position: absolute;
   border-radius: 50%;
-  background-color: var(--background-color-light);
+  background-color: var(--k-background-color-light);
   transition: transform 0.2s ease-in-out;
   pointer-events: none;
 }
@@ -101,7 +101,7 @@
 
 .k-switch-disabled + .k-switch-label,
 .k-switch-label:has(~ .k-switch-track.k-switch-disabled) {
-  color: var(--text-color-disabled);
+  color: var(--k-text-color-disabled);
   cursor: not-allowed;
 }
 

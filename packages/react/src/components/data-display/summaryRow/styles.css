@@ -5,8 +5,8 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.85rem;
   font-weight: 600;
-  background-color: var(--background-color-dark);
-  border: 1px solid var(--border-color);
+  background-color: var(--k-background-color-dark);
+  border: 1px solid var(--k-border-color);
   border-radius: 4px;
 }
 
@@ -17,10 +17,10 @@
 }
 
 .k-summary-row-label {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   font-weight: 500;
 }
 
 .k-summary-row-value {
-  color: var(--text-color);
+  color: var(--k-text-color);
 }

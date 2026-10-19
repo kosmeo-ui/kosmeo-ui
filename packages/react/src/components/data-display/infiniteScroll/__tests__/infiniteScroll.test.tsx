@@ -1,9 +1,9 @@
 import useInfiniteArchivableCursor from "../../../../hooks/useInfiniteArchivableCursor.js";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import useInfiniteCursor from "../../../../hooks/useInfiniteCursor.js";
 import { act, render, screen, within } from "@testing-library/react";
 import useInfinite from "../../../../hooks/useInfinite.js";
 import { userEvent } from "@testing-library/user-event";
-import { describe, expect, it, vi } from "vitest";
 import type { AxiosInstance } from "axios";
 import InfiniteScroll from "../index.js";
 import type { Mock } from "vitest";
@@ -40,6 +40,8 @@ const setup = (props: Partial<Props> = {}) => {
     onQueryChange,
     onReload,
     columns,
+    // The Apply flow these tests were written for; immediate mode is below.
+    applyMode: "manual",
     ...props,
   };
   const view = render(<InfiniteScroll<Person> {...allProps} />);
@@ -58,6 +60,8 @@ const lastQuery = (onQueryChange: Mock) =>
   Object.fromEntries(new URLSearchParams(onQueryChange.mock.lastCall![0]));
 
 const button = (name: string | RegExp) => screen.getByRole("button", { name });
+// Select filter options are checkboxes.
+const option = (name: string) => screen.getByRole("checkbox", { name });
 const apply = () => button("Apply");
 const region = () => screen.getByRole("region", { name: "People" });
 
@@ -123,6 +127,17 @@ const skus = (list = ""): InfiniteScrollMenuFilter => ({
   dataKey: "sku",
   list,
 });
+const sortMenu = {
+  menu: {
+    title: "People",
+    sort: {
+      sortDataKeys: [
+        { dataKey: "name", displayName: "Name", selected: false },
+        { dataKey: "createdAt", displayName: "Created", selected: true },
+      ],
+    },
+  },
+};
 
 describe("InfiniteScroll", () => {
   describe("rows", () => {
@@ -559,18 +574,6 @@ describe("InfiniteScroll", () => {
   });
 
   describe("sorting", () => {
-    const sortMenu = {
-      menu: {
-        title: "People",
-        sort: {
-          sortDataKeys: [
-            { dataKey: "name", displayName: "Name", selected: false },
-            { dataKey: "createdAt", displayName: "Created", selected: true },
-          ],
-        },
-      },
-    };
-
     it("has no sort controls without sort keys", () => {
       setup();
 
@@ -722,6 +725,23 @@ describe("InfiniteScroll", () => {
       });
     });
 
+    it("applies typed text on Enter", async () => {
+      const user = userEvent.setup();
+      const { onQueryChange } = setup(withFilters(nameSearch()));
+
+      await user.type(
+        screen.getByRole("textbox", { name: "Name" }),
+        "ann{Enter}"
+      );
+
+      expect(lastQuery(onQueryChange)).toEqual({
+        limit: "25",
+        offset: "0",
+        "filter[name]": "ann",
+        "filter[name_op]": "contains",
+      });
+    });
+
     it("drops a cleared search on Apply", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(nameSearch("ann")));
@@ -746,7 +766,7 @@ describe("InfiniteScroll", () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status()));
       await user.click(button("Status"));
-      await user.click(button("Active"));
+      await user.click(option("Active"));
 
       await user.click(apply());
 
@@ -761,7 +781,7 @@ describe("InfiniteScroll", () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status([1])));
       await user.click(button("Status"));
-      await user.click(button("Closed"));
+      await user.click(option("Closed"));
 
       await user.click(apply());
 
@@ -776,7 +796,7 @@ describe("InfiniteScroll", () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status([], true)));
       await user.click(button("Status"));
-      await user.click(button("Pending"));
+      await user.click(option("Pending"));
 
       await user.click(apply());
 
@@ -792,7 +812,7 @@ describe("InfiniteScroll", () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status([1], true)));
       await user.click(button("Status"));
-      await user.click(button("Pending"));
+      await user.click(option("Pending"));
 
       await user.click(apply());
 
@@ -808,7 +828,7 @@ describe("InfiniteScroll", () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status([1])));
       await user.click(button("Status"));
-      await user.click(button("Active"));
+      await user.click(option("Active"));
 
       await user.click(apply());
 
@@ -826,7 +846,7 @@ describe("InfiniteScroll", () => {
       );
 
       expect(
-        screen.queryByRole("button", { name: "Active" })
+        screen.queryByRole("checkbox", { name: "Active" })
       ).not.toBeInTheDocument();
     });
 
@@ -840,7 +860,7 @@ describe("InfiniteScroll", () => {
         "CLO"
       );
 
-      expect(button("Closed")).toBeVisible();
+      expect(option("Closed")).toBeVisible();
     });
   });
 
@@ -889,7 +909,20 @@ describe("InfiniteScroll", () => {
       expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
     });
 
-    it("reports a date as the UTC instant of local midnight", async () => {
+    it("drops a cleared date bound on Apply", async () => {
+      const user = userEvent.setup();
+      const { onQueryChange } = setup(
+        withFilters(created("DATE", "2024-01-05"))
+      );
+      await user.click(button("Created"));
+      await user.clear(screen.getByLabelText("Created start"));
+
+      await user.click(apply());
+
+      expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
+    });
+
+    it("reports a date as the picked calendar day", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(created("DATE")));
       await user.click(button("Created"));
@@ -900,7 +933,7 @@ describe("InfiniteScroll", () => {
       expect(lastQuery(onQueryChange)).toEqual({
         limit: "25",
         offset: "0",
-        "filter[createdAt_gte]": new Date(2024, 0, 5).toISOString(),
+        "filter[createdAt_gte]": "2024-01-05",
       });
     });
 
@@ -975,12 +1008,18 @@ describe("InfiniteScroll", () => {
 
     it("adds the values on Enter", async () => {
       const user = userEvent.setup();
-      setup(withFilters(skus()));
+      const { onQueryChange } = setup(withFilters(skus()));
       await user.click(button("SKUs"));
-
       await user.type(valuesBox(), "a1{Enter}");
 
-      expect(screen.getByText("SKUs: a1")).toBeVisible();
+      await user.click(apply());
+
+      expect(lastQuery(onQueryChange)).toEqual({
+        limit: "25",
+        offset: "0",
+        "filter[sku]": "a1",
+        "filter[sku_op]": "in",
+      });
     });
 
     it("cannot add until the values change", async () => {
@@ -1006,6 +1045,27 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText("Status: Pending")).toBeVisible();
     });
 
+    it("shows no tag for a pick that isn't applied yet", async () => {
+      const user = userEvent.setup();
+      setup(withFilters(status()));
+      await user.click(button("Status"));
+
+      await user.click(option("Active"));
+
+      expect(screen.queryByText("Status: Active")).not.toBeInTheDocument();
+    });
+
+    it("shows the tag once the pick is applied", async () => {
+      const user = userEvent.setup();
+      setup(withFilters(status()));
+      await user.click(button("Status"));
+      await user.click(option("Active"));
+
+      await user.click(apply());
+
+      expect(screen.getByText("Status: Active")).toBeVisible();
+    });
+
     it("removes a selected option's tag", async () => {
       const user = userEvent.setup();
       setup(withFilters(status([2])));
@@ -1015,12 +1075,11 @@ describe("InfiniteScroll", () => {
       expect(screen.queryByText("Status: Closed")).not.toBeInTheDocument();
     });
 
-    it("drops a removed tag's option on Apply", async () => {
+    it("drops a removed tag's option at once, without Apply", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(status([2])));
-      await user.click(button("Remove"));
 
-      await user.click(apply());
+      await user.click(button("Remove"));
 
       expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
     });
@@ -1086,12 +1145,11 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText("Price End: 9")).toBeVisible();
     });
 
-    it("drops a removed range tag's bound on Apply", async () => {
+    it("drops a removed range tag's bound at once", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(price(5)));
-      await user.click(button("Remove"));
 
-      await user.click(apply());
+      await user.click(button("Remove"));
 
       expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
     });
@@ -1105,12 +1163,11 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText(text)).toBeVisible();
     });
 
-    it("drops a removed list tag on Apply", async () => {
+    it("drops a removed list tag at once", async () => {
       const user = userEvent.setup();
       const { onQueryChange } = setup(withFilters(skus("a1,b2")));
-      await user.click(button("Remove"));
 
-      await user.click(apply());
+      await user.click(button("Remove"));
 
       expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
     });
@@ -1208,6 +1265,16 @@ describe("InfiniteScroll", () => {
       await user.click(button("Reset"));
 
       expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
+    });
+
+    it("stays enabled while applied filters are active, with nothing pending", async () => {
+      const user = userEvent.setup();
+      setup(withFilters(status([1])));
+      await user.click(button("Status"));
+
+      await user.click(option("Active"));
+
+      expect(button("Reset")).toBeEnabled();
     });
 
     it("empties the search box", async () => {
@@ -1426,6 +1493,121 @@ describe("InfiniteScroll", () => {
       setup({ hideFilters: true });
 
       expect(screen.getByRole("cell", { name: "Ann" })).toBeVisible();
+    });
+  });
+
+  describe('applyMode="immediate"', () => {
+    beforeEach(() => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    const immediate = (props: Partial<Props> = {}) =>
+      setup({ applyMode: "immediate", ...props });
+    const user = () =>
+      userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const wait = (ms: number) => act(() => vi.advanceTimersByTimeAsync(ms));
+
+    it("is the default", () => {
+      setup({ applyMode: undefined, ...withFilters(status()) });
+
+      expect(
+        screen.queryByRole("button", { name: "Apply" })
+      ).not.toBeInTheDocument();
+    });
+
+    it("applies a ticked option without Apply", async () => {
+      const u = user();
+      const { onQueryChange } = immediate(withFilters(status()));
+      await u.click(button("Status"));
+
+      await u.click(option("Active"));
+      await wait(0);
+
+      expect(lastQuery(onQueryChange)).toEqual({
+        limit: "25",
+        offset: "0",
+        "filter[status]": "1",
+      });
+    });
+
+    it("applies a picked sort without Apply", async () => {
+      const u = user();
+      const { onQueryChange } = immediate(sortMenu);
+      await u.click(button("Sort by: Created"));
+
+      await u.click(button("Name"));
+      await wait(0);
+
+      expect(lastQuery(onQueryChange)).toMatchObject({ sort: "name" });
+    });
+
+    // shouldAdvanceTime moves the clock with real time too, so the early case
+    // keeps a margin before the 400ms pause rather than sitting 1ms short.
+    it.each([
+      [300, false],
+      [400, true],
+    ])("searches %ims after typing stops: %s", async (ms, searched) => {
+      const u = user();
+      const { onQueryChange } = immediate(withFilters(nameSearch()));
+      await u.type(screen.getByRole("textbox", { name: "Name" }), "ann");
+
+      await wait(ms);
+
+      expect("filter[name]" in lastQuery(onQueryChange)).toBe(searched);
+    });
+
+    it("searches at once on Enter", async () => {
+      const u = user();
+      const { onQueryChange } = immediate(withFilters(nameSearch()));
+
+      await u.type(screen.getByRole("textbox", { name: "Name" }), "ann{Enter}");
+
+      expect(lastQuery(onQueryChange)).toMatchObject({ "filter[name]": "ann" });
+    });
+
+    it("keeps a range as a draft while it's typed", async () => {
+      const u = user();
+      const { onQueryChange } = immediate(withFilters(price()));
+      await u.click(button("Price"));
+      await u.type(screen.getByLabelText("Price start"), "5");
+      await u.type(screen.getByLabelText("Price end"), "9");
+
+      await wait(1000);
+
+      expect(lastQuery(onQueryChange)).toEqual({ limit: "25", offset: "0" });
+    });
+
+    it("applies both range bounds from the menu's Apply button", async () => {
+      const u = user();
+      const { onQueryChange } = immediate(withFilters(price()));
+      await u.click(button("Price"));
+      await u.type(screen.getByLabelText("Price start"), "5");
+      await u.type(screen.getByLabelText("Price end"), "9");
+
+      await u.click(apply());
+      await wait(0);
+
+      expect(lastQuery(onQueryChange)).toEqual({
+        limit: "25",
+        offset: "0",
+        "filter[price_gte]": "5",
+        "filter[price_lte]": "9",
+      });
+    });
+
+    it("drops a range draft when its menu closes without Apply", async () => {
+      const u = user();
+      immediate(withFilters(price()));
+      await u.click(button("Price"));
+      await u.type(screen.getByLabelText("Price start"), "5");
+
+      await u.click(button("Price"));
+
+      expect(screen.getByLabelText("Price start")).toHaveValue(null);
     });
   });
 });

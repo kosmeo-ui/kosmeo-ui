@@ -163,6 +163,7 @@ MUST NOT repeat them per test:
 | `setupFiles` → `vitest.polyfills.ts` | the web streams msw needs, which the jsdom environment lacks |
 | `setupFiles` → `vitest.setup.ts` | the msw server (`hooks/__tests__/server.ts`): no handlers, unhandled requests fail the test, handlers reset after each test; jest-dom matchers; Testing Library `cleanup()` and `localStorage.clear()` after each test; stubs for `scrollIntoView` and `Range` measurements, which jsdom lacks |
 | `console.error` guard | any `console.error` a test has not mocked fails that test, so React warnings (a controlled field with no `onChange`, a hydration mismatch, nested buttons) cannot pile up unnoticed |
+| `process.env.TZ = "America/Los_Angeles"` | the whole run is in one zone west of UTC, set before any worker starts, so date code that slips into UTC fails here (and in CI, which runs in UTC) instead of only for users in the Americas |
 
 CSS is not loaded: `import "./styles.css"` is a no-op under Vitest, so `toBeVisible`
 sees only `hidden`, inline styles and detached nodes, never class-based `display`.
@@ -286,8 +287,11 @@ Pick cases from the code's shape, not from typical inputs:
 
 Build expected values with local-time constructors (`new Date(2024, 0, 5, 23, 30)`)
 and local getters, so a test passes in any zone — as the `dateInput` util tests do.
-Do not stub `TZ`: the suite runs in threads that share one process, and that is not
-verified to isolate. A case about a specific zone needs a forks-pool config first.
+The whole suite runs in `America/Los_Angeles` (`vitest.config.ts` sets it once, before
+the workers start), so a date-only value read as UTC midnight shows up as the day
+before. Do not stub `TZ` per test: the suite runs in threads that share one process,
+and that is not verified to isolate. A case about another zone needs a forks-pool
+config first.
 
 ## Naming and tables
 

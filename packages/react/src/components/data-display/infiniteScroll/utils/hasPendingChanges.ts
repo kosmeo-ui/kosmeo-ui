@@ -2,6 +2,7 @@ import {
   InfiniteScrollMenuGeneratedFilter,
   InfiniteScrollMenuLimitOption,
   InfiniteScrollMenuSortDataKey,
+  RangeValue,
   SortDirection,
 } from "../types.js";
 
@@ -29,14 +30,18 @@ export const hasPendingChanges = (params: PendingChangesParams): boolean => {
   );
 };
 
+/** A range bound is set unless it's missing or empty; `0` is a real bound. */
+export const hasRangeValue = (
+  value: RangeValue | undefined
+): value is RangeValue => value !== undefined && value !== "";
+
 export const hasActiveFilters = (
   pendingFilters: InfiniteScrollMenuGeneratedFilter[]
 ): boolean => {
   for (const filter of pendingFilters) {
     if (filter.type === "RANGE") {
-      if (filter.startValue !== undefined && filter.startValue !== "")
+      if (hasRangeValue(filter.startValue) || hasRangeValue(filter.endValue))
         return true;
-      if (filter.endValue !== undefined && filter.endValue !== "") return true;
     } else if (filter.type === "SEARCH") {
       if (filter.value) return true;
     } else if (filter.type === "LIST") {
@@ -48,11 +53,42 @@ export const hasActiveFilters = (
   return false;
 };
 
+/** The filters with every value cleared, for Reset. */
+export const clearFilters = (
+  filters: InfiniteScrollMenuGeneratedFilter[]
+): InfiniteScrollMenuGeneratedFilter[] =>
+  filters.map((filter) => {
+    if (filter.type === "SELECT") {
+      return {
+        ...filter,
+        options: filter.options?.map((o) => ({ ...o, selected: false })),
+      };
+    } else if (filter.type === "RANGE") {
+      return { ...filter, startValue: undefined, endValue: undefined };
+    } else if (filter.type === "SEARCH") {
+      return { ...filter, value: undefined };
+    } else return { ...filter, list: "" };
+  });
+
+/**
+ * Whether a pending change is in a search box: applied immediately, searches
+ * wait for a pause in typing. (Ranges apply from their menu's Apply button.)
+ */
+export const hasTypedFilterChanges = (
+  filters: InfiniteScrollMenuGeneratedFilter[],
+  pendingFilters: InfiniteScrollMenuGeneratedFilter[]
+): boolean =>
+  filters.some(
+    (filter, i) =>
+      filter.type === "SEARCH" &&
+      hasFilterChanges([filter], [pendingFilters[i]])
+  );
+
 // An emptied field is "" and an untouched one undefined; both mean unset.
 const isSameValue = (a: unknown, b: unknown) =>
   a === b || ((a === "" || a === undefined) && (b === "" || b === undefined));
 
-const hasFilterChanges = (
+export const hasFilterChanges = (
   filters: InfiniteScrollMenuGeneratedFilter[],
   pendingFilters: InfiniteScrollMenuGeneratedFilter[]
 ): boolean => {

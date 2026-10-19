@@ -25,7 +25,7 @@
   height: 1.25rem;
   width: 1.25rem;
   border-radius: 0.25rem;
-  border-color: var(--border-color);
+  border-color: var(--k-border-color);
 }
 
 .k-checkbox-label {
@@ -33,7 +33,7 @@
   margin-bottom: 0.1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--k-text-color);
 }
 
 .k-checkbox[aria-readonly="true"] {
@@ -41,7 +41,7 @@
 }
 
 .k-checkbox-label:has(+ .k-checkbox[aria-readonly="true"]) {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-checkbox:disabled {
@@ -51,6 +51,6 @@
 
 .k-checkbox:disabled + .k-checkbox-label,
 .k-checkbox-label:has(+ .k-checkbox:disabled) {
-  color: var(--text-color-disabled);
+  color: var(--k-text-color-disabled);
   cursor: not-allowed;
 }

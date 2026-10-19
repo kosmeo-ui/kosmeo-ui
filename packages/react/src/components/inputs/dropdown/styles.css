@@ -7,9 +7,9 @@
 .k-dropdown-menu {
   position: absolute;
   top: 100%;
-  background-color: var(--background-color);
+  background-color: var(--k-background-color);
   border-radius: 0.5rem;
-  box-shadow: 0 0.375rem 1.25rem var(--shadow-color);
+  box-shadow: 0 0.375rem 1.25rem var(--k-shadow-color);
   overflow: hidden;
   transform: translateY(-0.625rem);
   opacity: 0;

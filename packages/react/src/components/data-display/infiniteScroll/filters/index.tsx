@@ -13,8 +13,18 @@ interface InfiniteScrollMenuFiltersProps {
   handleNewPendingFilters: (
     filters: SetStateAction<InfiniteScrollMenuGeneratedFilter[]>
   ) => void;
+  /** Applies the pending filters; Enter in a filter's text box calls it. Omit when there's nothing to apply. */
+  onApply?: () => void;
+  /** Range filters keep edits as a draft until their menu's Apply button. */
+  rangeApplyInMenu?: boolean;
   children?: ReactNode;
 }
+
+// Enter in a search, number or date box applies, as in a form; checkboxes and
+// buttons keep their own Enter behaviour.
+const isTextEntry = (target: EventTarget) =>
+  target instanceof HTMLInputElement &&
+  !["checkbox", "radio", "button", "submit"].includes(target.type);
 
 const Filters = (props: InfiniteScrollMenuFiltersProps) => {
   const handleFilterChange = useCallback(
@@ -41,6 +51,7 @@ const Filters = (props: InfiniteScrollMenuFiltersProps) => {
           key={filter.filterId}
           filter={filter}
           onFilterChange={handleFilterChange}
+          applyInMenu={props.rangeApplyInMenu}
         />
       );
     } else if (filter.type === "SEARCH") {
@@ -62,8 +73,14 @@ const Filters = (props: InfiniteScrollMenuFiltersProps) => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Enter" || !props.onApply || !isTextEntry(e.target)) return;
+    e.preventDefault();
+    props.onApply();
+  };
+
   return (
-    <div className="k-menu-filters-container">
+    <div className="k-menu-filters-container" onKeyDown={handleKeyDown}>
       <div className="k-menu-filters">
         {props.pendingFilters.map(getFilter)}
       </div>

@@ -24,7 +24,7 @@
   justify-content: space-between;
   gap: 1.5rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--k-border-color);
 }
 
 .k-list-card > div:last-child {
@@ -35,7 +35,7 @@
   font-weight: 600;
   text-align: left;
   flex-shrink: 0;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-list-card dd {
@@ -44,5 +44,5 @@
 
 .k-list-card-actions {
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--k-border-color);
 }

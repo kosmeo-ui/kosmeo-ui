@@ -7,7 +7,8 @@ import {
   TimeInput,
 } from "@kosmeo-ui/react";
 
-// The date inputs take and return ISO strings; PhoneInput returns E.164.
+// DateInput returns yyyy-mm-dd, DateTimeInput an ISO timestamp, TimeInput
+// HH:mm; PhoneInput returns E.164.
 export const DateAndPhoneInputs = () => {
   const [date, setDate] = useState<string | null>("2026-10-14");
   const [dateTime, setDateTime] = useState<string | null>(null);

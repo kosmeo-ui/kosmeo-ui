@@ -1,7 +1,9 @@
 import { api } from "@/lib/api-client";
+import { useState } from "react";
 import {
   Badge,
   InfiniteScroll,
+  Switch,
   useInfiniteCursor,
   type InfiniteScrollMenu,
   type TableColumn,
@@ -70,6 +72,8 @@ const columns: TableColumn<Customer>[] = [
 
 // useInfiniteCursor drives InfiniteScroll against a cursor-paginated endpoint
 // through the app's own axios instance (here, the demo's mock API).
+// Filters apply as they change by default; applyMode="manual" adds an Apply
+// button and waits for it.
 export const InfiniteScrollExample = () => {
   const { data, hasMore, isLoading, onQueryChange, reload } =
     useInfiniteCursor<Customer>({
@@ -78,11 +82,18 @@ export const InfiniteScrollExample = () => {
       queryKey: "gallery-customers",
       initialLimit: 5,
     });
+  const [manual, setManual] = useState(false);
 
   return (
     <div className="demo-frame demo-frame-tall">
+      <Switch
+        label='Apply button (applyMode="manual")'
+        checked={manual}
+        onChange={(e) => setManual(e.target.checked)}
+      />
       <InfiniteScroll<Customer>
         menu={menu}
+        applyMode={manual ? "manual" : "immediate"}
         columns={columns}
         data={data}
         hasMore={hasMore}

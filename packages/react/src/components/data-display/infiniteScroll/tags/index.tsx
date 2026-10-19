@@ -1,6 +1,7 @@
 "use client";
 
 import { InfiniteScrollMenuGeneratedFilter } from "../types.js";
+import { hasRangeValue } from "../utils/hasPendingChanges.js";
 import SelectFilterTag from "./selectFilterTag.js";
 import RangeFilterTag from "./rangeFilterTag.js";
 import ListFilterTag from "./listFilterTag.js";
@@ -29,7 +30,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
         );
       }
     } else if (f.type === "RANGE") {
-      if (f.startValue !== undefined && f.startValue !== "") {
+      if (hasRangeValue(f.startValue)) {
         tags.push(
           <RangeFilterTag
             key={`${f.filterId}-start`}
@@ -40,7 +41,7 @@ const Tags = (props: InfiniteScrollMenuTagsProps) => {
           />
         );
       }
-      if (f.endValue !== undefined && f.endValue !== "") {
+      if (hasRangeValue(f.endValue)) {
         tags.push(
           <RangeFilterTag
             key={`${f.filterId}-end`}

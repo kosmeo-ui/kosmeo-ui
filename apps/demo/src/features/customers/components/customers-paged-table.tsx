@@ -1,57 +1,22 @@
+import { Col, Pagination, Table, TableFilters } from "@kosmeo-ui/react";
 import { useCustomerColumns } from "../hooks/use-customer-columns";
 import { useCustomersPage } from "../api/get-customers-page";
-import type { CustomerStatus } from "@/types/api";
+import { CUSTOMER_FILTERS } from "../utils/filters";
 import { useNavigate } from "react-router";
 import { paths } from "@/config/paths";
 import { useState } from "react";
-import {
-  Col,
-  Input,
-  Pagination,
-  Row,
-  Select,
-  Table,
-  useDebouncedValue,
-} from "@kosmeo-ui/react";
 
-const STATUS_OPTIONS = [
-  { value: "", label: "Any status" },
-  { value: "active", label: "Active" },
-  { value: "trial", label: "Trial" },
-  { value: "churned", label: "Churned" },
-];
-
+// TableFilters is InfiniteScroll's filter bar on its own: the same filters,
+// tags and Reset, reported as params for usePaginated.
 export const CustomersPagedTable = () => {
   const navigate = useNavigate();
   const columns = useCustomerColumns();
-  const [name, setName] = useState("");
-  const [status, setStatus] = useState("");
-  const customers = useCustomersPage({
-    name: useDebouncedValue(name, 300),
-    status: (status || undefined) as CustomerStatus | undefined,
-  });
+  const [filters, setFilters] = useState<Record<string, string>>({});
+  const customers = useCustomersPage(filters);
 
   return (
     <Col size="md">
-      <Row wrap align="end">
-        <div className="demo-filter-field">
-          <Input
-            label="Name"
-            placeholder="Search…"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            onClear={() => setName("")}
-          />
-        </div>
-        <div className="demo-filter-field">
-          <Select
-            label="Status"
-            value={status}
-            options={STATUS_OPTIONS}
-            onChange={(v) => setStatus(v ?? "")}
-          />
-        </div>
-      </Row>
+      <TableFilters filters={CUSTOMER_FILTERS} onChange={setFilters} />
 
       {/* The previous page stays visible, dimmed, while the next one loads. */}
       <div

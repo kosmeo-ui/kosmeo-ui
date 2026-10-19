@@ -15,6 +15,7 @@ export const Forms = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [days, setDays] = useState({ objects: "", versions: "", purge: "" });
 
   return (
     <Form
@@ -40,6 +41,31 @@ export const Forms = () => {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+        />
+      </FormGrid>
+      {/* Controls stay level when a label wraps or one field has helper text. */}
+      <FormGrid columns={3}>
+        <Input
+          label="Expire objects after (days)"
+          type="number"
+          placeholder="Leave empty to keep"
+          value={days.objects}
+          onChange={(e) => setDays({ ...days, objects: e.target.value })}
+        />
+        <Input
+          label="Expire non-current versions after (days)"
+          type="number"
+          placeholder="Leave empty to keep"
+          value={days.versions}
+          onChange={(e) => setDays({ ...days, versions: e.target.value })}
+          helperText="Only applies to versioned buckets"
+        />
+        <Input
+          label="Purge soft-deleted objects after (days)"
+          type="number"
+          placeholder="Leave empty to never purge"
+          value={days.purge}
+          onChange={(e) => setDays({ ...days, purge: e.target.value })}
         />
       </FormGrid>
       {error && <FormError>{error}</FormError>}

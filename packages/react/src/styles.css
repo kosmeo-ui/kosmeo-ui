@@ -61,171 +61,186 @@ h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background-color);
+  background: var(--k-background-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--k-border-color);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-color);
+  background: var(--k-secondary-color);
 }
 
 :root {
+  /* Native controls (date/time picker icons, checkboxes, scrollbars, the
+     select picker) render for the active theme. */
+  color-scheme: light;
+
   /* Primary Colors */
-  --primary-color: #17257d;
-  --primary-color-dark: #1a2332;
-  --primary-color-hover: #2032ac;
-  --primary-color-active: #141f6c;
-  --primary-color-background: #3d52db;
-  --primary-color-background-light: #f0f2ff;
+  --k-primary-color: #17257d;
+  --k-primary-color-dark: #1a2332;
+  --k-primary-color-hover: #2032ac;
+  --k-primary-color-active: #141f6c;
+  --k-primary-color-background: #3d52db;
+  --k-primary-color-background-light: #f0f2ff;
   /* Primary as text (links, active tabs) on page and card surfaces. */
-  --primary-color-text: #17257d;
+  --k-primary-color-text: #17257d;
 
   /* Secondary Colors — dark enough for white text (4.5:1) */
-  --secondary-color: #6b6b6b;
-  --secondary-color-hover: #757575;
-  --secondary-color-active: #616161;
-  --secondary-color-background: #6b6b6b;
+  --k-secondary-color: #6b6b6b;
+  --k-secondary-color-hover: #757575;
+  --k-secondary-color-active: #616161;
+  --k-secondary-color-background: #6b6b6b;
 
   /* Light Colors */
-  --light-color: #fafafa;
-  --light-color-hover: #e6e6e6;
-  --light-color-active: #f2f2f2;
-  --light-color-background: white;
+  --k-light-color: #fafafa;
+  --k-light-color-hover: #e6e6e6;
+  --k-light-color-active: #f2f2f2;
+  --k-light-color-background: white;
 
   /* Warning Colors */
-  --warning-color: #ffc107;
-  --warning-color-hover: #ffc61a;
-  --warning-color-active: #ffbf00;
-  --warning-color-background: #ffd24d;
-  --warning-color-background-light: #fff8e1;
-  --warning-color-text: #92400e;
+  --k-warning-color: #ffc107;
+  --k-warning-color-hover: #ffc61a;
+  --k-warning-color-active: #ffbf00;
+  --k-warning-color-background: #ffd24d;
+  --k-warning-color-background-light: #fff8e1;
+  --k-warning-color-text: #92400e;
   /* Text on a warning fill. */
-  --warning-color-contrast: #333;
+  --k-warning-color-contrast: #333;
 
   /* Danger Colors */
-  --danger-color: #dc3545;
-  --danger-color-hover: #e23243;
-  --danger-color-active: #d92638;
-  --danger-color-background: #c42b3b;
+  --k-danger-color: #dc3545;
+  --k-danger-color-hover: #e23243;
+  --k-danger-color-active: #d92638;
+  --k-danger-color-background: #c42b3b;
   /* Danger as text (field errors) on page and card surfaces. */
-  --danger-color-text: #b92535;
+  --k-danger-color-text: #b92535;
 
   /* Success Colors */
-  --success-color: #198754;
-  --success-color-hover: #1c975d;
-  --success-color-active: #188150;
-  --success-color-background: #157347;
-  --success-color-background-light: #e8f5e8;
+  --k-success-color: #198754;
+  --k-success-color-hover: #1c975d;
+  --k-success-color-active: #188150;
+  --k-success-color-background: #157347;
+  --k-success-color-background-light: #e8f5e8;
 
   /* Background Colors */
-  --background-color: #fafafa;
-  --background-color-dark: #f2f2f2;
-  --background-color-light: white;
-  --background-color-hover: #e6e6e6;
-  --background-color-overlay: rgba(0, 0, 0, 0.5);
+  --k-background-color: #fafafa;
+  --k-background-color-dark: #f2f2f2;
+  --k-background-color-light: white;
+  --k-background-color-hover: #e6e6e6;
+  --k-background-color-overlay: rgba(0, 0, 0, 0.5);
+  --k-background-color-disabled: #f2f2f2;
 
   /* Border Styles */
-  --border-color: #ccc;
-  --border-color-active: var(--primary-color);
-  --border-shadow-color-active: rgba(23, 37, 125, 0.2);
+  --k-border-color: #ccc;
+  --k-border-color-hover: #999;
+  --k-border-color-disabled: #e0e0e0;
+  --k-border-color-active: var(--k-primary-color);
+  --k-border-shadow-color-active: rgba(23, 37, 125, 0.2);
 
   /* Shadow Colors */
-  --shadow-color: rgba(0, 0, 0, 0.1);
-  --shadow-color-active: rgba(0, 0, 0, 0.05);
-  --shadow-color-hover: rgba(0, 0, 0, 0.2);
+  --k-shadow-color: rgba(0, 0, 0, 0.1);
+  --k-shadow-color-active: rgba(0, 0, 0, 0.05);
+  --k-shadow-color-hover: rgba(0, 0, 0, 0.2);
 
   /* Text Styles */
-  --text-color: #333;
-  --text-color-secondary: #666;
-  --text-color-light: white;
-  --text-color-link: #0062cc;
-  --text-size-sm: 0.875rem;
-  --text-size-md: 1rem;
-  --text-size-lg: 1.125rem;
-  --text-size-xl: 1.25rem;
-  --text-size-2xl: 1.5rem;
-  --text-size-3xl: 1.875rem;
+  --k-text-color: #333;
+  --k-text-color-secondary: #666;
+  --k-text-color-light: white;
+  --k-text-color-link: #0062cc;
+  /* Disabled text is exempt from WCAG contrast minimums. */
+  --k-text-color-disabled: #888;
+  --k-text-size-sm: 0.875rem;
+  --k-text-size-md: 1rem;
+  --k-text-size-lg: 1.125rem;
+  --k-text-size-xl: 1.25rem;
+  --k-text-size-2xl: 1.5rem;
+  --k-text-size-3xl: 1.875rem;
 
   /* Glass/Overlay Effects */
-  --overlay-light-weak: rgba(255, 255, 255, 0.1);
-  --overlay-light-medium: rgba(255, 255, 255, 0.2);
-  --overlay-light-strong: rgba(255, 255, 255, 0.5);
-  --overlay-dark-weak: rgba(0, 0, 0, 0.1);
-  --overlay-dark-medium: rgba(0, 0, 0, 0.2);
-  --overlay-dark-strong: rgba(0, 0, 0, 0.3);
+  --k-overlay-light-weak: rgba(255, 255, 255, 0.1);
+  --k-overlay-light-medium: rgba(255, 255, 255, 0.2);
+  --k-overlay-light-strong: rgba(255, 255, 255, 0.5);
+  --k-overlay-dark-weak: rgba(0, 0, 0, 0.1);
+  --k-overlay-dark-medium: rgba(0, 0, 0, 0.2);
+  --k-overlay-dark-strong: rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
+
   /* Primary Colors — desaturated, less violent on dark surfaces */
-  --primary-color: #4a5fb5;
-  --primary-color-dark: #0e1119;
-  --primary-color-hover: #5a70c4;
-  --primary-color-active: #3d4f99;
-  --primary-color-background: #4a5fb5;
-  --primary-color-background-light: #1c2240;
-  --primary-color-text: #9aabf2;
+  --k-primary-color: #4a5fb5;
+  --k-primary-color-dark: #0e1119;
+  --k-primary-color-hover: #5a70c4;
+  --k-primary-color-active: #3d4f99;
+  --k-primary-color-background: #4a5fb5;
+  --k-primary-color-background-light: #1c2240;
+  --k-primary-color-text: #9aabf2;
 
   /* Secondary Colors */
-  --secondary-color: #646a75;
-  --secondary-color-hover: #6e7480;
-  --secondary-color-active: #5a606a;
-  --secondary-color-background: #4a4f5a;
+  --k-secondary-color: #646a75;
+  --k-secondary-color-hover: #6e7480;
+  --k-secondary-color-active: #5a606a;
+  --k-secondary-color-background: #4a4f5a;
 
   /* Light Colors — surface-toned (used for "light" variant buttons/pills) */
-  --light-color: #2d323d;
-  --light-color-hover: #383e4a;
-  --light-color-active: #343945;
-  --light-color-background: #242831;
+  --k-light-color: #2d323d;
+  --k-light-color-hover: #383e4a;
+  --k-light-color-active: #343945;
+  --k-light-color-background: #242831;
 
   /* Warning Colors */
-  --warning-color: #d99e00;
-  --warning-color-hover: #e8aa0d;
-  --warning-color-active: #c08c00;
-  --warning-color-background: #4d3a00;
-  --warning-color-background-light: #2e2200;
-  --warning-color-text: #f5c542;
-  --warning-color-contrast: #15181f;
+  --k-warning-color: #d99e00;
+  --k-warning-color-hover: #e8aa0d;
+  --k-warning-color-active: #c08c00;
+  --k-warning-color-background: #4d3a00;
+  --k-warning-color-background-light: #2e2200;
+  --k-warning-color-text: #f5c542;
+  --k-warning-color-contrast: #15181f;
 
   /* Danger Colors */
-  --danger-color: #c94250;
-  --danger-color-hover: #d35261;
-  --danger-color-active: #b53847;
-  --danger-color-background: #4a1820;
-  --danger-color-text: #ff8f9a;
+  --k-danger-color: #c94250;
+  --k-danger-color-hover: #d35261;
+  --k-danger-color-active: #b53847;
+  --k-danger-color-background: #4a1820;
+  --k-danger-color-text: #ff8f9a;
 
   /* Success Colors */
-  --success-color: #1f7a4e;
-  --success-color-hover: #238556;
-  --success-color-active: #1b6d45;
-  --success-color-background: #133e2c;
-  --success-color-background-light: #0d2419;
+  --k-success-color: #1f7a4e;
+  --k-success-color-hover: #238556;
+  --k-success-color-active: #1b6d45;
+  --k-success-color-background: #133e2c;
+  --k-success-color-background-light: #0d2419;
 
   /* Background Colors — cool-grey hierarchy */
-  --background-color: #15181f;
-  --background-color-dark: #1d2129;
-  --background-color-light: #2a2f3a;
-  --background-color-hover: #343a47;
-  --background-color-overlay: rgba(0, 0, 0, 0.7);
+  --k-background-color: #15181f;
+  --k-background-color-dark: #1d2129;
+  --k-background-color-light: #2a2f3a;
+  --k-background-color-hover: #343a47;
+  --k-background-color-overlay: rgba(0, 0, 0, 0.7);
+  --k-background-color-disabled: #1d2129;
 
   /* Border Styles — visible on surface */
-  --border-color: #565d6b;
-  --border-color-active: var(--primary-color);
-  --border-shadow-color-active: rgba(74, 95, 181, 0.35);
+  --k-border-color: #565d6b;
+  --k-border-color-hover: #6e7480;
+  --k-border-color-disabled: #3a3f4a;
+  --k-border-color-active: var(--k-primary-color);
+  --k-border-shadow-color-active: rgba(74, 95, 181, 0.35);
 
   /* Shadow Colors — stronger on dark */
-  --shadow-color: rgba(0, 0, 0, 0.5);
-  --shadow-color-active: rgba(0, 0, 0, 0.3);
-  --shadow-color-hover: rgba(0, 0, 0, 0.65);
+  --k-shadow-color: rgba(0, 0, 0, 0.5);
+  --k-shadow-color-active: rgba(0, 0, 0, 0.3);
+  --k-shadow-color-hover: rgba(0, 0, 0, 0.65);
 
   /* Text Styles */
-  --text-color: #e4e6eb;
-  --text-color-secondary: #9aa0aa;
-  --text-color-light: white;
-  --text-color-link: #6e9fff;
+  --k-text-color: #e4e6eb;
+  --k-text-color-secondary: #9aa0aa;
+  --k-text-color-light: white;
+  --k-text-color-link: #6e9fff;
+  --k-text-color-disabled: #6e7480;
 }
 
 h1,
@@ -236,41 +251,41 @@ h5,
 h6 {
   font-weight: 600;
   line-height: 1.25;
-  color: var(--text-color);
+  color: var(--k-text-color);
 }
 
 h1 {
-  font-size: var(--text-size-3xl);
+  font-size: var(--k-text-size-3xl);
 }
 
 h2 {
-  font-size: var(--text-size-2xl);
+  font-size: var(--k-text-size-2xl);
 }
 
 h3 {
-  font-size: var(--text-size-xl);
+  font-size: var(--k-text-size-xl);
 }
 
 h4 {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
 }
 
 h5 {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
 }
 
 h6 {
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
 }
 
 body {
-  font-size: var(--text-size-md);
-  color: var(--text-color);
-  background-color: var(--background-color);
+  font-size: var(--k-text-size-md);
+  color: var(--k-text-color);
+  background-color: var(--k-background-color);
 }
 
 :where(a, a:visited) {
-  color: var(--text-color-link);
+  color: var(--k-text-color-link);
 }
 
 :where(a:hover) {
@@ -284,7 +299,7 @@ code {
 
 /* Focus visible for accessibility */
 :focus-visible {
-  outline: 2px solid var(--primary-color);
+  outline: 2px solid var(--k-primary-color);
   outline-offset: 2px;
 }
 
@@ -305,12 +320,12 @@ code {
 }
 
 .k-muted-text {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-help-text {
   font-size: 0.85rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   margin: 0.5rem 0;
 }
 
@@ -321,7 +336,7 @@ code {
 }
 
 .k-hint--danger {
-  color: var(--danger-color);
+  color: var(--k-danger-color);
 }
 
 .k-mono {
@@ -330,7 +345,7 @@ code {
 }
 
 .k-link {
-  color: var(--primary-color);
+  color: var(--k-primary-color);
   text-decoration: none;
   font-weight: 500;
   cursor: pointer;
@@ -341,11 +356,11 @@ code {
 }
 
 .k-text-success {
-  color: var(--success-color);
+  color: var(--k-success-color);
 }
 
 .k-text-danger {
-  color: var(--danger-color);
+  color: var(--k-danger-color);
 }
 
 .k-text-semibold {

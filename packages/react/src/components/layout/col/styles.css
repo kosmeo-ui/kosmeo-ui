@@ -23,5 +23,5 @@
 .k-col-divider-solid-top {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--k-border-color);
 }

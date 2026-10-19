@@ -39,11 +39,11 @@
 .k-form-error {
   background-color: color-mix(
     in srgb,
-    var(--danger-color) 12%,
-    var(--background-color)
+    var(--k-danger-color) 12%,
+    var(--k-background-color)
   );
-  color: var(--danger-color-text);
-  border: 0.0625rem solid var(--danger-color);
+  color: var(--k-danger-color-text);
+  border: 0.0625rem solid var(--k-danger-color);
   border-radius: 0.375rem;
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;

@@ -7,7 +7,7 @@
 .k-color-picker-label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--k-text-color);
 }
 
 .k-color-picker-row {
@@ -21,7 +21,7 @@
   -webkit-appearance: none;
   width: 2.5rem;
   height: 2.5rem;
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid var(--k-border-color);
   border-radius: 0.375rem;
   padding: 0;
   cursor: pointer;
@@ -48,5 +48,5 @@
 
 .k-color-picker-error {
   font-size: 0.8125rem;
-  color: var(--danger-color-text);
+  color: var(--k-danger-color-text);
 }

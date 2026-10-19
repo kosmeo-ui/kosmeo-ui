@@ -1,9 +1,9 @@
 /* Card Component Styles */
 .k-card {
-  background: var(--background-color);
+  background: var(--k-background-color);
   border-radius: 0.9375rem;
   transition: all 0.3s ease;
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid var(--k-border-color);
 }
 
 .k-card-align-left {
@@ -15,12 +15,12 @@
 }
 
 .k-card-hoverable {
-  box-shadow: 0 0.3125rem 0.9375rem var(--shadow-color);
+  box-shadow: 0 0.3125rem 0.9375rem var(--k-shadow-color);
 }
 
 .k-card-hoverable:hover {
   transform: translateY(-0.3125rem);
-  box-shadow: 0 0.9375rem 1.875rem var(--shadow-color-hover);
+  box-shadow: 0 0.9375rem 1.875rem var(--k-shadow-color-hover);
 }
 
 .k-card-header {
@@ -29,7 +29,7 @@
   gap: 0.5rem;
   padding-bottom: 0.75rem;
   margin-bottom: 1rem;
-  border-bottom: 0.0625rem solid var(--border-color);
+  border-bottom: 0.0625rem solid var(--k-border-color);
 }
 
 .k-card-header-row {
@@ -58,7 +58,7 @@
 
 .k-card-progress-label {
   font-size: 0.8125rem;
-  color: var(--text-color);
+  color: var(--k-text-color);
   opacity: 0.7;
 }
 
@@ -72,7 +72,7 @@
   gap: 0.5rem;
   padding-top: 0.75rem;
   margin-top: 1rem;
-  border-top: 0.0625rem solid var(--border-color);
+  border-top: 0.0625rem solid var(--k-border-color);
 }
 
 /* Padding Variants */
@@ -116,67 +116,67 @@
 
 /* Color Variants */
 .k-card-primary {
-  border-color: var(--primary-color);
+  border-color: var(--k-primary-color);
 }
 
 .k-card-primary.k-card-hoverable:hover {
-  border-color: var(--primary-color-hover);
+  border-color: var(--k-primary-color-hover);
   box-shadow:
-    0 0.9375rem 1.875rem var(--shadow-color-hover),
-    0 0 0 0.0625rem var(--primary-color);
+    0 0.9375rem 1.875rem var(--k-shadow-color-hover),
+    0 0 0 0.0625rem var(--k-primary-color);
 }
 
 .k-card-secondary {
-  border-color: var(--secondary-color);
+  border-color: var(--k-secondary-color);
 }
 
 .k-card-secondary.k-card-hoverable:hover {
-  border-color: var(--secondary-color-hover);
+  border-color: var(--k-secondary-color-hover);
   box-shadow:
-    0 0.9375rem 1.875rem var(--shadow-color-hover),
-    0 0 0 0.0625rem var(--secondary-color);
+    0 0.9375rem 1.875rem var(--k-shadow-color-hover),
+    0 0 0 0.0625rem var(--k-secondary-color);
 }
 
 .k-card-light {
-  border-color: var(--light-color);
+  border-color: var(--k-light-color);
 }
 
 .k-card-light.k-card-hoverable:hover {
-  border-color: var(--light-color-hover);
+  border-color: var(--k-light-color-hover);
   box-shadow:
-    0 0.9375rem 1.875rem var(--shadow-color-hover),
-    0 0 0 0.0625rem var(--light-color);
+    0 0.9375rem 1.875rem var(--k-shadow-color-hover),
+    0 0 0 0.0625rem var(--k-light-color);
 }
 
 .k-card-danger {
-  border-color: var(--danger-color);
+  border-color: var(--k-danger-color);
 }
 
 .k-card-danger.k-card-hoverable:hover {
-  border-color: var(--danger-color-hover);
+  border-color: var(--k-danger-color-hover);
   box-shadow:
-    0 0.9375rem 1.875rem var(--shadow-color-hover),
-    0 0 0 0.0625rem var(--danger-color);
+    0 0.9375rem 1.875rem var(--k-shadow-color-hover),
+    0 0 0 0.0625rem var(--k-danger-color);
 }
 
 .k-card-warning {
-  border-color: var(--warning-color);
+  border-color: var(--k-warning-color);
 }
 
 .k-card-warning.k-card-hoverable:hover {
-  border-color: var(--warning-color-hover);
+  border-color: var(--k-warning-color-hover);
   box-shadow:
-    0 0.9375rem 1.875rem var(--shadow-color-hover),
-    0 0 0 0.0625rem var(--warning-color);
+    0 0.9375rem 1.875rem var(--k-shadow-color-hover),
+    0 0 0 0.0625rem var(--k-warning-color);
 }
 
 .k-card-success {
-  border-color: var(--success-color);
+  border-color: var(--k-success-color);
 }
 
 .k-card-success.k-card-hoverable:hover {
-  border-color: var(--success-color-hover);
+  border-color: var(--k-success-color-hover);
   box-shadow:
-    0 0.9375rem 1.875rem var(--shadow-color-hover),
-    0 0 0 0.0625rem var(--success-color);
+    0 0.9375rem 1.875rem var(--k-shadow-color-hover),
+    0 0 0 0.0625rem var(--k-success-color);
 }

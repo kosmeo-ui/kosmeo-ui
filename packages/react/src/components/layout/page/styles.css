@@ -1,8 +1,11 @@
 .k-page {
+  --k-page-padding: 0px;
+  --k-page-gap: 0px;
   display: flex;
   flex-direction: column;
   width: 100%;
   box-sizing: border-box;
+  gap: var(--k-page-gap);
 }
 
 .k-page-fill {
@@ -11,15 +14,32 @@
 }
 
 .k-page-padded {
-  padding: 1.5rem;
+  --k-page-padding: 1.5rem;
+  padding: var(--k-page-padding);
+}
+
+/* A fill page has a fixed height, so content taller than it spills past the
+   bottom padding and ends flush with the view. A spacer after the content
+   stands in for that padding: it follows the content when it overflows, so
+   the scroll area still ends with the space. Its margin cancels the gap
+   before it; it keeps a real height, as an empty box adds no scroll area. */
+.k-page-fill.k-page-padded {
+  padding-bottom: 0;
+}
+
+.k-page-fill.k-page-padded::after {
+  content: "";
+  flex: none;
+  height: var(--k-page-padding);
+  margin-top: calc(-1 * var(--k-page-gap));
 }
 
 .k-page-gap-sm {
-  gap: 0.75rem;
+  --k-page-gap: 0.75rem;
 }
 
 .k-page-gap-md {
-  gap: 1.5rem;
+  --k-page-gap: 1.5rem;
 }
 
 .k-page-max-narrow {
@@ -45,9 +65,9 @@
 
 @media (max-width: 640px) {
   .k-page-padded {
-    padding: 1rem;
+    --k-page-padding: 1rem;
   }
   .k-page-gap-md {
-    gap: 1rem;
+    --k-page-gap: 1rem;
   }
 }

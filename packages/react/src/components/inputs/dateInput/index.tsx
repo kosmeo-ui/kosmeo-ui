@@ -4,7 +4,6 @@ import FieldShell from "../../forms/fieldShell/index.js";
 import { ChangeEvent, useId } from "react";
 import "./styles.css";
 import {
-  dateInputToIso,
   dateTimeLocalToIso,
   toDateInputValue,
   toDateTimeLocalValue,
@@ -23,10 +22,10 @@ export interface DateInputBaseProps {
 }
 
 export interface DateInputProps extends DateInputBaseProps {
-  /** Accepts an ISO string or `Date`. Empty string and null both mean "no value". */
+  /** Accepts a `yyyy-mm-dd` date, an ISO string or `Date`. Empty string and null both mean "no value". */
   value: string | Date | null;
-  /** Fires with an ISO date-time string (start-of-day) or `null` when cleared. */
-  onChange: (iso: string | null) => void;
+  /** Fires with the picked calendar day as `yyyy-mm-dd`, or `null` when cleared. */
+  onChange: (date: string | null) => void;
 }
 
 export interface DateTimeInputProps extends DateInputBaseProps {
@@ -57,7 +56,7 @@ export const DateInput = ({
   const fallbackId = useId();
   const id = idProp ?? fallbackId;
   const handle = (e: ChangeEvent<HTMLInputElement>) =>
-    onChange(dateInputToIso(e.target.value));
+    onChange(e.target.value || null);
   return (
     <FieldShell
       label={label}

@@ -43,46 +43,46 @@
 }
 
 .k-alert-primary {
-  background-color: var(--primary-color-background);
-  color: var(--text-color-light);
+  background-color: var(--k-primary-color-background);
+  color: var(--k-text-color-light);
 }
 
 .k-alert-secondary {
-  background-color: var(--secondary-color-background);
-  color: var(--text-color-light);
+  background-color: var(--k-secondary-color-background);
+  color: var(--k-text-color-light);
 }
 
 .k-alert-light {
-  background-color: var(--light-color-background);
-  color: var(--text-color);
+  background-color: var(--k-light-color-background);
+  color: var(--k-text-color);
 }
 
 .k-alert-danger {
-  background-color: var(--danger-color-background);
-  color: var(--text-color-light);
+  background-color: var(--k-danger-color-background);
+  color: var(--k-text-color-light);
 }
 
 .k-alert-warning {
-  background-color: var(--warning-color-background);
-  color: var(--text-color);
+  background-color: var(--k-warning-color-background);
+  color: var(--k-text-color);
 }
 
 .k-alert-success {
-  background-color: var(--success-color-background);
-  color: var(--text-color-light);
+  background-color: var(--k-success-color-background);
+  color: var(--k-text-color-light);
 }
 
 .k-alert-sm {
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   padding: 0.5rem 0.75rem;
 }
 
 .k-alert-md {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
   padding: 0.75rem 1rem;
 }
 
 .k-alert-lg {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
   padding: 1rem 1.25rem;
 }

@@ -26,18 +26,18 @@ const INVOICES: Invoice[] = [
 ];
 
 const columns: TableColumn<Invoice>[] = [
-  { title: "Invoice", dataKey: "id", width: "8rem" },
+  { title: "Invoice", dataKey: "id", width: "15%" },
   { title: "Customer", dataKey: "customer" },
   {
     title: "Amount",
     align: "right",
-    width: "7rem",
+    width: "15%",
     cellElement: (inv) => `$${inv.amount.toLocaleString()}`,
   },
   {
     title: "Status",
     align: "center",
-    width: "7rem",
+    width: "15%",
     cellElement: (inv) => (
       <Badge
         size="sm"
@@ -50,6 +50,7 @@ const columns: TableColumn<Invoice>[] = [
   },
   {
     title: "Actions",
+    align: "right",
     width: "8rem",
     disableRowClick: true,
     cellElement: (inv) => (

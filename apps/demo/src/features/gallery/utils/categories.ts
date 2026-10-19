@@ -98,7 +98,10 @@ export const GALLERY_CATEGORIES: GalleryCategory[] = [
     examples: [
       { file: "tables", title: "Table, DataTable, RowActions" },
       { file: "infinite-scroll", title: "InfiniteScroll + useInfiniteCursor" },
-      { file: "paged-table", title: "Table + Pagination + usePaginated" },
+      {
+        file: "paged-table",
+        title: "Table + TableFilters + Pagination + usePaginated",
+      },
       { file: "stats", title: "StatCard, SummaryRow" },
       { file: "lists", title: "ListCard, ListRow, TagCard" },
       {

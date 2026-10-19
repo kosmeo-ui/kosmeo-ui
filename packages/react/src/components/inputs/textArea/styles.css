@@ -1,8 +1,8 @@
 .k-textarea {
-  background-color: var(--background-color-light);
-  border: 0.0625rem solid var(--border-color);
+  background-color: var(--k-background-color-light);
+  border: 0.0625rem solid var(--k-border-color);
   border-radius: 0.375rem;
-  color: var(--text-color);
+  color: var(--k-text-color);
   width: 100%;
   box-sizing: border-box;
   transition:
@@ -14,34 +14,34 @@
 }
 
 .k-textarea-sm {
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   padding: 0.5rem 0.75rem;
 }
 
 .k-textarea-md {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
   padding: 0.625rem 1rem;
 }
 
 .k-textarea-lg {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
   padding: 0.75rem 1.25rem;
 }
 
 .k-textarea::placeholder {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   opacity: 0.7;
 }
 
 .k-textarea:focus {
   outline: none;
-  border-color: var(--border-color-active);
-  box-shadow: 0 0 0 0.1875rem var(--border-shadow-color-active);
+  border-color: var(--k-border-color-active);
+  box-shadow: 0 0 0 0.1875rem var(--k-border-shadow-color-active);
 }
 
 .k-textarea:disabled {
-  background-color: var(--bg-color-disabled);
-  color: var(--text-color-disabled);
+  background-color: var(--k-background-color-disabled);
+  color: var(--k-text-color-disabled);
   cursor: not-allowed;
   opacity: 0.6;
   resize: none;

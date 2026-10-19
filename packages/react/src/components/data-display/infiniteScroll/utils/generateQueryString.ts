@@ -1,3 +1,4 @@
+import { hasRangeValue } from "./hasPendingChanges.js";
 import {
   InfiniteScrollMenuGeneratedFilter,
   InfiniteScrollMenuLimitOption,
@@ -39,37 +40,51 @@ const generateQueryString = (params: GenerateQueryStringParams): string => {
     queryParams.set("sortDir", sortDirection);
   }
 
-  // Filter params - simple key-value format for server-side validation
+  for (const [name, value] of Object.entries(filterParams(filters))) {
+    queryParams.set(name, value);
+  }
+
+  return queryParams.toString();
+};
+
+/**
+ * The `filter[...]` query params for the filters' current values: simple
+ * key-value pairs for server-side validation. Shared by InfiniteScroll and
+ * TableFilters, so both send the same format.
+ */
+export const filterParams = (
+  filters: InfiniteScrollMenuGeneratedFilter[]
+): Record<string, string> => {
+  const params: Record<string, string> = {};
   for (const filter of filters) {
     const key = filter.dataKey;
 
     if (filter.type === "SEARCH" && filter.value) {
-      queryParams.set(`filter[${key}]`, filter.value);
-      queryParams.set(`filter[${key}_op]`, "contains");
+      params[`filter[${key}]`] = filter.value;
+      params[`filter[${key}_op]`] = "contains";
     } else if (filter.type === "RANGE") {
-      if (filter.startValue !== undefined && filter.startValue !== "") {
-        queryParams.set(`filter[${key}_gte]`, String(filter.startValue));
+      if (hasRangeValue(filter.startValue)) {
+        params[`filter[${key}_gte]`] = String(filter.startValue);
       }
-      if (filter.endValue !== undefined && filter.endValue !== "") {
-        queryParams.set(`filter[${key}_lte]`, String(filter.endValue));
+      if (hasRangeValue(filter.endValue)) {
+        params[`filter[${key}_lte]`] = String(filter.endValue);
       }
     } else if (filter.type === "SELECT") {
       const selectedOptions = filter.options
         .filter((opt) => opt.selected)
         .map((opt) => opt.id);
       if (selectedOptions.length > 0) {
-        queryParams.set(`filter[${key}]`, selectedOptions.join(","));
+        params[`filter[${key}]`] = selectedOptions.join(",");
         if (filter.multiSelect) {
-          queryParams.set(`filter[${key}_op]`, "in");
+          params[`filter[${key}_op]`] = "in";
         }
       }
     } else if (filter.type === "LIST" && filter.list) {
-      queryParams.set(`filter[${key}]`, filter.list);
-      queryParams.set(`filter[${key}_op]`, "in");
+      params[`filter[${key}]`] = filter.list;
+      params[`filter[${key}_op]`] = "in";
     }
   }
-
-  return queryParams.toString();
+  return params;
 };
 
 export default generateQueryString;

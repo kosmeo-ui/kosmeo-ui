@@ -1,8 +1,8 @@
 /* App layout only. Every color is a library token, so both themes work. */
 
 body {
-  background: var(--background-color);
-  color: var(--text-color);
+  background: var(--k-background-color);
+  color: var(--k-text-color);
 }
 
 #root {
@@ -19,8 +19,8 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   width: 15rem;
-  background: var(--primary-color-dark);
-  color: var(--text-color-light);
+  background: var(--k-primary-color-dark);
+  color: var(--k-text-color-light);
 }
 
 .demo-brand {
@@ -29,7 +29,7 @@ body {
   gap: 0.625rem;
   padding: 1.25rem 1.5rem 0.75rem;
   font-weight: 700;
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
 }
 
 .demo-brand img {
@@ -40,17 +40,17 @@ body {
 
 .demo-sidebar-footer {
   padding: 1rem 1.5rem;
-  border-top: 1px solid var(--overlay-light-weak);
+  border-top: 1px solid var(--k-overlay-light-weak);
 }
 
 .demo-sidebar-footer .k-switch-label {
-  color: var(--text-color-light);
+  color: var(--k-text-color-light);
 }
 
-/* The off-state track (--border-color) falls under 3:1 on the dark-theme
+/* The off-state track (--k-border-color) falls under 3:1 on the dark-theme
    sidebar; 50% white clears it in both themes. */
 .demo-sidebar-footer .k-switch-track:not(.k-switch-on) {
-  background-color: var(--overlay-light-strong);
+  background-color: var(--k-overlay-light-strong);
 }
 
 .demo-main {
@@ -80,9 +80,9 @@ body {
 }
 
 .demo-code {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--k-border-color);
   border-radius: 0.5rem;
-  background: var(--background-color-dark);
+  background: var(--k-background-color-dark);
   overflow: hidden;
 }
 
@@ -91,9 +91,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0.25rem 0.5rem 0.25rem 0.875rem;
-  border-bottom: 1px solid var(--border-color);
-  font-size: var(--text-size-sm);
-  color: var(--text-color-secondary);
+  border-bottom: 1px solid var(--k-border-color);
+  font-size: var(--k-text-size-sm);
+  color: var(--k-text-color-secondary);
 }
 
 .demo-code pre {
@@ -106,10 +106,6 @@ body {
   tab-size: 2;
 }
 
-.demo-filter-field {
-  width: 16rem;
-}
-
 /* A page that's being replaced by the next one. */
 .demo-loading {
   opacity: 0.6;
@@ -119,13 +115,13 @@ body {
 /* Small caption naming the variant an example shows. */
 .demo-example-label {
   margin: 0 0 0.25rem;
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   font-weight: 600;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .demo-muted {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .demo-underline {
@@ -136,7 +132,7 @@ body {
 /* Component gallery */
 
 .demo-frame {
-  border: 1px dashed var(--border-color);
+  border: 1px dashed var(--k-border-color);
   border-radius: 0.5rem;
   overflow: hidden;
 }

@@ -24,7 +24,7 @@
 }
 
 .k-stat-card-compact .k-card {
-  background: var(--background-color-dark);
+  background: var(--k-background-color-dark);
 }
 
 .k-stat-card-icon {
@@ -34,25 +34,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-color-light);
+  color: var(--k-text-color-light);
   font-size: 1.5rem;
   flex-shrink: 0;
 }
 
 .k-stat-card-icon-primary {
-  background-color: var(--primary-color);
+  background-color: var(--k-primary-color);
 }
 .k-stat-card-icon-secondary {
-  background-color: var(--secondary-color);
+  background-color: var(--k-secondary-color);
 }
 .k-stat-card-icon-success {
-  background-color: var(--success-color);
+  background-color: var(--k-success-color);
 }
 .k-stat-card-icon-warning {
-  background-color: var(--warning-color);
+  background-color: var(--k-warning-color);
 }
 .k-stat-card-icon-danger {
-  background-color: var(--danger-color);
+  background-color: var(--k-danger-color);
 }
 
 .k-stat-card-content {
@@ -63,19 +63,19 @@
 .k-stat-card-default .k-stat-card-value {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-color);
+  color: var(--k-text-color);
   line-height: 1;
 }
 
 .k-stat-card-default .k-stat-card-label {
   font-size: 0.875rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   margin-top: 0.25rem;
 }
 
 .k-stat-card-compact .k-stat-card-label {
   font-size: 0.75rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
@@ -87,10 +87,10 @@
 }
 
 .k-stat-card-trailing {
-  color: var(--border-color);
+  color: var(--k-border-color);
   flex-shrink: 0;
 }
 
 .k-stat-card-interactive:hover .k-stat-card-trailing {
-  color: var(--primary-color-text);
+  color: var(--k-primary-color-text);
 }

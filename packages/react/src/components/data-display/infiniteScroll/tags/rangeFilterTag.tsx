@@ -1,5 +1,6 @@
 "use client";
 
+import { hasRangeValue } from "../utils/hasPendingChanges.js";
 import Badge from "../../../feedback/badge/index.js";
 import { useCallback, useMemo } from "react";
 import { DateTime } from "luxon";
@@ -32,7 +33,7 @@ const RangeFilterTag = (props: InfiniteScrollRangeFilterTagProps) => {
 
   const tagValue = useMemo(() => {
     const value = filter[filterValue];
-    if (value === undefined || value === "") return "";
+    if (!hasRangeValue(value)) return "";
     if (filter.rangeType === "DATE") {
       return DateTime.fromISO(String(value)).toFormat("D");
     } else if (filter.rangeType === "DATETIME") {

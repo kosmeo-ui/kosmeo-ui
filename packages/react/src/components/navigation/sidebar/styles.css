@@ -16,7 +16,7 @@
   letter-spacing: 0.05em;
   /* 50% white: the weakest overlay that keeps small text above 4.5:1 on the
      sidebar's dark background. */
-  color: var(--overlay-light-strong);
+  color: var(--k-overlay-light-strong);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -26,7 +26,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 1.5rem;
-  color: var(--text-color-light);
+  color: var(--k-text-color-light);
   text-decoration: none;
   font-size: 0.875rem;
   transition:
@@ -37,18 +37,18 @@
 }
 
 .k-sidebar-nav-link:hover {
-  background-color: var(--overlay-light-weak);
+  background-color: var(--k-overlay-light-weak);
 }
 
 /* Browser default focus rings can vanish on the dark background. */
 .k-sidebar-nav-link:focus-visible {
-  outline: 2px solid var(--text-color-light);
+  outline: 2px solid var(--k-text-color-light);
   outline-offset: -2px;
 }
 
 .k-sidebar-nav-link.active {
-  background-color: var(--overlay-light-medium);
-  color: var(--text-color-light);
+  background-color: var(--k-overlay-light-medium);
+  color: var(--k-text-color-light);
   font-weight: 600;
 }
 

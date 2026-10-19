@@ -78,6 +78,14 @@ interface Draft {
   notes: string | undefined;
 }
 
+// Local calendar day; toISOString() would give the UTC date, which is already
+// tomorrow on a US evening.
+const today = () => {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
 const EMPTY: Draft = {
   name: "",
   email: "",
@@ -92,7 +100,7 @@ const EMPTY: Draft = {
   plan: "growth",
   seats: 5,
   billing: "monthly",
-  startDate: new Date().toISOString().slice(0, 10),
+  startDate: today(),
   tags: [],
   channels: ["email"],
   sendWelcome: true,
@@ -150,7 +158,7 @@ export const CreateCustomerForm = () => {
         phone: draft.phone,
         plan: draft.plan,
         seats: draft.seats,
-        signedUp: draft.startDate ?? new Date().toISOString().slice(0, 10),
+        signedUp: draft.startDate ?? today(),
         street1: draft.street1,
         city: draft.city,
         stateProvince: "",

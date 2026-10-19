@@ -125,7 +125,7 @@ describe("Badge", () => {
 
     expect(screen.getByText("Dark").parentElement).toHaveStyle({
       backgroundColor: "#000000",
-      color: "var(--text-color-light)",
+      color: "var(--k-text-color-light)",
     });
   });
 

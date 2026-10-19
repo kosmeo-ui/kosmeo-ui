@@ -7,7 +7,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.25rem;
-  border-bottom: 0.0625rem solid var(--border-color);
+  border-bottom: 0.0625rem solid var(--k-border-color);
   margin-bottom: 1rem;
 }
 
@@ -16,7 +16,7 @@
   background: transparent;
   border: none;
   border-bottom: 0.1875rem solid transparent;
-  color: var(--text-color);
+  color: var(--k-text-color);
   cursor: pointer;
   font-size: 0.9375rem;
   font-weight: 500;
@@ -28,12 +28,12 @@
 }
 
 .k-tabs-button:hover:not(:disabled) {
-  color: var(--primary-color-text);
+  color: var(--k-primary-color-text);
 }
 
 .k-tabs-button-active {
-  color: var(--primary-color-text);
-  border-bottom-color: var(--primary-color);
+  color: var(--k-primary-color-text);
+  border-bottom-color: var(--k-primary-color);
 }
 
 .k-tabs-button:disabled {

@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  dateInputToIso,
   dateTimeLocalToIso,
   toDateInputValue,
   toDateTimeLocalValue,
@@ -15,6 +14,10 @@ describe("toDateInputValue", () => {
     expect(toDateInputValue(new Date(2024, 11, 31).toISOString())).toBe(
       "2024-12-31"
     );
+  });
+
+  it("keeps a date-only string on its calendar day", () => {
+    expect(toDateInputValue("2026-10-14")).toBe("2026-10-14");
   });
 
   it.each([null, undefined, "", "not a date"])(
@@ -32,24 +35,12 @@ describe("toDateTimeLocalValue", () => {
     );
   });
 
+  it("reads a date-only string as local midnight", () => {
+    expect(toDateTimeLocalValue("2026-10-14")).toBe("2026-10-14T00:00");
+  });
+
   it.each([null, "nope"])("returns an empty string for %j", (value) => {
     expect(toDateTimeLocalValue(value)).toBe("");
-  });
-});
-
-describe("dateInputToIso", () => {
-  it("reads the date as local midnight", () => {
-    expect(dateInputToIso("2024-01-05")).toBe(
-      new Date(2024, 0, 5).toISOString()
-    );
-  });
-
-  it.each(["", "2024-13-45"])("returns null for %j", (value) => {
-    expect(dateInputToIso(value)).toBeNull();
-  });
-
-  it("round-trips through toDateInputValue", () => {
-    expect(toDateInputValue(dateInputToIso("2024-07-04"))).toBe("2024-07-04");
   });
 });
 

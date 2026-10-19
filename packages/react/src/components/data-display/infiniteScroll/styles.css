@@ -17,7 +17,7 @@
 
 .k-infinite-scroll-menu-table-divider {
   margin: 1rem;
-  border-top: 2px solid var(--border-color);
+  border-top: 2px solid var(--k-border-color);
 }
 
 .k-infinite-scroll-next-page-container {
@@ -32,6 +32,6 @@
   justify-content: center;
   align-items: center;
   padding: 3rem 1rem;
-  color: var(--text-muted);
+  color: var(--k-text-color-secondary);
   font-size: 1rem;
 }

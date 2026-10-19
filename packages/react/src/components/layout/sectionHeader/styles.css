@@ -11,13 +11,13 @@
 
 .k-section-header-divider {
   padding-bottom: 1rem;
-  border-bottom: 0.0625rem solid var(--border-color);
+  border-bottom: 0.0625rem solid var(--k-border-color);
   margin-bottom: 1.5rem;
 }
 
 .k-section-header-preface {
   font-size: 0.875rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-section-header-row {
@@ -82,7 +82,7 @@
 
 .k-section-header-subtitle {
   font-size: 0.8125rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-section-header-badges {

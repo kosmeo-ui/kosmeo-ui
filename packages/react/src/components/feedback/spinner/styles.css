@@ -1,10 +1,13 @@
+/* An empty box, so as a flex item it would shrink to fit a short or narrow
+   container (an oval while a page is still laying out). */
 .k-spinner {
   border-radius: 50%;
   display: inline-block;
-  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+  animation: k-spin 0.8s linear infinite;
 }
 
-@keyframes spin {
+@keyframes k-spin {
   0% {
     transform: rotate(0deg);
   }
@@ -16,36 +19,36 @@
 .k-spinner-lg {
   height: 3.75rem;
   width: 3.75rem;
-  border: 0.375rem solid var(--shadow-color);
+  border: 0.375rem solid var(--k-shadow-color);
 }
 
 .k-spinner-md {
   height: 2.5rem;
   width: 2.5rem;
-  border: 0.25rem solid var(--shadow-color);
+  border: 0.25rem solid var(--k-shadow-color);
 }
 
 .k-spinner-sm {
   height: 1.25rem;
   width: 1.25rem;
-  border: 0.125rem solid var(--shadow-color);
+  border: 0.125rem solid var(--k-shadow-color);
 }
 
 .k-spinner-primary {
-  border-left-color: var(--primary-color);
+  border-left-color: var(--k-primary-color);
 }
 .k-spinner-secondary {
-  border-left-color: var(--secondary-color);
+  border-left-color: var(--k-secondary-color);
 }
 .k-spinner-light {
-  border-left-color: var(--light-color);
+  border-left-color: var(--k-light-color);
 }
 .k-spinner-success {
-  border-left-color: var(--success-color);
+  border-left-color: var(--k-success-color);
 }
 .k-spinner-danger {
-  border-left-color: var(--danger-color);
+  border-left-color: var(--k-danger-color);
 }
 .k-spinner-warning {
-  border-left-color: var(--warning-color);
+  border-left-color: var(--k-warning-color);
 }

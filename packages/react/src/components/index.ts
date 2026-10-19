@@ -1,6 +1,7 @@
 export { default as RecoveryCodeGrid } from "./data-display/recoveryCodeGrid/index.js";
 export { default as ConfirmationModal } from "./overlays/confirmationModal/index.js";
 export { default as InfiniteScroll } from "./data-display/infiniteScroll/index.js";
+export { default as TableFilters } from "./data-display/tableFilters/index.js";
 export {
   DateInput,
   DateTimeInput,
@@ -122,6 +123,7 @@ export type {
   AddressBlockAddress,
 } from "./data-display/addressBlock/index.js";
 export type { PaginationProps } from "./navigation/pagination/index.js";
+export type { TableFiltersProps } from "./data-display/tableFilters/index.js";
 export type {
   StepperProps,
   StepperStep,

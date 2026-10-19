@@ -10,57 +10,135 @@
 }
 
 .k-select {
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid var(--k-border-color);
   border-radius: 0.375rem;
-  color: var(--text-color);
+  color: var(--k-text-color);
   width: 100%;
   box-sizing: border-box;
   line-height: 1.5;
   transition:
     border-color 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
-  background-color: var(--background-color-light);
+  background-color: var(--k-background-color-light);
   cursor: pointer;
 }
 
 .k-select-sm {
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   padding: 0.69rem 0.75rem;
 }
 
 .k-select-md {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
   padding: 0.84rem 1rem;
 }
 
 .k-select-lg {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
   padding: 0.98rem 1.25rem;
 }
 
 .k-select:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--border-shadow-color-active);
+  border-color: var(--k-primary-color);
+  box-shadow: 0 0 0 2px var(--k-border-shadow-color-active);
 }
 
 .k-select:disabled {
-  background-color: var(--background-color-disabled);
-  color: var(--text-color-disabled);
+  background-color: var(--k-background-color-disabled);
+  color: var(--k-text-color-disabled);
   cursor: not-allowed;
-  border-color: var(--border-color-disabled);
+  border-color: var(--k-border-color-disabled);
 }
 
 .k-select option {
-  color: var(--text-color);
-  background-color: var(--background-color);
+  color: var(--k-text-color);
+  background-color: var(--k-background-color);
   padding: 0.5rem;
 }
 
 .k-select:invalid {
-  border-color: var(--danger-color);
+  border-color: var(--k-danger-color);
 }
 
 .k-select:hover:not(:disabled) {
-  border-color: var(--border-color-hover);
+  border-color: var(--k-border-color-hover);
+}
+
+/* A native picker opens wherever the OS puts it (macOS lays the selected
+   option over the field). Where customizable <select> is supported, the
+   picker opens below the field and takes the theme instead; elsewhere the
+   native picker remains. */
+@supports (appearance: base-select) {
+  .k-select,
+  .k-select::picker(select) {
+    appearance: base-select;
+  }
+
+  /* The browser's filled triangle, swapped for the chevron MultiSelect and
+     SearchSelect show (FontAwesome chevron-down), sized and colored alike. */
+  .k-select::picker-icon {
+    content: "";
+    align-self: center;
+    width: 0.875em;
+    height: 1em;
+    background-color: var(--k-text-color-secondary);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition:
+      background-color 0.2s ease-in-out,
+      rotate 0.2s ease-in-out;
+  }
+
+  .k-select-sm::picker-icon {
+    font-size: 0.75rem;
+  }
+
+  .k-select-md::picker-icon {
+    font-size: 0.875rem;
+  }
+
+  .k-select-lg::picker-icon {
+    font-size: 1rem;
+  }
+
+  .k-select:hover:not(:disabled)::picker-icon {
+    background-color: var(--k-primary-color-text);
+  }
+
+  .k-select:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  .k-select::picker(select) {
+    margin-top: 0.25rem;
+    padding: 0.25rem 0;
+    border: 0.0625rem solid var(--k-border-color);
+    border-radius: 0.375rem;
+    background-color: var(--k-background-color-light);
+    box-shadow:
+      0 0.25rem 0.375rem -0.0625rem var(--k-shadow-color),
+      0 0.125rem 0.25rem -0.125rem var(--k-shadow-color);
+  }
+
+  .k-select option {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
+  .k-select option:hover,
+  .k-select option:focus-visible {
+    outline: none;
+    background-color: var(--k-background-color-hover);
+  }
+
+  .k-select option:checked {
+    background-color: var(--k-primary-color-background-light);
+  }
+
+  .k-select option:disabled {
+    color: var(--k-text-color-disabled);
+    cursor: default;
+  }
 }

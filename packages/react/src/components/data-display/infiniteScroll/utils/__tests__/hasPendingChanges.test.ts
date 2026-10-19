@@ -1,5 +1,10 @@
-import { hasActiveFilters, hasPendingChanges } from "../hasPendingChanges.js";
 import { describe, expect, it } from "vitest";
+import {
+  clearFilters,
+  hasActiveFilters,
+  hasPendingChanges,
+  hasTypedFilterChanges,
+} from "../hasPendingChanges.js";
 import {
   GeneratedListFilter,
   GeneratedRangeFilter,
@@ -227,5 +232,31 @@ describe("hasActiveFilters", () => {
     ["end", range(undefined, 0)],
   ])("is true for a range %s of 0", (_name, filter) => {
     expect(hasActiveFilters([filter])).toBe(true);
+  });
+});
+
+describe("clearFilters", () => {
+  it("leaves no filter active", () => {
+    expect(
+      hasActiveFilters(
+        clearFilters([search("ann"), range(0, 9), select(1, 2), list("a1")])
+      )
+    ).toBe(false);
+  });
+});
+
+describe("hasTypedFilterChanges", () => {
+  it.each<[string, InfiniteScrollMenuGeneratedFilter, boolean]>([
+    ["an edited search", search("ann"), true],
+    ["an edited range", range(5), false],
+    ["a picked option", select(1), false],
+  ])("treats %s as typed: %s", (_name, pending, typed) => {
+    expect(hasTypedFilterChanges(clearFilters([pending]), [pending])).toBe(
+      typed
+    );
+  });
+
+  it("is false with nothing pending", () => {
+    expect(hasTypedFilterChanges([search("ann")], [search("ann")])).toBe(false);
   });
 });
