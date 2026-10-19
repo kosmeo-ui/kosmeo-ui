@@ -9,7 +9,7 @@ Taken from the real suite. Open the source file for the full version.
 - Component — a cancelled click
 - Component — a pointer drag
 - Component — a mouse-only control
-- Hook — a data hook against a fake `AxiosInstance`
+- Hook — a data hook against msw
 - Hook — a request that waits
 - Hydration — server render, then hydrate
 - Fake timers — a debounced search
@@ -153,36 +153,66 @@ await user.click(removeButton("Apple"));
 expect(onChange).toHaveBeenCalledWith([banana]);
 ```
 
-## Hook — a data hook against a fake `AxiosInstance`
+## Hook — a data hook against msw
 
 `packages/react/src/hooks/__tests__/usePaginated.test.ts`
 
-`mockAxios` serves pages from the requested `limit` and `offset`, like the real
-endpoint; `createWrapper` gives each test a fresh `QueryClient`.
+`serve` answers GET `/rows` the way the real endpoint does, from the `limit` and
+`offset` axios actually sent; `api()` is a real `AxiosInstance`.
 
 ```ts
-const server = (total = 23) =>
-  mockAxios((_url, config) => {
-    const { limit, offset } = (config as { params: Record<string, number> })
-      .params;
-    const rows = Array.from({ length: total }, (_, i) => ({ id: i + 1 }));
-    return { data: rows.slice(offset, offset + limit), total };
-  });
+/** The page of `total` rows that `url`'s limit and offset ask for. */
+const page = (url: URL, total = 23) => {
+  const limit = Number(url.searchParams.get("limit"));
+  const offset = Number(url.searchParams.get("offset"));
+  const rows = Array.from({ length: total }, (_, i) => ({ id: i + 1 }));
+  return { data: rows.slice(offset, offset + limit), total };
+};
 
-const setup = (
-  params?: Record<string, string>,
-  axios: { instance: AxiosInstance } = server()
-) =>
+const setup = (params?: Record<string, string>) =>
   renderHook(
     ({ params }) =>
       usePaginated<Row>({
-        axiosInstance: axios.instance,
+        axiosInstance: api(),
         endpoint: "/rows",
         queryKey: "rows",
         params,
       }),
     { wrapper: createWrapper(), initialProps: { params } }
   );
+
+it("requests limit and offset with the extra params", async () => {
+  const requests = serve("/rows", (url) => page(url));
+  const { result } = setup({ sort: "name" });
+  await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+  act(() => result.current.setPage(3));
+
+  await waitFor(() => expect(result.current.data[0]?.id).toBe(21));
+  expect(requests.at(-1)?.search).toBe("?sort=name&limit=10&offset=20");
+});
+```
+
+The assertion is on the query string the server received, so it checks axios's
+`params` serialization too — a hand-built fake `AxiosInstance` cannot.
+
+Errors are responses too:
+
+```ts
+it.each([
+  [
+    "an error status",
+    () => HttpResponse.json(null, { status: 500 }),
+    "Request failed with status code 500",
+  ],
+  ["a network failure", () => HttpResponse.error(), "Network Error"],
+])("surfaces %s", async (_, respond, message) => {
+  serve("/rows", respond);
+
+  const { result } = setup();
+
+  await waitFor(() => expect(result.current.error?.message).toBe(message));
+});
 ```
 
 ## Hook — a request that waits
@@ -192,33 +222,25 @@ act and assert while the request is in flight — where the "previous page stays
 screen" promise lives.
 
 ```ts
-const deferredServer = () => {
+/** Serves 23 rows; every page after the first waits for `release()`. */
+const serveDeferred = () => {
   let release!: () => void;
-  const get = vi.fn(
-    async (_url: string, config: { params: Record<string, number> }) => {
-      if (config.params.offset > 0)
-        await new Promise<void>((resolve) => (release = resolve));
-      const rows = Array.from({ length: 23 }, (_, i) => ({ id: i + 1 }));
-      const { limit, offset } = config.params;
-      return {
-        data: { data: rows.slice(offset, offset + limit), total: 23 },
-      };
-    }
-  );
-  return {
-    instance: { get } as unknown as AxiosInstance,
-    release: () => release(),
-  };
+  serve("/rows", async (url) => {
+    if (Number(url.searchParams.get("offset")) > 0)
+      await new Promise<void>((resolve) => (release = resolve));
+    return page(url);
+  });
+  return { release: () => release() };
 };
 
 it("shows the next page once it arrives", async () => {
-  const axios = deferredServer();
-  const { result } = setup(undefined, axios);
+  const server = serveDeferred();
+  const { result } = setup();
   await waitFor(() => expect(result.current.isLoading).toBe(false));
   act(() => result.current.setPage(2));
   await waitFor(() => expect(result.current.isFetching).toBe(true));
 
-  act(() => axios.release());
+  act(() => server.release());
 
   await waitFor(() => expect(result.current.data[0]?.id).toBe(11));
 });
@@ -341,5 +363,6 @@ afterEach(() => vi.unstubAllGlobals());
 | `getByText("Apple", { selector: ".k-chip" }).parentElement` | `within(screen.getByRole("combobox")).getByText("Apple")` |
 | `container.querySelector("[contenteditable]")` | `screen.getByRole("textbox", { name: "Notes" })` |
 | `vi.mock("../../../hooks/useListKeyboard.js")` | render the real hook through a harness |
+| `vi.mock("axios")`, or `{ get: vi.fn() } as unknown as AxiosInstance` | `api()` plus `serve("/rows", (url) => page(url))`, asserting on the returned requests |
 | `expect(isDisabled)` … click … `expect(onClick)` in one test | two tests: "is disabled", "does not call onClick when disabled" |
 | asserting the current wrong output | assert the right output; fix the bug in its own `fix(react):` commit |

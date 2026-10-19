@@ -1,6 +1,6 @@
 ---
 name: testing
-description: How to write tests for @kosmeo-ui/react (packages/react) — Vitest, React Testing Library, user-event and jest-dom on jsdom; where tests live, queries and assertions, harnesses for controlled components, testing hooks with createWrapper and mockAxios, server-render and hydration checks, fake timers, choosing cases, and proving a test can fail. Use when adding, writing, reviewing or fixing a test or a .test.ts or .test.tsx file in packages/react — testing a component, hook or util, faking an API response, or when a test is flaky, hangs, cannot find an element, or turns up a bug.
+description: How to write tests for @kosmeo-ui/react (packages/react) — Vitest, React Testing Library, user-event and jest-dom on jsdom; where tests live, queries and assertions, harnesses for controlled components, testing data hooks against msw, server-render and hydration checks, fake timers, choosing cases, and proving a test can fail. Use when adding, writing, reviewing or fixing a test or a .test.ts or .test.tsx file in packages/react — testing a component, hook or util, faking an API response, or when a test is flaky, hangs, cannot find an element, or turns up a bug.
 paths:
   - packages/react/**/__tests__/**
   - packages/react/vitest.*
@@ -37,11 +37,12 @@ A util test needs only this file. Before writing a component or hook test, read
    `expect(pageRange(5, 10)).toEqual([…])`, not via a `result` variable.
 3. **Import what you use from `"vitest"`** (`describe`, `it`, `expect`, `vi`, …) and
    nothing else. There are no globals, and an unused import fails lint.
-4. **Fake the boundary, not our modules.** MUST NOT `vi.mock` a library module, hook or
-   component, and render real child components. The boundary is what an app hands in:
-   a data hook gets a fake `AxiosInstance` from `mockAxios` and a real React Query
-   client from `createWrapper` (see "Hooks"). A browser API jsdom lacks is stubbed with
-   `vi.stubGlobal` and undone with `vi.unstubAllGlobals()` in `afterEach`.
+4. **Fake the network, not our modules.** MUST NOT `vi.mock` axios, a library module,
+   hook or component, and MUST NOT hand a hook a hand-built `AxiosInstance`. A data
+   hook gets a real one (`api()`) and msw answers its requests, so axios's query-string
+   building and error handling run for real (see "Hooks"). Render real child
+   components. A browser API jsdom lacks is stubbed with `vi.stubGlobal` and undone
+   with `vi.unstubAllGlobals()` in `afterEach`.
 5. **MUST NOT assert output that looks wrong** — not even to describe what the code
    does today. See "When a test finds a bug".
 6. **Prove the test can fail.** Before calling a new test done, break the line it
@@ -159,7 +160,8 @@ MUST NOT repeat them per test:
 | `environment: "jsdom"` | no `// @vitest-environment` pragma |
 | `pool: "vmThreads"` | each file gets its own module registry and DOM |
 | `restoreMocks: true` | `vi.spyOn` spies are restored after each test |
-| `setupFiles` → `vitest.setup.ts` | jest-dom matchers; Testing Library `cleanup()` and `localStorage.clear()` after each test; stubs for `scrollIntoView` and `Range` measurements, which jsdom lacks |
+| `setupFiles` → `vitest.polyfills.ts` | the web streams msw needs, which the jsdom environment lacks |
+| `setupFiles` → `vitest.setup.ts` | the msw server (`hooks/__tests__/server.ts`): no handlers, unhandled requests fail the test, handlers reset after each test; jest-dom matchers; Testing Library `cleanup()` and `localStorage.clear()` after each test; stubs for `scrollIntoView` and `Range` measurements, which jsdom lacks |
 | `console.error` guard | any `console.error` a test has not mocked fails that test, so React warnings (a controlled field with no `onChange`, a hydration mismatch, nested buttons) cannot pile up unnoticed |
 
 CSS is not loaded: `import "./styles.css"` is a no-op under Vitest, so `toBeVisible`
@@ -182,10 +184,16 @@ faked timers, and cleanup stops working in whichever file runs next.
   `hooks/__tests__/queryWrapper.tsx`:
   - `createWrapper()` — a fresh `QueryClient` with retries off, as `renderHook`'s
     `wrapper`.
-  - `mockAxios(respond)` — an `AxiosInstance` whose `get` returns `{ data: respond(url,
-    config) }`; `respond` builds the page from the requested `limit`, `offset` or
-    `cursor`, like the real endpoint. Assert requests on the returned `get` spy.
-  - **A request that waits** — for loading states and in-flight behaviour: a `get` that
+  - `api()` — a real `AxiosInstance` (`axios.create()`), as an app passes one in.
+  - `serve(path, respond)` — an msw handler for GET `path`. `respond(url)` returns the
+    JSON body, built from the requested `limit`, `offset` or `cursor` like the real
+    endpoint, or a `Response` (`HttpResponse.json(null, { status: 500 })`,
+    `HttpResponse.error()`). It returns the requested `URL`s in order: assert on
+    `requests.at(-1)?.search` or `requests` length, not on a spy.
+  - The server starts empty, so each test serves exactly the endpoints it expects;
+    any other request fails the test. Use `server.use(...)` from
+    `hooks/__tests__/server.ts` directly for anything `serve` doesn't cover.
+  - **A request that waits** — for loading states and in-flight behaviour: `respond`
     awaits a promise the test resolves (`let release!: () => void` …
     `act(() => release())`). See the examples.
 - Wait for results with `waitFor`, then assert synchronously.
