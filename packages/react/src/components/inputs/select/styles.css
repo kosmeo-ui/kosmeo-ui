@@ -75,6 +75,41 @@
     appearance: base-select;
   }
 
+  /* The browser's filled triangle, swapped for the chevron MultiSelect and
+     SearchSelect show (FontAwesome chevron-down), sized and colored alike. */
+  .k-select::picker-icon {
+    content: "";
+    align-self: center;
+    width: 0.875em;
+    height: 1em;
+    background-color: var(--k-text-color-secondary);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3E%3Cpath d='M201.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 338.7 54.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    transition:
+      background-color 0.2s ease-in-out,
+      rotate 0.2s ease-in-out;
+  }
+
+  .k-select-sm::picker-icon {
+    font-size: 0.75rem;
+  }
+
+  .k-select-md::picker-icon {
+    font-size: 0.875rem;
+  }
+
+  .k-select-lg::picker-icon {
+    font-size: 1rem;
+  }
+
+  .k-select:hover:not(:disabled)::picker-icon {
+    background-color: var(--k-primary-color-text);
+  }
+
+  .k-select:open::picker-icon {
+    rotate: 180deg;
+  }
+
   .k-select::picker(select) {
     margin-top: 0.25rem;
     padding: 0.25rem 0;

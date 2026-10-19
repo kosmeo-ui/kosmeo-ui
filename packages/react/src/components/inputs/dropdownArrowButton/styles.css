@@ -1,7 +1,12 @@
 /* Generic dropdown arrow toggle — used by Input (dropDown), MultiSelect, etc. */
+/* Spans the field's height and centers the chevron, however tall the field
+   grows (MultiSelect with chips). */
 .k-dropdown-arrow {
   position: absolute;
+  top: 0;
+  bottom: 0;
   right: 0.75rem;
+  display: flex;
   background: none;
   border: none;
   cursor: pointer;
@@ -29,17 +34,14 @@
 
 .k-dropdown-arrow-sm {
   font-size: 0.75rem;
-  top: 0.5rem;
 }
 
 .k-dropdown-arrow-md {
   font-size: 0.875rem;
-  top: 0.625rem;
 }
 
 .k-dropdown-arrow-lg {
   font-size: 1rem;
-  top: 0.75rem;
 }
 
 .k-dropdown-arrow-open {
