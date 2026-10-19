@@ -219,6 +219,7 @@ const FileUpload = (props: FileUploadProps) => {
           {required && <MandatoryAsterisk />}
         </label>
       )}
+      {/* Hidden: the buttons below open these, and are the keyboard path. */}
       <input
         type="file"
         accept={props.accept}
@@ -228,6 +229,8 @@ const FileUpload = (props: FileUploadProps) => {
         className="k-file-upload-input"
         id={componentId}
         required={required}
+        aria-label={multiple ? "Upload Files" : "Upload File"}
+        tabIndex={-1}
       />
       {props.allowDirectory && (
         <input
@@ -237,6 +240,8 @@ const FileUpload = (props: FileUploadProps) => {
           ref={directoryInputRef}
           className="k-file-upload-input"
           id={directoryId}
+          aria-label="Upload Folder"
+          tabIndex={-1}
         />
       )}
 
@@ -245,22 +250,25 @@ const FileUpload = (props: FileUploadProps) => {
       {/* A custom renderFiles brings its own controls once files are chosen. */}
       {(selectedFiles.length === 0 || !props.renderFiles) && (
         <div className="k-file-upload-empty-actions">
-          <label
-            htmlFor={componentId}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
             className={`k-button k-button-${variant} k-button-${size} k-button-center k-file-upload-button`}
           >
-            <FontAwesomeIcon icon={faUpload} />{" "}
+            <FontAwesomeIcon icon={faUpload} aria-hidden="true" />{" "}
             {selectedFiles.length === 0
               ? `Upload ${multiple ? "Files" : "File"}`
               : `Change File${selectedFiles.length > 1 ? "s" : ""}`}
-          </label>
+          </button>
           {props.allowDirectory && (
-            <label
-              htmlFor={directoryId}
+            <button
+              type="button"
+              onClick={() => directoryInputRef.current?.click()}
               className={`k-button k-button-${variant} k-button-${size} k-button-center k-file-upload-button`}
             >
-              <FontAwesomeIcon icon={faFolderOpen} /> Upload Folder
-            </label>
+              <FontAwesomeIcon icon={faFolderOpen} aria-hidden="true" /> Upload
+              Folder
+            </button>
           )}
         </div>
       )}

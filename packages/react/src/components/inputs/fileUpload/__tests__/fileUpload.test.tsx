@@ -53,10 +53,30 @@ describe("FileUpload", () => {
   it("styles the upload button from variant and size", () => {
     render(<FileUpload onFileSelect={() => {}} variant="danger" size="sm" />);
 
-    expect(screen.getByText("Upload File")).toHaveClass(
+    expect(screen.getByRole("button", { name: "Upload File" })).toHaveClass(
       "k-button k-button-danger k-button-sm k-button-center k-file-upload-button",
       { exact: true }
     );
+  });
+
+  it("opens the file picker from the Upload button", async () => {
+    const user = userEvent.setup();
+    const onPick = vi.fn();
+    render(<FileUpload onFileSelect={() => {}} />);
+    screen.getByLabelText("Upload File").addEventListener("click", onPick);
+
+    await user.click(screen.getByRole("button", { name: "Upload File" }));
+
+    expect(onPick).toHaveBeenCalledTimes(1);
+  });
+
+  it("reaches the Upload button with Tab", async () => {
+    const user = userEvent.setup();
+    render(<FileUpload onFileSelect={() => {}} />);
+
+    await user.tab();
+
+    expect(screen.getByRole("button", { name: "Upload File" })).toHaveFocus();
   });
 
   it("passes the accepted types to the input", () => {
@@ -202,12 +222,11 @@ describe("FileUpload", () => {
     it.each([
       [1, "Change File"],
       [2, "Change Files"],
-    ])("names the change control for %i file(s)", (count, name) => {
+    ])("names the Change button for %i file(s)", (count, name) => {
       const seed = Array.from({ length: count }, (_, i) => file(`${i}.txt`));
       render(<FileUpload onFileSelect={() => {}} initialFiles={seed} />);
 
-      // Like Upload, Change is a <label> for the hidden file input.
-      expect(screen.getByText(name)).toBeVisible();
+      expect(screen.getByRole("button", { name })).toBeVisible();
     });
 
     it("opens the picker from the change button", async () => {
@@ -222,7 +241,7 @@ describe("FileUpload", () => {
       );
       screen.getByLabelText("Attachments").addEventListener("click", onPick);
 
-      await user.click(screen.getByText("Change File"));
+      await user.click(screen.getByRole("button", { name: "Change File" }));
 
       expect(onPick).toHaveBeenCalledTimes(1);
     });
@@ -290,7 +309,7 @@ describe("FileUpload", () => {
 
       await user.click(screen.getByRole("button", { name: "Remove a.txt" }));
 
-      expect(screen.getByText("Upload File")).toBeVisible();
+      expect(screen.getByRole("button", { name: "Upload File" })).toBeVisible();
     });
 
     it("clears every file", async () => {
@@ -334,7 +353,7 @@ describe("FileUpload", () => {
         );
 
         const list = screen.getByText("Selected Files (1)");
-        const change = screen.getByText("Change File");
+        const change = screen.getByRole("button", { name: "Change File" });
         expect(list.compareDocumentPosition(change) & changeControlIs).not.toBe(
           0
         );
@@ -508,7 +527,9 @@ describe("FileUpload", () => {
     it("offers no folder upload by default", () => {
       render(<FileUpload onFileSelect={() => {}} />);
 
-      expect(screen.queryByText("Upload Folder")).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: "Upload Folder" })
+      ).not.toBeInTheDocument();
     });
 
     it("picks a directory", () => {
@@ -517,6 +538,17 @@ describe("FileUpload", () => {
       expect(screen.getByLabelText("Upload Folder")).toHaveAttribute(
         "webkitdirectory"
       );
+    });
+
+    it("opens the folder picker from the Upload Folder button", async () => {
+      const user = userEvent.setup();
+      const onPick = vi.fn();
+      render(<FileUpload onFileSelect={() => {}} allowDirectory />);
+      screen.getByLabelText("Upload Folder").addEventListener("click", onPick);
+
+      await user.click(screen.getByRole("button", { name: "Upload Folder" }));
+
+      expect(onPick).toHaveBeenCalledTimes(1);
     });
 
     it("selects the files in an uploaded folder", async () => {
