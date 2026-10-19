@@ -9,8 +9,9 @@ import InfiniteScroll from "../index.js";
 import type { Mock } from "vitest";
 import { DateTime } from "luxon";
 import {
+  api,
   createWrapper,
-  mockAxios,
+  serve,
 } from "../../../../hooks/__tests__/queryWrapper.js";
 import {
   InfiniteScrollMenu,
@@ -370,9 +371,10 @@ describe("InfiniteScroll", () => {
     ])(
       "makes a single request on mount at %s's default page size",
       async (_, respond, useList) => {
-        const axios = mockAxios(respond);
+        const requests = serve("/people", respond);
+        const axios = api();
         const List = () => {
-          const list = useList(axios.instance);
+          const list = useList(axios);
           return (
             <InfiniteScroll<Person>
               menu={{ title: "People" }}
@@ -394,22 +396,23 @@ describe("InfiniteScroll", () => {
         );
 
         await screen.findByRole("cell", { name: "Ada" });
-        expect(axios.get).toHaveBeenCalledExactlyOnceWith(
-          expect.stringContaining("limit=25")
-        );
+        expect(requests.map((url) => url.searchParams.get("limit"))).toEqual([
+          "25",
+        ]);
       }
     );
 
     it("requests once when the app passes menu and onReload inline", async () => {
-      const axios = mockAxios(() => ({
+      const requests = serve("/people", () => ({
         data: [{ id: 1, name: "Ada" }],
         hasMore: false,
         limit: 25,
         nextCursor: null,
       }));
+      const axios = api();
       const InlineList = () => {
         const list = useInfiniteCursor<Person>({
-          axiosInstance: axios.instance,
+          axiosInstance: axios,
           endpoint: "/people",
           queryKey: "people",
           initialLimit: 25,
@@ -435,7 +438,7 @@ describe("InfiniteScroll", () => {
       );
 
       await screen.findByRole("cell", { name: "Ada" });
-      expect(axios.get).toHaveBeenCalledOnce();
+      expect(requests).toHaveLength(1);
     });
   });
 

@@ -104,12 +104,13 @@ npm run clean    # Remove dist/, tsconfig.tsbuildinfo
 
 ## Tests
 
-Vitest + Testing Library on jsdom (`vitest.config.ts`, `vitest.setup.ts`). Each
-component's tests sit in a `__tests__` folder inside its own folder
-(`buttons/button/__tests__/button.test.tsx`); hooks' tests are in
-`hooks/__tests__/`, where `queryWrapper.tsx` provides a `QueryClient` wrapper and
-a mock `AxiosInstance`. `__tests__` is excluded from the build `tsconfig.json`,
-from `dist/` and from the published tarball.
+Vitest + Testing Library on jsdom (`vitest.config.ts`, `vitest.setup.ts`), with msw
+faking the network. Each component's tests sit in a `__tests__` folder inside its own
+folder (`buttons/button/__tests__/button.test.tsx`); hooks' tests are in
+`hooks/__tests__/`, where `server.ts` is the msw server and `queryWrapper.tsx`
+provides a `QueryClient` wrapper, a real `AxiosInstance` and `serve()` for
+endpoints. `__tests__` is excluded from the build `tsconfig.json`, from `dist/` and
+from the published tarball.
 
 How to write them — queries, assertions, harnesses, hooks, hydration checks, fake
 timers, and what to do when a test finds a bug — is in the `testing` skill

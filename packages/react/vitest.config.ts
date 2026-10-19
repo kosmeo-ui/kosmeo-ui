@@ -5,7 +5,7 @@ export default defineConfig({
     environment: "jsdom",
     pool: "vmThreads",
     include: ["src/**/__tests__/**/*.test.{ts,tsx}"],
-    setupFiles: ["./vitest.setup.ts"],
+    setupFiles: ["./vitest.polyfills.ts", "./vitest.setup.ts"],
     restoreMocks: true,
     coverage: {
       provider: "v8",
