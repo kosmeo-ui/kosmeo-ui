@@ -39,3 +39,35 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Each item spans three rows (label, control, message) and fields share them
+   through subgrid, so controls in a row stay level when one label wraps or
+   one field shows helper or error text. Non-field items span the same three
+   rows so auto-placement stays one item per cell. */
+.k-form-grid > * {
+  grid-row: span 3;
+}
+
+.k-form-grid > .k-field-shell,
+.k-form-grid > * > .k-field-shell,
+.k-form-grid > :has(> .k-field-shell) {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  row-gap: 0;
+}
+
+:is(.k-form-grid > .k-field-shell, .k-form-grid > * > .k-field-shell) > * {
+  grid-row: 2;
+}
+
+:is(.k-form-grid > .k-field-shell, .k-form-grid > * > .k-field-shell)
+  > .k-field-shell-label-row {
+  grid-row: 1;
+  align-self: end;
+}
+
+:is(.k-form-grid > .k-field-shell, .k-form-grid > * > .k-field-shell)
+  > :is(.k-field-shell-error, .k-field-shell-helper) {
+  grid-row: 3;
+}
