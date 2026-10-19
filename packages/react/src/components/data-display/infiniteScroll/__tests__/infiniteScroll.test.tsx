@@ -1,9 +1,14 @@
+import useInfiniteCursor from "../../../../hooks/useInfiniteCursor.js";
 import { act, render, screen, within } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import InfiniteScroll from "../index.js";
 import type { Mock } from "vitest";
 import { DateTime } from "luxon";
+import {
+  createWrapper,
+  mockAxios,
+} from "../../../../hooks/__tests__/queryWrapper.js";
 import {
   InfiniteScrollMenu,
   InfiniteScrollMenuFilter,
@@ -240,9 +245,121 @@ describe("InfiniteScroll", () => {
       });
     });
 
-    it.todo(
-      "decide whether mounting should call onReload — currently it does when menu has filters, and not when it has none"
-    );
+    it.each([
+      ["no filters", { menu: { title: "People" } }],
+      ["filters", withFilters(status([1]))],
+    ])("does not call onReload on mount with %s", (_, props) => {
+      const { onReload } = setup(props);
+
+      expect(onReload).not.toHaveBeenCalled();
+    });
+
+    it("calls onReload once when the menu's contents change", () => {
+      const { onReload, rerender } = setup(withFilters(status([1])));
+
+      rerender(withFilters(status([3])));
+
+      expect(onReload).toHaveBeenCalledOnce();
+    });
+
+    it("applies a new sort from a menu without filters", () => {
+      const { onQueryChange, rerender } = setup({ menu: { title: "People" } });
+
+      rerender({
+        menu: {
+          title: "People",
+          sort: {
+            sortDataKeys: [
+              { dataKey: "name", displayName: "Name", selected: true },
+            ],
+            sortDirection: "asc",
+          },
+        },
+      });
+
+      expect(lastQuery(onQueryChange)).toEqual({
+        limit: "25",
+        offset: "0",
+        sort: "name",
+        sortDir: "asc",
+      });
+    });
+
+    describe("re-rendered with equal props", () => {
+      it.each([
+        [
+          "an equal menu",
+          () => ({ menu: { title: "People", filters: [nameSearch()] } }),
+        ],
+        ["a new onReload", () => ({ onReload: vi.fn() })],
+      ])("keeps the user's filters given %s", async (_, next) => {
+        const user = userEvent.setup();
+        const { onQueryChange, rerender } = setup(withFilters(nameSearch()));
+        await user.type(screen.getByRole("textbox", { name: "Name" }), "ann");
+        await user.click(apply());
+
+        rerender(next());
+
+        expect(lastQuery(onQueryChange)).toMatchObject({
+          "filter[name]": "ann",
+        });
+      });
+
+      it("does not call onReload given an equal menu", () => {
+        const { onReload, rerender } = setup(withFilters(nameSearch()));
+
+        rerender({ menu: { title: "People", filters: [nameSearch()] } });
+
+        expect(onReload).not.toHaveBeenCalled();
+      });
+
+      it("does not call a new onReload it is given", () => {
+        const next = vi.fn();
+        const { rerender } = setup(withFilters(nameSearch()));
+
+        rerender({ onReload: next });
+
+        expect(next).not.toHaveBeenCalled();
+      });
+    });
+
+    it("requests once when the app passes menu and onReload inline", async () => {
+      const axios = mockAxios(() => ({
+        data: [{ id: 1, name: "Ada" }],
+        hasMore: false,
+        limit: 25,
+        nextCursor: null,
+      }));
+      const InlineList = () => {
+        const list = useInfiniteCursor<Person>({
+          axiosInstance: axios.instance,
+          endpoint: "/people",
+          queryKey: "people",
+          initialLimit: 25,
+        });
+        return (
+          <InfiniteScroll<Person>
+            menu={{ title: "People", filters: [nameSearch()] }}
+            columns={columns}
+            data={list.data}
+            hasMore={list.hasMore}
+            isLoading={list.isLoading}
+            onQueryChange={list.onQueryChange}
+            onReload={() => list.reload()}
+          />
+        );
+      };
+      const Wrapper = createWrapper();
+
+      render(
+        <Wrapper>
+          <InlineList />
+        </Wrapper>
+      );
+
+      await screen.findByRole("cell", { name: "Ada" });
+      expect(axios.get).toHaveBeenCalledOnce();
+    });
   });
 
   describe("next page button", () => {
