@@ -38,14 +38,14 @@
   height: 2rem;
   min-width: 2rem;
   border-radius: 50%;
-  border: 0.125rem solid var(--border-color);
+  border: 0.125rem solid var(--k-border-color);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
-  background: var(--background-color);
-  color: var(--text-color);
+  background: var(--k-background-color);
+  color: var(--k-text-color);
   transition:
     background 0.15s ease,
     border-color 0.15s ease,
@@ -60,7 +60,7 @@
 
 .k-stepper-connector {
   position: absolute;
-  background: var(--border-color);
+  background: var(--k-border-color);
 }
 
 .k-stepper-horizontal .k-stepper-connector {
@@ -78,24 +78,24 @@
 }
 
 .k-stepper-step-active .k-stepper-marker {
-  border-color: var(--primary-color);
-  background: var(--primary-color);
-  color: var(--text-color-light);
+  border-color: var(--k-primary-color);
+  background: var(--k-primary-color);
+  color: var(--k-text-color-light);
 }
 
 .k-stepper-step-complete .k-stepper-marker {
-  border-color: var(--success-color);
-  background: var(--success-color);
-  color: var(--text-color-light);
+  border-color: var(--k-success-color);
+  background: var(--k-success-color);
+  color: var(--k-text-color-light);
 }
 
 .k-stepper-step-error .k-stepper-marker {
-  border-color: var(--danger-color);
-  background: var(--danger-color);
-  color: var(--text-color-light);
+  border-color: var(--k-danger-color);
+  background: var(--k-danger-color);
+  color: var(--k-text-color-light);
 }
 
 .k-stepper-step-complete .k-stepper-connector,
 .k-stepper-step-active .k-stepper-connector {
-  background: var(--primary-color);
+  background: var(--k-primary-color);
 }

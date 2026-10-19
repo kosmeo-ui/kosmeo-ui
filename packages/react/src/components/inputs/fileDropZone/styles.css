@@ -1,43 +1,43 @@
 .k-file-drop-zone {
-  border: 0.125rem dashed var(--border-color);
+  border: 0.125rem dashed var(--k-border-color);
   border-radius: 0.5rem;
   padding: 2rem;
   text-align: center;
-  background-color: var(--background-color-dark);
+  background-color: var(--k-background-color-dark);
   transition: all 0.2s ease;
   margin-bottom: 1rem;
   cursor: pointer;
 }
 
 .k-file-drop-zone:hover {
-  border-color: var(--primary-color);
-  background-color: var(--background-color-hover);
+  border-color: var(--k-primary-color);
+  background-color: var(--k-background-color-hover);
 }
 
 .k-file-drop-zone-dragging {
-  border-color: var(--primary-color);
-  background-color: var(--primary-color-light);
+  border-color: var(--k-primary-color);
+  background-color: var(--k-primary-color-background-light);
   border-style: solid;
 }
 
 .k-file-drop-zone p {
   margin: 0.5rem 0;
-  color: var(--text-color);
-  font-size: var(--text-size-sm);
+  color: var(--k-text-color);
+  font-size: var(--k-text-size-sm);
 }
 
 .k-file-drop-zone-button {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+  background-color: var(--k-primary-color);
+  color: var(--k-text-color-light);
   border-radius: 0.5rem;
   cursor: pointer;
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   font-weight: 600;
   transition: background-color 0.2s ease;
 }
 
 .k-file-drop-zone-button:hover {
-  background-color: var(--primary-color-hover);
+  background-color: var(--k-primary-color-hover);
 }

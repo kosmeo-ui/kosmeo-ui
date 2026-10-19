@@ -1,15 +1,10 @@
 "use client";
 
-import { faSquare } from "@fortawesome/free-regular-svg-icons";
-import IconButton from "../../../buttons/iconButton/index.js";
+import { faSquareCheck } from "@fortawesome/free-solid-svg-icons";
 import Dropdown from "../../../inputs/dropdown/index.js";
 import { useEffect, useMemo, useState } from "react";
 import Input from "../../../inputs/input/index.js";
 import "./styles.css";
-import {
-  faCheckSquare,
-  faSquareCheck,
-} from "@fortawesome/free-solid-svg-icons";
 import {
   GeneratedSelectFilter,
   InfiniteScrollMenuFilterOption,
@@ -63,18 +58,16 @@ const SelectFilter = (props: InfiniteScrollSelectFilterProps) => {
       if (optionSearch === "") return true;
       return item.name.toLowerCase().includes(optionSearch.toLowerCase());
     });
-    return available.map((item, index) => (
-      <IconButton
-        size="sm"
-        variant="light"
-        align="left"
-        shadow={false}
-        key={index}
-        onClick={() => handleSelect(item.id, !item.selected)}
-        icon={item.selected ? faCheckSquare : faSquare}
-      >
+    return available.map((item) => (
+      <label className="k-select-filter-option" key={item.id}>
+        <input
+          type="checkbox"
+          className="k-select-filter-option-input"
+          checked={item.selected}
+          onChange={() => handleSelect(item.id, !item.selected)}
+        />
         {item.name}
-      </IconButton>
+      </label>
     ));
   }, [options, optionSearch]);
 

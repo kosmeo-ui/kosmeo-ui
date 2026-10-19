@@ -24,8 +24,9 @@
   border: 0;
 }
 
+/* Headers follow their column's `align`, so they line up with the cells. */
 .k-data-table-header-cell {
-  text-align: center;
+  text-align: left;
 }
 
 .k-data-table-row-clickable {
@@ -33,7 +34,7 @@
 }
 
 .k-data-table-row-clickable:hover {
-  background-color: var(--bg-hover) !important;
+  background-color: var(--k-background-color-hover) !important;
 }
 
 /* Alignment classes using flexbox for reliable alignment of any content */

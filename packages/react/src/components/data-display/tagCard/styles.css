@@ -8,7 +8,7 @@
 }
 
 .k-tag-card-empty-text {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   font-style: italic;
   margin: 0;
 }

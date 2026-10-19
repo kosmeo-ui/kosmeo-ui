@@ -33,11 +33,13 @@
 
 .k-tooltip-content {
   position: relative;
-  background-color: var(--text-color);
-  color: var(--text-color-light);
+  background-color: var(--k-text-color);
+  /* An inverted surface, so the text takes the page background, not a fixed
+     light color that disappears on the dark theme's light tooltip. */
+  color: var(--k-background-color);
   padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   white-space: normal;
   max-width: 12.5rem;
   text-align: center;
@@ -59,26 +61,26 @@
   bottom: -0.625rem; /* Double the border-width to ensure visibility */
   left: 50%;
   transform: translateX(-50%);
-  border-color: var(--text-color) transparent transparent transparent;
+  border-color: var(--k-text-color) transparent transparent transparent;
 }
 
 .k-tooltip-bottom .k-tooltip-content::after {
   top: -0.625rem; /* Double the border-width to ensure visibility */
   left: 50%;
   transform: translateX(-50%);
-  border-color: transparent transparent var(--text-color) transparent;
+  border-color: transparent transparent var(--k-text-color) transparent;
 }
 
 .k-tooltip-left .k-tooltip-content::after {
   right: -0.625rem; /* Double the border-width to ensure visibility */
   top: 50%;
   transform: translateY(-50%);
-  border-color: transparent transparent transparent var(--text-color);
+  border-color: transparent transparent transparent var(--k-text-color);
 }
 
 .k-tooltip-right .k-tooltip-content::after {
   left: -0.625rem; /* Double the border-width to ensure visibility */
   top: 50%;
   transform: translateY(-50%);
-  border-color: transparent var(--text-color) transparent transparent;
+  border-color: transparent var(--k-text-color) transparent transparent;
 }

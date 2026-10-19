@@ -91,7 +91,7 @@ type FlexJustify = "start" | "center" | "end" | "between" | "around";
 
 ## CSS Convention
 
-All CSS classes use `k-` prefix: `k-button`, `k-button-primary`, `k-button-sm`. Theme tokens are defined in `styles.css` on `:root` (light) and `[data-theme="dark"]`. Consuming apps set `document.documentElement.dataset.theme = "dark"` to switch themes; persisting the choice and falling back to `prefers-color-scheme` is the app's job.
+All CSS classes use `k-` prefix: `k-button`, `k-button-primary`, `k-button-sm`. CSS variables use a `--k-` prefix: `--k-primary-color`, `--k-text-size-sm`. Theme tokens are defined in `styles.css` on `:root` (light) and `[data-theme="dark"]`. Consuming apps set `document.documentElement.dataset.theme = "dark"` to switch themes; persisting the choice and falling back to `prefers-color-scheme` is the app's job.
 
 ## Build
 

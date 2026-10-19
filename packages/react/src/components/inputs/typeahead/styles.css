@@ -19,8 +19,8 @@
 
 .k-typeahead-options-list-portal {
   z-index: 10000;
-  background-color: var(--background-color-light);
-  border: 0.0625rem solid var(--border-color);
+  background-color: var(--k-background-color-light);
+  border: 0.0625rem solid var(--k-border-color);
   border-top: none;
   border-radius: 0 0 0.25rem 0.25rem;
   overflow-y: auto;
@@ -28,8 +28,8 @@
   padding: 0;
   margin: 0;
   box-shadow:
-    0 0.25rem 0.375rem -0.0625rem var(--shadow-color),
-    0 0.125rem 0.25rem -0.125rem var(--shadow-color);
+    0 0.25rem 0.375rem -0.0625rem var(--k-shadow-color),
+    0 0.125rem 0.25rem -0.125rem var(--k-shadow-color);
 }
 
 .k-typeahead-options-list-large {
@@ -43,44 +43,44 @@
 .k-typeahead-option {
   cursor: pointer;
   text-align: left;
-  color: var(--text-color);
+  color: var(--k-text-color);
 }
 
 .k-typeahead-option:hover,
 .k-typeahead-option:focus {
-  background-color: var(--background-color-dark);
+  background-color: var(--k-background-color-dark);
 }
 
 .k-typeahead-no-results-item {
   text-align: center;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   font-style: italic;
 }
 
 .k-typeahead-option-sm {
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
   padding: 0.5rem 0.75rem;
 }
 
 .k-typeahead-option-md {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
   padding: 0.75rem 1rem;
 }
 
 .k-typeahead-option-lg {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
   padding: 1rem 1.25rem;
 }
 
 .k-typeahead-option-highlighted {
-  background-color: var(--background-color-dark);
+  background-color: var(--k-background-color-dark);
   cursor: pointer;
 }
 
 .k-typeahead-loading {
   text-align: center;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   font-style: italic;
   padding: 0.75rem 1rem;
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
 }

@@ -7,12 +7,12 @@
 }
 
 .k-breadcrumb-item {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
 }
 
 .k-breadcrumb-item a {
   text-decoration: none;
-  color: var(--text-color-link);
+  color: var(--k-text-color-link);
 }
 
 .k-breadcrumb-item a:hover {
@@ -20,23 +20,23 @@
 }
 
 .k-breadcrumb-item span {
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-breadcrumb-item + .k-breadcrumb-item::before {
   content: "/";
   margin: 0 0.5rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
 }
 
 .k-breadcrumb-item-sm {
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
 }
 
 .k-breadcrumb-item-md {
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
 }
 
 .k-breadcrumb-item-lg {
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
 }

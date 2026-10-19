@@ -46,126 +46,126 @@
 
 .k-button-shadow {
   box-shadow:
-    0 0.25rem 0.375rem -0.0625rem var(--shadow-color),
-    0 0.125rem 0.25rem -0.125rem var(--shadow-color);
+    0 0.25rem 0.375rem -0.0625rem var(--k-shadow-color),
+    0 0.125rem 0.25rem -0.125rem var(--k-shadow-color);
 }
 
 .k-button-sm {
   padding: 0.5rem 1rem;
-  font-size: var(--text-size-sm);
+  font-size: var(--k-text-size-sm);
 }
 
 .k-button-md {
   padding: 0.75rem 1.5rem;
-  font-size: var(--text-size-md);
+  font-size: var(--k-text-size-md);
 }
 
 .k-button-lg {
   padding: 1rem 2rem;
-  font-size: var(--text-size-lg);
+  font-size: var(--k-text-size-lg);
 }
 
 .k-button:not(:disabled):hover {
   box-shadow:
-    0 0.625rem 0.9375rem -0.1875rem var(--shadow-color-hover),
-    0 0.25rem 0.375rem -0.25rem var(--shadow-color-hover);
+    0 0.625rem 0.9375rem -0.1875rem var(--k-shadow-color-hover),
+    0 0.25rem 0.375rem -0.25rem var(--k-shadow-color-hover);
 }
 
 .k-button:active {
-  box-shadow: inset 0 0.125rem 0.25rem 0 var(--shadow-color-active);
+  box-shadow: inset 0 0.125rem 0.25rem 0 var(--k-shadow-color-active);
 }
 
 .k-button:focus {
-  box-shadow: 0 0 0 0.1875rem var(--shadow-color-hover);
+  box-shadow: 0 0 0 0.1875rem var(--k-shadow-color-hover);
 }
 
 .k-button-primary {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+  background-color: var(--k-primary-color);
+  color: var(--k-text-color-light);
 }
 .k-button-primary:not(:disabled):hover {
-  background-color: var(--primary-color-hover);
+  background-color: var(--k-primary-color-hover);
 }
 .k-button-primary:active {
-  background-color: var(--primary-color-active);
+  background-color: var(--k-primary-color-active);
 }
 .k-button-primary:focus {
-  box-shadow: 0 0 0 0.1875rem var(--primary-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-primary-color);
 }
 
 .k-button-secondary {
-  background-color: var(--secondary-color);
-  color: var(--text-color-light);
+  background-color: var(--k-secondary-color);
+  color: var(--k-text-color-light);
 }
 .k-button-secondary:not(:disabled):hover {
-  background-color: var(--secondary-color-hover);
+  background-color: var(--k-secondary-color-hover);
 }
 .k-button-secondary:active {
-  background-color: var(--secondary-color-active);
+  background-color: var(--k-secondary-color-active);
 }
 .k-button-secondary:focus {
-  box-shadow: 0 0 0 0.1875rem var(--secondary-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-secondary-color);
 }
 
 .k-button-light {
-  background-color: var(--light-color);
-  color: var(--text-color);
+  background-color: var(--k-light-color);
+  color: var(--k-text-color);
 }
 .k-button-light:not(:disabled):hover {
-  background-color: var(--light-color-hover);
+  background-color: var(--k-light-color-hover);
 }
 .k-button-light:active {
-  background-color: var(--light-color-active);
+  background-color: var(--k-light-color-active);
 }
 .k-button-light:focus {
-  box-shadow: 0 0 0 0.1875rem var(--light-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-light-color);
 }
 
 .k-button-danger {
-  background-color: var(--danger-color);
-  color: var(--text-color-light);
+  background-color: var(--k-danger-color);
+  color: var(--k-text-color-light);
 }
 .k-button-danger:not(:disabled):hover {
-  background-color: var(--danger-color-hover);
+  background-color: var(--k-danger-color-hover);
 }
 .k-button-danger:active {
-  background-color: var(--danger-color-active);
+  background-color: var(--k-danger-color-active);
 }
 .k-button-danger:focus {
-  box-shadow: 0 0 0 0.1875rem var(--danger-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-danger-color);
 }
 
 .k-button-success {
-  background-color: var(--success-color);
-  color: var(--text-color-light);
+  background-color: var(--k-success-color);
+  color: var(--k-text-color-light);
 }
 .k-button-success:not(:disabled):hover {
-  background-color: var(--success-color-hover);
+  background-color: var(--k-success-color-hover);
 }
 .k-button-success:active {
-  background-color: var(--success-color-active);
+  background-color: var(--k-success-color-active);
 }
 .k-button-success:focus {
-  box-shadow: 0 0 0 0.1875rem var(--success-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-success-color);
 }
 
 .k-button-warning {
-  background-color: var(--warning-color);
-  color: var(--warning-color-contrast);
+  background-color: var(--k-warning-color);
+  color: var(--k-warning-color-contrast);
 }
 .k-button-warning:not(:disabled):hover {
-  background-color: var(--warning-color-hover);
+  background-color: var(--k-warning-color-hover);
 }
 .k-button-warning:active {
-  background-color: var(--warning-color-active);
+  background-color: var(--k-warning-color-active);
 }
 .k-button-warning:focus {
-  box-shadow: 0 0 0 0.1875rem var(--warning-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-warning-color);
 }
 
 .k-button-link {
   background-color: transparent;
-  color: var(--primary-color-text);
+  color: var(--k-primary-color-text);
   padding: 0;
   border-radius: 0;
   font-weight: 500;
@@ -174,19 +174,19 @@
   box-shadow: none;
 }
 .k-button-link:not(:disabled):hover {
-  color: var(--primary-color-text);
+  color: var(--k-primary-color-text);
   /* One text color keeps contrast in both themes; hover shows as a heavier underline. */
   text-decoration-thickness: 0.125rem;
   background-color: transparent;
   box-shadow: none;
 }
 .k-button-link:active {
-  color: var(--primary-color-text);
+  color: var(--k-primary-color-text);
   background-color: transparent;
   box-shadow: none;
 }
 .k-button-link:focus {
-  outline: 0.125rem solid var(--primary-color);
+  outline: 0.125rem solid var(--k-primary-color);
   outline-offset: 0.125rem;
   box-shadow: none;
 }

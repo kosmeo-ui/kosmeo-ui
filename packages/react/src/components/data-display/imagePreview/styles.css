@@ -4,7 +4,7 @@
   align-items: center;
   gap: 0.5rem;
   width: 100%;
-  border: 0.0625rem dashed var(--border-color);
+  border: 0.0625rem dashed var(--k-border-color);
   border-radius: 0.25rem;
   padding: 0.5rem;
 }
@@ -23,7 +23,7 @@
 .k-image-preview-item {
   object-fit: cover;
   border-radius: 0.25rem;
-  box-shadow: 0 0.125rem 0.25rem var(--shadow-color);
+  box-shadow: 0 0.125rem 0.25rem var(--k-shadow-color);
   flex-shrink: 0;
 }
 

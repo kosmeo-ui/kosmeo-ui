@@ -55,8 +55,8 @@ const Badge = ({
           backgroundColor: color,
           color:
             getContrastTextColor(color) === "light"
-              ? "var(--text-color-light)"
-              : "var(--text-color)",
+              ? "var(--k-text-color-light)"
+              : "var(--k-text-color)",
         }
       : undefined;
 

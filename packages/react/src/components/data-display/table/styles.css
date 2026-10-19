@@ -2,8 +2,8 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  color: var(--text-color);
-  background-color: var(--background-color-light);
+  color: var(--k-text-color);
+  background-color: var(--k-background-color-light);
 }
 
 .k-table th,
@@ -27,25 +27,25 @@
 }
 
 .k-table-striped tbody tr:nth-of-type(odd) {
-  background-color: var(--background-color-dark);
+  background-color: var(--k-background-color-dark);
 }
 
 .k-table-hover tbody tr:hover {
-  background-color: var(--background-color-hover);
+  background-color: var(--k-background-color-hover);
 }
 
 .k-table-bordered {
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--k-border-color);
 }
 
 .k-table-bordered th,
 .k-table-bordered td {
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--k-border-color);
 }
 
 .k-table-bordered th:not(:first-child),
 .k-table-bordered td:not(:first-child) {
-  border-left: 1px solid var(--border-color);
+  border-left: 1px solid var(--k-border-color);
 }
 
 /* ===== Clickable rows ===== */
@@ -55,18 +55,18 @@
 
 /* ===== Row selection (caller marks rows with data-selected="true") ===== */
 .k-table tbody tr[data-selected="true"] {
-  background-color: var(--primary-color-background-light);
+  background-color: var(--k-primary-color-background-light);
 }
 
 /* ===== Scrollable wrapper with sticky header ===== */
 .k-table-scroll-container {
   overflow-y: auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--k-border-color);
   border-radius: 4px;
 }
 
 .k-table-scroll-container .k-table thead tr {
   position: sticky;
   top: 0;
-  background: var(--background-color-light);
+  background: var(--k-background-color-light);
 }

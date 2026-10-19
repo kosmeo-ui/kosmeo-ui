@@ -7,7 +7,7 @@
 .k-options-group-label {
   font-weight: 600;
   font-size: 0.875rem;
-  color: var(--text-color);
+  color: var(--k-text-color);
 }
 
 .k-options-group-options {

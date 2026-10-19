@@ -72,7 +72,9 @@ type Size = "sm" | "md" | "lg";
 ## Theming
 
 Theme tokens are defined in `src/styles.css` on `:root` (light) and `[data-theme="dark"]`. Import
-`styles.css` in your app entry point and override the variables to customize the theme.
+`styles.css` in your app entry point and override the variables to customize the theme. Every token
+is `--k-` prefixed (`--k-primary-color`, `--k-text-color`) so it can't collide with your app's own
+variables.
 
 `styles.css` is a global base, not only tokens: it also resets `html`, `body`, headings, links,
 form-control fonts and scrollbars. Import it once, in the app's entry point.

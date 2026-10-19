@@ -4,9 +4,9 @@
   padding: 0.75rem;
   display: grid;
   gap: 0.5rem;
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid var(--k-border-color);
   border-radius: 0.375rem;
-  background: var(--background-color-light, var(--background-color));
+  background: var(--k-background-color-light, var(--k-background-color));
 }
 
 .k-recovery-code-grid-1col {
@@ -34,7 +34,7 @@
 
 .k-recovery-code-grid-index {
   font-size: 0.75rem;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   min-width: 1.5rem;
   text-align: right;
 }

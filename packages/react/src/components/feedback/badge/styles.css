@@ -79,33 +79,33 @@ button.k-badge {
 
 /* Variants */
 .k-badge-primary {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+  background-color: var(--k-primary-color);
+  color: var(--k-text-color-light);
 }
 
 .k-badge-secondary {
-  background-color: var(--secondary-color);
-  color: var(--text-color-light);
+  background-color: var(--k-secondary-color);
+  color: var(--k-text-color-light);
 }
 
 .k-badge-light {
-  background-color: var(--light-color-background);
-  color: var(--text-color);
+  background-color: var(--k-light-color-background);
+  color: var(--k-text-color);
 }
 
 .k-badge-danger {
-  background-color: var(--danger-color);
-  color: var(--text-color-light);
+  background-color: var(--k-danger-color);
+  color: var(--k-text-color-light);
 }
 
 .k-badge-warning {
-  background-color: var(--warning-color);
-  color: var(--warning-color-contrast);
+  background-color: var(--k-warning-color);
+  color: var(--k-warning-color-contrast);
 }
 
 .k-badge-success {
-  background-color: var(--success-color);
-  color: var(--text-color-light);
+  background-color: var(--k-success-color);
+  color: var(--k-text-color-light);
 }
 
 /* Pill shape */
@@ -119,58 +119,44 @@ button.k-badge {
 }
 
 /* Subtle variants - transparent background with colored text */
-/* Subtle text blends the variant color 60/40 with --text-color: the full
+/* Subtle text blends the variant color 60/40 with --k-text-color: the full
    variant color on its own 15% tint falls under 4.5:1 for most variants. */
 .k-badge-subtle.k-badge-primary {
-  background-color: color-mix(
-    in srgb,
-    var(--primary-color) 15%,
-    var(--background-color)
-  );
-  color: color-mix(in srgb, var(--primary-color) 60%, var(--text-color));
+  background-color: color-mix(in srgb, var(--k-primary-color) 15%, transparent);
+  color: color-mix(in srgb, var(--k-primary-color) 60%, var(--k-text-color));
 }
 
 .k-badge-subtle.k-badge-secondary {
   background-color: color-mix(
     in srgb,
-    var(--secondary-color) 15%,
-    var(--background-color)
+    var(--k-secondary-color) 15%,
+    transparent
   );
-  color: color-mix(in srgb, var(--secondary-color) 60%, var(--text-color));
+  color: color-mix(in srgb, var(--k-secondary-color) 60%, var(--k-text-color));
 }
 
 .k-badge-subtle.k-badge-light {
-  background-color: color-mix(
-    in srgb,
-    var(--light-color) 30%,
-    var(--background-color)
-  );
-  color: var(--text-color);
+  background-color: color-mix(in srgb, var(--k-light-color) 30%, transparent);
+  color: var(--k-text-color);
 }
 
 .k-badge-subtle.k-badge-danger {
-  background-color: color-mix(
-    in srgb,
-    var(--danger-color) 15%,
-    var(--background-color)
-  );
-  color: color-mix(in srgb, var(--danger-color) 60%, var(--text-color));
+  background-color: color-mix(in srgb, var(--k-danger-color) 15%, transparent);
+  color: color-mix(in srgb, var(--k-danger-color) 60%, var(--k-text-color));
 }
 
 .k-badge-subtle.k-badge-warning {
-  background-color: color-mix(
-    in srgb,
-    var(--warning-color) 20%,
-    var(--background-color)
-  );
-  color: var(--warning-color-text);
+  background-color: color-mix(in srgb, var(--k-warning-color) 20%, transparent);
+  color: var(--k-warning-color-text);
 }
 
 .k-badge-subtle.k-badge-success {
-  background-color: color-mix(
-    in srgb,
-    var(--success-color) 15%,
-    var(--background-color)
-  );
-  color: color-mix(in srgb, var(--success-color) 60%, var(--text-color));
+  background-color: color-mix(in srgb, var(--k-success-color) 15%, transparent);
+  color: color-mix(in srgb, var(--k-success-color) 60%, var(--k-text-color));
+}
+
+/* The tint is translucent so it reads on any surface (striped rows, cards);
+   the inset outline keeps the edge visible where the tint alone is too faint. */
+.k-badge-subtle {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 30%, transparent);
 }

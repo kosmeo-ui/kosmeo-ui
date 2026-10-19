@@ -6,7 +6,7 @@
 }
 
 .k-color-swatch-bordered {
-  border: 0.0625rem solid var(--border-color);
+  border: 0.0625rem solid var(--k-border-color);
 }
 
 .k-color-swatch-sm {

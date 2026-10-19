@@ -23,7 +23,7 @@ source layout.
   (`./button/index.js`): webpack, and so Next.js, rejects anything shorter in an ESM package.
   `moduleResolution: "NodeNext"` makes `tsc` enforce it.
 - **`"use client";`** opens every component and hook file, for Next.js server components.
-- **Every CSS class is `k-` prefixed**, and third-party markup (TipTap's `.tiptap`) is styled only
+- **Every CSS class is `k-` prefixed, and every CSS variable `--k-`**, and third-party markup (TipTap's `.tiptap`) is styled only
   under a `k-` class, so nothing leaks into or collides with an app's styles.
 - **Zero app dependencies.** A package here never imports an app. App concerns —
   routing, auth, HTTP clients — come in as props (callbacks, an `AxiosInstance`, an `as` element).

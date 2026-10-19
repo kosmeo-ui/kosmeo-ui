@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  dateInputToIso,
   dateTimeLocalToIso,
   toDateInputValue,
   toDateTimeLocalValue,
@@ -14,6 +13,10 @@ describe("toDateInputValue", () => {
   it("accepts an ISO string", () => {
     const iso = new Date(2024, 11, 31).toISOString();
     expect(toDateInputValue(iso)).toBe("2024-12-31");
+  });
+
+  it("keeps a date-only string on its calendar day", () => {
+    expect(toDateInputValue("2026-10-14")).toBe("2026-10-14");
   });
 
   it("returns an empty string for empty or invalid values", () => {
@@ -31,26 +34,13 @@ describe("toDateTimeLocalValue", () => {
     );
   });
 
+  it("reads a date-only string as local midnight", () => {
+    expect(toDateTimeLocalValue("2026-10-14")).toBe("2026-10-14T00:00");
+  });
+
   it("returns an empty string for empty or invalid values", () => {
     expect(toDateTimeLocalValue(null)).toBe("");
     expect(toDateTimeLocalValue("nope")).toBe("");
-  });
-});
-
-describe("dateInputToIso", () => {
-  it("reads the date as local midnight", () => {
-    expect(dateInputToIso("2024-01-05")).toBe(
-      new Date(2024, 0, 5).toISOString()
-    );
-  });
-
-  it("returns null for empty or invalid values", () => {
-    expect(dateInputToIso("")).toBeNull();
-    expect(dateInputToIso("2024-13-45")).toBeNull();
-  });
-
-  it("round-trips through toDateInputValue", () => {
-    expect(toDateInputValue(dateInputToIso("2024-07-04"))).toBe("2024-07-04");
   });
 });
 

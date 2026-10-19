@@ -8,14 +8,14 @@
   padding: 0;
   align-items: center;
   justify-content: center;
-  color: var(--text-color-secondary);
+  color: var(--k-text-color-secondary);
   transition:
     color 0.2s ease-in-out,
     transform 0.2s ease-in-out;
 }
 
 .k-dropdown-arrow:hover:not(:disabled) {
-  color: var(--primary-color-text);
+  color: var(--k-primary-color-text);
 }
 
 .k-dropdown-arrow:focus {
