@@ -24,7 +24,7 @@ interface UseInfiniteArchivableCursorOptions {
   queryKey: string | (string | null)[];
   /** Organization ID to scope cache keys (prevents stale cross-org data). */
   orgId?: string | null;
-  /** Initial page size (default: 10). */
+  /** Initial page size (default: 25, InfiniteScroll's default). */
   initialLimit?: number;
   enabled?: boolean;
 }
@@ -45,7 +45,7 @@ const useInfiniteArchivableCursor = <T extends { id: number | string }>(
     endpoint,
     queryKey,
     orgId,
-    initialLimit = 10,
+    initialLimit = 25,
     enabled = true,
   } = options;
 
@@ -130,13 +130,17 @@ const useInfiniteArchivableCursor = <T extends { id: number | string }>(
   }, [query.data]);
 
   const lastPage = query.data?.pages[query.data.pages.length - 1];
-  const hasMore = lastPage?.hasMore ?? query.hasNextPage ?? false;
+  // After a failure, stop offering pages: reload() retries.
+  const hasMore = query.isError
+    ? false
+    : (lastPage?.hasMore ?? query.hasNextPage ?? false);
 
   return {
     data: allData,
     hasMore,
     isLoading: query.isLoading,
     isReloading: query.isRefetching && allData.length > 0,
+    error: query.error,
     total: 0,
     onQueryChange,
     reload,

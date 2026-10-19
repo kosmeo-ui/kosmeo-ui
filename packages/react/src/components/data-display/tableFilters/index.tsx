@@ -16,9 +16,9 @@ const TYPING_DEBOUNCE_MS = 400;
 
 export interface TableFiltersProps {
   /**
-   * The filters to offer, as in InfiniteScroll's `menu.filters`. Keep the
-   * array's identity stable (module-level or memoized): a new array resets
-   * every filter.
+   * The filters to offer, as in InfiniteScroll's `menu.filters`. They're
+   * compared by contents, so an inline array is fine; changing them resets
+   * every filter to the new definitions.
    */
   filters: InfiniteScrollMenuFilter[];
   /**
@@ -55,10 +55,13 @@ const TableFilters = ({
   const [filters, setFilters] = useState(() => generate(definitions));
   const [pendingFilters, setPendingFilters] = useState(filters);
 
-  const [prevDefinitions, setPrevDefinitions] = useState(definitions);
-  if (definitions !== prevDefinitions) {
+  // The definitions are plain data, as InfiniteScroll's menu: start over when
+  // their contents change, not each time they're a new array.
+  const definitionsKey = JSON.stringify(definitions);
+  const [prevDefinitionsKey, setPrevDefinitionsKey] = useState(definitionsKey);
+  if (definitionsKey !== prevDefinitionsKey) {
     const next = generate(definitions);
-    setPrevDefinitions(definitions);
+    setPrevDefinitionsKey(definitionsKey);
     setFilters(next);
     setPendingFilters(next);
   }

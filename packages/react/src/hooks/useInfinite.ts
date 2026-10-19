@@ -18,7 +18,7 @@ interface UseInfiniteOptions {
   queryKey: string;
   /** Organization ID to scope cache keys (prevents stale cross-org data) */
   orgId?: string | null;
-  /** Initial limit (default: 10) */
+  /** Initial limit (default: 25, InfiniteScroll's default page size) */
   initialLimit?: number;
   /** Whether or not the query should be enabled */
   enabled?: boolean;
@@ -29,6 +29,8 @@ export interface UseInfiniteReturn<T> {
   hasMore: boolean;
   isLoading: boolean;
   isReloading: boolean;
+  /** The failed request's error, or null; cleared once a load succeeds. */
+  error: Error | null;
   total: number;
   onQueryChange: (queryString: string) => void;
   reload: () => void;
@@ -42,7 +44,7 @@ const useInfinite = <T extends { id: number | string }>(
     endpoint,
     queryKey,
     orgId,
-    initialLimit = 10,
+    initialLimit = 25,
   } = options;
 
   const [queryString, setQueryString] = useState(
@@ -139,9 +141,11 @@ const useInfinite = <T extends { id: number | string }>(
 
   return {
     data: allData,
-    hasMore: query.data?.hasMore ?? true,
+    // After a failure, stop offering pages: reload() retries.
+    hasMore: query.isError ? false : (query.data?.hasMore ?? true),
     isLoading: query.isLoading,
     isReloading: query.isFetching && allData.length > 0,
+    error: query.error,
     total: query.data?.total ?? 0,
     onQueryChange: handleQueryChange,
     reload,

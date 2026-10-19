@@ -199,9 +199,19 @@ const InfiniteScroll = <TData extends object>(
     props.onRowSelect(selectedData);
   }, [selectedRows, rows, props.onRowSelect]);
 
+  // The menu is plain data: re-apply it when its contents change, not each
+  // time it is a new object, or an inline menu or onReload re-renders forever.
+  const menuKey = JSON.stringify([
+    props.menu.filters,
+    props.menu.sort,
+    props.menu.limitOptions,
+  ]);
+  const onReloadRef = useRef(props.onReload);
+  onReloadRef.current = props.onReload;
+  const menuApplied = useRef(false);
+
   useEffect(() => {
-    if (!props.menu.filters) return;
-    const generatedFilters = props.menu.filters.map((f, i) => {
+    const generatedFilters = (props.menu.filters ?? []).map((f, i) => {
       return { ...f, filterId: `${f.dataKey}-${i}` };
     });
     setFilters(generatedFilters);
@@ -215,8 +225,10 @@ const InfiniteScroll = <TData extends object>(
     const limits = props.menu.limitOptions || DEFAULT_LIMIT_OPTIONS;
     setLimitOptions(limits);
     setPendingLimitOptions(limits);
-    props.onReload();
-  }, [props.menu, props.onReload]);
+    // On mount the first query already loads the data.
+    if (menuApplied.current) onReloadRef.current();
+    menuApplied.current = true;
+  }, [menuKey]);
 
   useEffect(() => {
     const queryString = generateQueryString({
@@ -370,6 +382,8 @@ const InfiniteScroll = <TData extends object>(
       <div
         ref={infiniteScrollTableRef}
         className="k-infinite-scroll-table-container"
+        role="region"
+        aria-label={props.menu.title}
         onScroll={handleScroll}
       >
         {props.columns && (

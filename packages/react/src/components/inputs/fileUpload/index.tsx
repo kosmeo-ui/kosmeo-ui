@@ -116,8 +116,11 @@ const FileUpload = (props: FileUploadProps) => {
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    const i = Math.min(
+      Math.floor(Math.log(bytes) / Math.log(k)),
+      sizes.length - 1
+    );
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
@@ -134,6 +137,8 @@ const FileUpload = (props: FileUploadProps) => {
           const fileNames = oversizedFiles.map((f) => f.name);
           setOversizedFileInfo({ files: fileNames, maxSize: maxSizeFormatted });
           setShowSizeModal(true);
+          // Rejected files must not stay in the input, or a form would submit them.
+          event.target.value = "";
           return;
         }
       }
@@ -178,13 +183,6 @@ const FileUpload = (props: FileUploadProps) => {
         <div className="k-file-list-header">
           <span>Selected Files ({selectedFiles.length})</span>
           <div className="k-file-list-actions">
-            <Button
-              onClick={() => fileInputRef.current?.click()}
-              variant={variant}
-              size={size}
-            >
-              Change File{selectedFiles.length > 1 ? "s" : ""}
-            </Button>
             <Button onClick={handleClearFiles} variant="danger" size={size}>
               Clear All
             </Button>
@@ -203,6 +201,7 @@ const FileUpload = (props: FileUploadProps) => {
               <IconButton
                 icon={faTrash}
                 onClick={() => handleRemoveFile(index)}
+                aria-label={`Remove ${file.name}`}
                 variant="danger"
                 size={size}
               />
@@ -215,11 +214,12 @@ const FileUpload = (props: FileUploadProps) => {
   return (
     <div className={"k-file-upload-container"}>
       {props.label && (
-        <label className="k-file-upload-label-text">
+        <label htmlFor={componentId} className="k-file-upload-label-text">
           {props.label}
           {required && <MandatoryAsterisk />}
         </label>
       )}
+      {/* Hidden: the buttons below open these, and are the keyboard path. */}
       <input
         type="file"
         accept={props.accept}
@@ -229,6 +229,8 @@ const FileUpload = (props: FileUploadProps) => {
         className="k-file-upload-input"
         id={componentId}
         required={required}
+        aria-label={multiple ? "Upload Files" : "Upload File"}
+        tabIndex={-1}
       />
       {props.allowDirectory && (
         <input
@@ -238,27 +240,35 @@ const FileUpload = (props: FileUploadProps) => {
           ref={directoryInputRef}
           className="k-file-upload-input"
           id={directoryId}
+          aria-label="Upload Folder"
+          tabIndex={-1}
         />
       )}
 
       {fileListPosition === "above" && fileList}
 
-      {selectedFiles.length === 0 && (
+      {/* A custom renderFiles brings its own controls once files are chosen. */}
+      {(selectedFiles.length === 0 || !props.renderFiles) && (
         <div className="k-file-upload-empty-actions">
-          <label
-            htmlFor={componentId}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
             className={`k-button k-button-${variant} k-button-${size} k-button-center k-file-upload-button`}
           >
-            <FontAwesomeIcon icon={faUpload} /> Upload{" "}
-            {multiple ? "Files" : "File"}
-          </label>
+            <FontAwesomeIcon icon={faUpload} aria-hidden="true" />{" "}
+            {selectedFiles.length === 0
+              ? `Upload ${multiple ? "Files" : "File"}`
+              : `Change File${selectedFiles.length > 1 ? "s" : ""}`}
+          </button>
           {props.allowDirectory && (
-            <label
-              htmlFor={directoryId}
+            <button
+              type="button"
+              onClick={() => directoryInputRef.current?.click()}
               className={`k-button k-button-${variant} k-button-${size} k-button-center k-file-upload-button`}
             >
-              <FontAwesomeIcon icon={faFolderOpen} /> Upload Folder
-            </label>
+              <FontAwesomeIcon icon={faFolderOpen} aria-hidden="true" /> Upload
+              Folder
+            </button>
           )}
         </div>
       )}

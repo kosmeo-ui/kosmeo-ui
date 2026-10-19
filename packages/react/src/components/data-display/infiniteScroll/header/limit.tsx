@@ -39,6 +39,7 @@ const Limit = (props: LimitProps) => {
       <p>Results Per Page:</p>
       <Dropdown
         label={limitOptions.find((o) => o.selected)?.value || "None"}
+        aria-label={`Results per page: ${limitOptions.find((o) => o.selected)?.value || "None"}`}
         align="right"
         size="sm"
         variant="secondary"

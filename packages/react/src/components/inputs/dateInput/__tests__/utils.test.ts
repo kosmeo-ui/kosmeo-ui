@@ -11,20 +11,21 @@ describe("toDateInputValue", () => {
   });
 
   it("accepts an ISO string", () => {
-    const iso = new Date(2024, 11, 31).toISOString();
-    expect(toDateInputValue(iso)).toBe("2024-12-31");
+    expect(toDateInputValue(new Date(2024, 11, 31).toISOString())).toBe(
+      "2024-12-31"
+    );
   });
 
   it("keeps a date-only string on its calendar day", () => {
     expect(toDateInputValue("2026-10-14")).toBe("2026-10-14");
   });
 
-  it("returns an empty string for empty or invalid values", () => {
-    expect(toDateInputValue(null)).toBe("");
-    expect(toDateInputValue(undefined)).toBe("");
-    expect(toDateInputValue("")).toBe("");
-    expect(toDateInputValue("not a date")).toBe("");
-  });
+  it.each([null, undefined, "", "not a date"])(
+    "returns an empty string for %j",
+    (value) => {
+      expect(toDateInputValue(value)).toBe("");
+    }
+  );
 });
 
 describe("toDateTimeLocalValue", () => {
@@ -38,9 +39,8 @@ describe("toDateTimeLocalValue", () => {
     expect(toDateTimeLocalValue("2026-10-14")).toBe("2026-10-14T00:00");
   });
 
-  it("returns an empty string for empty or invalid values", () => {
-    expect(toDateTimeLocalValue(null)).toBe("");
-    expect(toDateTimeLocalValue("nope")).toBe("");
+  it.each([null, "nope"])("returns an empty string for %j", (value) => {
+    expect(toDateTimeLocalValue(value)).toBe("");
   });
 });
 
@@ -51,8 +51,7 @@ describe("dateTimeLocalToIso", () => {
     );
   });
 
-  it("returns null for empty or invalid values", () => {
-    expect(dateTimeLocalToIso("")).toBeNull();
-    expect(dateTimeLocalToIso("garbage")).toBeNull();
+  it.each(["", "garbage"])("returns null for %j", (value) => {
+    expect(dateTimeLocalToIso(value)).toBeNull();
   });
 });

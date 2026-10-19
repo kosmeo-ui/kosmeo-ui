@@ -2,7 +2,7 @@ import type { InfiniteScrollMenuFilter } from "@kosmeo-ui/react";
 import { PLAN_LABELS } from "./labels";
 
 // Shared by the infinite-scroll list and the paged table, so both offer the
-// same filters. Module-level: a new array would reset every filter.
+// same filters.
 export const CUSTOMER_FILTERS: InfiniteScrollMenuFilter[] = [
   { type: "SEARCH", title: "Name", dataKey: "name" },
   { type: "SEARCH", title: "Company", dataKey: "company" },

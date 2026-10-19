@@ -182,6 +182,7 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
             type={inputType}
             value={formattedStartValue}
             onChange={handleStartChange}
+            aria-label={`${props.filter.title} start`}
             max={formattedEndValue}
           />
         </div>
@@ -192,6 +193,7 @@ const RangeFilter = (props: InfiniteScrollRangeFilterProps) => {
             type={inputType}
             value={formattedEndValue}
             onChange={handleEndChange}
+            aria-label={`${props.filter.title} end`}
             min={formattedStartValue}
           />
         </div>

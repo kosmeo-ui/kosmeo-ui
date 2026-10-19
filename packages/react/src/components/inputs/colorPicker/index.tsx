@@ -1,7 +1,7 @@
 "use client";
 
+import { ChangeEvent, useId } from "react";
 import Input from "../input/index.js";
-import { ChangeEvent } from "react";
 import "./styles.css";
 
 export interface ColorPickerProps {
@@ -30,6 +30,7 @@ const ColorPicker = ({
   required,
   invalidMessage = DEFAULT_INVALID_MESSAGE,
 }: ColorPickerProps) => {
+  const inputId = useId();
   const trimmed = value.trim();
   const isEmpty = trimmed === "";
   const isValid = HEX_RE.test(trimmed);
@@ -46,7 +47,7 @@ const ColorPicker = ({
   return (
     <div className="k-color-picker">
       {label && (
-        <label className="k-color-picker-label">
+        <label className="k-color-picker-label" htmlFor={inputId}>
           {label}
           {required && <span aria-hidden> *</span>}
         </label>
@@ -61,9 +62,11 @@ const ColorPicker = ({
         />
         <div className="k-color-picker-input">
           <Input
+            id={inputId}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
+            required={required}
           />
         </div>
       </div>

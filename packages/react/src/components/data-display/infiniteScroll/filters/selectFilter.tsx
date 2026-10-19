@@ -85,6 +85,7 @@ const SelectFilter = (props: InfiniteScrollSelectFilterProps) => {
         <Input
           size="sm"
           placeholder="Search"
+          aria-label={`Search ${props.filter.title} options`}
           value={optionSearch}
           onChange={handleSearchOption}
         />

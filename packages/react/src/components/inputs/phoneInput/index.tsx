@@ -81,6 +81,7 @@ const PhoneInput = (props: PhoneInputProps) => {
 
   useEffect(() => {
     if (value === lastEmittedRef.current) return;
+    lastEmittedRef.current = value;
     if (!value) {
       setDisplay("");
       return;
@@ -88,6 +89,8 @@ const PhoneInput = (props: PhoneInputProps) => {
     const parsed = parsePhoneNumberFromString(value);
     if (parsed?.country) {
       setCountry(parsed.country);
+      setDisplay(parsed.formatNational());
+    } else if (parsed) {
       setDisplay(parsed.formatNational());
     } else {
       const formatter = new AsYouType(country);
@@ -121,14 +124,18 @@ const PhoneInput = (props: PhoneInputProps) => {
     const formatter = new AsYouType(country);
     const formatted = formatter.input(raw);
     const nationalDigits = formatter.getNationalNumber();
+    const nextCountry = formatter.getCountry() ?? country;
+    setCountry(nextCountry);
     setDisplay(formatted);
-    emit(nationalDigits, country);
+    emit(nationalDigits, nextCountry);
   };
 
   const handleCountrySelect = (cc: CountryCode) => {
     setCountry(cc);
     setPickerOpen(false);
-    const digits = display.replace(/\D/g, "");
+    const current = new AsYouType(country);
+    current.input(display);
+    const digits = current.getNationalNumber();
     if (digits) {
       const formatter = new AsYouType(cc);
       const formatted = formatter.input(digits);
@@ -192,6 +199,7 @@ const PhoneInput = (props: PhoneInputProps) => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search country or code"
+              aria-label="Search country or code"
             />
           </div>
           <ul className="k-phone-input-list" role="listbox">

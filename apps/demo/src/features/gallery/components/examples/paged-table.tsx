@@ -33,8 +33,7 @@ const columns: TableColumn<Customer>[] = [
   },
 ];
 
-// Same definitions as InfiniteScroll's menu.filters; module-level, as a new
-// array resets the filters.
+// Same definitions as InfiniteScroll's menu.filters.
 const filters: InfiniteScrollMenuFilter[] = [
   { type: "SEARCH", title: "Name", dataKey: "name" },
   {

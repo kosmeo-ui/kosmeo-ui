@@ -5,6 +5,6 @@
     "composite": false,
     "noEmit": true
   },
-  "include": ["src/**/*", "vitest.config.ts", "vitest.setup.ts"],
+  "include": ["src/**/*", "vitest.*.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,12 +1,13 @@
 import RichTextEditor from "../../../inputs/richTextEditor/index.js";
 import CheckboxGroup from "../../../inputs/checkboxGroup/index.js";
-import { render, screen, waitFor } from "@testing-library/react";
 import RadioGroup from "../../../inputs/radioGroup/index.js";
 import TextArea from "../../../inputs/textArea/index.js";
 import Checkbox from "../../../inputs/checkbox/index.js";
+import { render, screen } from "@testing-library/react";
 import Select from "../../../inputs/select/index.js";
 import Input from "../../../inputs/input/index.js";
 import { describe, expect, it } from "vitest";
+import { ReactElement } from "react";
 
 const options = [
   { value: "a", label: "A" },
@@ -14,28 +15,44 @@ const options = [
 ];
 
 describe("required fields", () => {
-  it("keep the asterisk out of the accessible name", () => {
-    render(
-      <>
-        <Input label="Email" required />
-        <TextArea label="Notes" required />
-        <Select label="Plan" options={options} required value="a" />
-        <Checkbox label="Agree" checked={false} onChange={() => {}} required />
-      </>
-    );
-    expect(screen.getByRole("textbox", { name: "Email" })).toBeRequired();
-    expect(screen.getByRole("textbox", { name: "Notes" })).toBeRequired();
-    expect(screen.getByRole("combobox", { name: "Plan" })).toBeRequired();
-    expect(screen.getByRole("checkbox", { name: "Agree" })).toBeRequired();
-  });
+  it.each<[string, "textbox" | "combobox" | "checkbox", ReactElement]>([
+    ["Input", "textbox", <Input label="Field" required />],
+    ["TextArea", "textbox", <TextArea label="Field" required />],
+    [
+      "Select",
+      "combobox",
+      <Select label="Field" options={options} required value="a" />,
+    ],
+    [
+      "Checkbox",
+      "checkbox",
+      <Checkbox label="Field" checked={false} onChange={() => {}} required />,
+    ],
+  ])(
+    "keep the asterisk out of a required %s's name",
+    (_name, role, element) => {
+      render(element);
+
+      expect(screen.getByRole(role, { name: "Field" })).toBeRequired();
+    }
+  );
 
   it("still show the asterisk", () => {
     render(<Input label="Email" required />);
-    expect(screen.getByText("*")).toHaveClass("k-mandatory-asterisk");
+
+    expect(screen.getByText("*")).toBeVisible();
   });
 
-  it("mark a radio group as a named, required radiogroup", () => {
-    render(
+  it("style the asterisk", () => {
+    render(<Input label="Email" required />);
+
+    expect(screen.getByText("*")).toHaveClass("k-mandatory-asterisk", {
+      exact: true,
+    });
+  });
+
+  describe("radio group", () => {
+    const RequiredRadioGroup = () => (
       <RadioGroup
         label="Size"
         name="size"
@@ -45,47 +62,62 @@ describe("required fields", () => {
         required
       />
     );
-    const group = screen.getByRole("radiogroup", { name: "Size" });
-    expect(group).toHaveAttribute("aria-required", "true");
-    for (const radio of screen.getAllByRole("radio"))
-      expect(radio).toBeRequired();
+
+    it("is a named, required radiogroup", () => {
+      render(<RequiredRadioGroup />);
+
+      expect(screen.getByRole("radiogroup", { name: "Size" })).toHaveAttribute(
+        "aria-required",
+        "true"
+      );
+    });
+
+    it.each(["A", "B"])("marks radio %s required", (label) => {
+      render(<RequiredRadioGroup />);
+
+      expect(screen.getByRole("radio", { name: label })).toBeRequired();
+    });
   });
 
-  it("name a checkbox group, saying it's required", () => {
-    const { rerender } = render(
-      <CheckboxGroup
-        label="Access"
-        name="access"
-        options={options}
-        values={[]}
-        onChange={() => {}}
-      />
-    );
-    expect(screen.getByRole("group", { name: "Access" })).toBeInTheDocument();
+  describe("checkbox group", () => {
+    it("is named by its label", () => {
+      render(
+        <CheckboxGroup
+          label="Access"
+          name="access"
+          options={options}
+          values={[]}
+          onChange={() => {}}
+        />
+      );
 
-    rerender(
-      <CheckboxGroup
-        label="Access"
-        name="access"
-        options={options}
-        values={[]}
-        onChange={() => {}}
-        required
-      />
-    );
-    expect(
-      // jsdom's name computation drops the space before "(required)".
-      screen.getByRole("group", { name: /^Access ?\(required\)$/ })
-    ).toBeInTheDocument();
+      expect(screen.getByRole("group", { name: "Access" })).toBeVisible();
+    });
+
+    it("says it's required in its name", () => {
+      render(
+        <CheckboxGroup
+          label="Access"
+          name="access"
+          options={options}
+          values={[]}
+          onChange={() => {}}
+          required
+        />
+      );
+
+      expect(
+        // jsdom's name computation drops the space before "(required)".
+        screen.getByRole("group", { name: /^Access ?\(required\)$/ })
+      ).toBeVisible();
+    });
   });
 
   it("mark a required rich text editor", async () => {
     render(<RichTextEditor label="Body" required />);
-    await waitFor(() =>
-      expect(screen.getByRole("textbox", { name: "Body" })).toHaveAttribute(
-        "aria-required",
-        "true"
-      )
-    );
+
+    expect(
+      await screen.findByRole("textbox", { name: "Body" })
+    ).toHaveAttribute("aria-required", "true");
   });
 });

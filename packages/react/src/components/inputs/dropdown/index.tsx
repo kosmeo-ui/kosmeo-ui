@@ -46,7 +46,7 @@ const Dropdown = (props: DropdownProps) => {
     setIsOpen(!isOpen);
   };
 
-  useOutsideClick([dropdownRef], () => setIsOpen(false));
+  useOutsideClick([dropdownRef], () => setIsOpen(false), isOpen);
 
   const label = (
     <div className="k-dropdown-label-container">

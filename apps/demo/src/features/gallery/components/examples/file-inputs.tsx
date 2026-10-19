@@ -7,6 +7,12 @@ import {
   ImagePreview,
 } from "@kosmeo-ui/react";
 
+// Preselected so both list positions show on load.
+const SAMPLE_FILES = [
+  new File(["x".repeat(2048)], "report.pdf", { type: "application/pdf" }),
+  new File(["x".repeat(512)], "notes.txt", { type: "text/plain" }),
+];
+
 export const FileInputs = () => {
   const [images, setImages] = useState<File[] | null>(null);
 
@@ -41,6 +47,20 @@ export const FileInputs = () => {
             onChange={onChange}
           />
         )}
+      />
+      <FileUpload
+        label='fileListPosition="above"'
+        multiple
+        fileListPosition="above"
+        initialFiles={SAMPLE_FILES}
+        onFileSelect={() => {}}
+      />
+      <FileUpload
+        label='fileListPosition="below"'
+        multiple
+        fileListPosition="below"
+        initialFiles={SAMPLE_FILES}
+        onFileSelect={() => {}}
       />
       <FileDropZone
         label="FileDropZone: drop up to 3 files"

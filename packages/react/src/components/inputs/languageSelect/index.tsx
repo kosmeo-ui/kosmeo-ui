@@ -57,15 +57,30 @@ const LanguageSelect = ({
   required,
   includeNone = true,
 }: LanguageSelectProps) => {
-  const options: LanguageOption[] = includeNone
-    ? [{ value: "", label: "— None —" }, ...SUPPORTED_LANGUAGES]
-    : SUPPORTED_LANGUAGES;
+  // A stored value is shown, never replaced on load (Select would report its
+  // first option for a value it lacks): a bare language ("en") as its first
+  // locale, any other unknown code as itself.
+  const stored = value ?? "";
+  const isSupported = SUPPORTED_LANGUAGES.some((l) => l.value === stored);
+  const locale =
+    stored && !isSupported
+      ? SUPPORTED_LANGUAGES.find((l) =>
+          l.value.toLowerCase().startsWith(`${stored.toLowerCase()}-`)
+        )?.value
+      : undefined;
+  const unknown: LanguageOption[] =
+    stored && !isSupported && !locale ? [{ value: stored, label: stored }] : [];
+  const options: LanguageOption[] = [
+    ...(includeNone ? [{ value: "", label: "— None —" }] : []),
+    ...unknown,
+    ...SUPPORTED_LANGUAGES,
+  ];
 
   return (
     <Select
       label={label}
       id={id}
-      value={value ?? ""}
+      value={locale ?? stored}
       disabled={disabled}
       required={required}
       options={options}

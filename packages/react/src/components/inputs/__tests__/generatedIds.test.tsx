@@ -37,27 +37,41 @@ const ids = (root: Element) =>
   Array.from(root.querySelectorAll("[id]"), (el) => el.id);
 
 describe.each(fields)("%s generated id", (_name, element) => {
+  it("is generated", () => {
+    const { container } = render(element());
+
+    expect(ids(container).length).toBeGreaterThan(0);
+  });
+
   it("is stable across re-renders", () => {
     const { container, rerender } = render(element());
     const before = ids(container);
-    expect(before.length).toBeGreaterThan(0);
 
     rerender(element());
+
     expect(ids(container)).toEqual(before);
   });
 });
 
 describe.each(fields)("%s server render", (_name, element) => {
-  it("matches between server and client render", async () => {
+  it("hydrates without a mismatch", async () => {
     const container = serverRender(element());
-    const serverIds = ids(container);
 
     const { consoleError, onRecoverableError } = await hydrate(
       container,
       element()
     );
+
     expect(consoleError).not.toHaveBeenCalled();
     expect(onRecoverableError).not.toHaveBeenCalled();
+  });
+
+  it("keeps the server's ids after hydration", async () => {
+    const container = serverRender(element());
+    const serverIds = ids(container);
+
+    await hydrate(container, element());
+
     expect(ids(container)).toEqual(serverIds);
   });
 });
@@ -69,11 +83,13 @@ it("gives each instance its own id", () => {
       <Input label="B" />
     </>
   );
+
   const [a, b] = ids(container);
   expect(a).not.toBe(b);
 });
 
 it("prefers an explicit id", () => {
   const { container } = render(<Input id="email" label="Email" />);
+
   expect(ids(container)).toEqual(["email"]);
 });

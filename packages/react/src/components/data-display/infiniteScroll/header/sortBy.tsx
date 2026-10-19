@@ -31,6 +31,7 @@ const SortBy = (props: SortbyProps) => {
       size="sm"
       variant="secondary"
       label={props.sortBy.find((key) => key.selected)?.displayName || "None"}
+      aria-label={`Sort by: ${props.sortBy.find((key) => key.selected)?.displayName || "None"}`}
       isOpen={isOpen}
       onOpenChange={setIsOpen}
     >
