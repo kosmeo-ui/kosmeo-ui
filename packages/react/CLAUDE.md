@@ -26,7 +26,7 @@ src/
 │   ├── overlays/               # Modal, ConfirmationModal, Portal
 │   ├── feedback/               # Alert, Spinner, LoadingOverlay, ProgressBar,
 │   │                           # EmptyState, Tooltip, Badge
-│   ├── data-display/           # Table, DataTable, InfiniteScroll, ListCard, ListRow,
+│   ├── data-display/           # Table, DataTable, InfiniteScroll, TableFilters, ListCard, ListRow,
 │   │                           # TagCard, ImagePreview, ColorSwatch, AddressBlock,
 │   │                           # RecoveryCodeGrid, SecretDisplay, StatCard, SummaryRow
 │   └── navigation/             # Tabs, TabButton, Breadcrumbs, Stepper, Pagination,
@@ -72,7 +72,7 @@ import "@kosmeo-ui/react/styles.css";
 
 **Feedback**: `Alert`, `Badge`, `Spinner`, `LoadingOverlay`, `ProgressBar`, `EmptyState`, `Tooltip`
 
-**Data display**: `Table`, `DataTable`, `InfiniteScroll`, `ListCard`, `ListRow`, `TagCard`, `ImagePreview`, `ColorSwatch`, `AddressBlock`, `RecoveryCodeGrid`, `SecretDisplay`, `StatCard`, `SummaryRow`
+**Data display**: `Table`, `DataTable`, `InfiniteScroll`, `TableFilters`, `ListCard`, `ListRow`, `TagCard`, `ImagePreview`, `ColorSwatch`, `AddressBlock`, `RecoveryCodeGrid`, `SecretDisplay`, `StatCard`, `SummaryRow`
 
 **Navigation**: `Tabs`, `TabButton`, `Breadcrumbs`, `Stepper`, `Pagination`, `Sidebar` (with `SidebarNavGroup`, `SidebarNavLink`)
 

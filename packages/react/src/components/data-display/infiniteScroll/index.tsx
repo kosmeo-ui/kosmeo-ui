@@ -310,18 +310,7 @@ const InfiniteScroll = <TData extends object>(
   );
 
   const handleReset = useCallback(() => {
-    const clearedFilters = pendingFilters.map((filter) => {
-      if (filter.type === "SELECT") {
-        return {
-          ...filter,
-          options: filter.options?.map((o) => ({ ...o, selected: false })),
-        };
-      } else if (filter.type === "RANGE") {
-        return { ...filter, startValue: undefined, endValue: undefined };
-      } else if (filter.type === "SEARCH") {
-        return { ...filter, value: undefined };
-      } else return { ...filter, list: "" };
-    });
+    const clearedFilters = pendingChangesUtil.clearFilters(pendingFilters);
     setPendingFilters(clearedFilters);
     setFilters(clearedFilters);
   }, [pendingFilters]);

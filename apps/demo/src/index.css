@@ -106,10 +106,6 @@ body {
   tab-size: 2;
 }
 
-.demo-filter-field {
-  width: 16rem;
-}
-
 /* A page that's being replaced by the next one. */
 .demo-loading {
   opacity: 0.6;

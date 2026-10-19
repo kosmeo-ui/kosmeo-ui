@@ -53,6 +53,23 @@ export const hasActiveFilters = (
   return false;
 };
 
+/** The filters with every value cleared, for Reset. */
+export const clearFilters = (
+  filters: InfiniteScrollMenuGeneratedFilter[]
+): InfiniteScrollMenuGeneratedFilter[] =>
+  filters.map((filter) => {
+    if (filter.type === "SELECT") {
+      return {
+        ...filter,
+        options: filter.options?.map((o) => ({ ...o, selected: false })),
+      };
+    } else if (filter.type === "RANGE") {
+      return { ...filter, startValue: undefined, endValue: undefined };
+    } else if (filter.type === "SEARCH") {
+      return { ...filter, value: undefined };
+    } else return { ...filter, list: "" };
+  });
+
 /**
  * Whether a pending change is in a typed filter (search, or a number or text
  * range): applied immediately, those wait for a pause in typing.
@@ -69,7 +86,7 @@ export const hasTypedFilterChanges = (
     return typed && hasFilterChanges([filter], [pendingFilters[i]]);
   });
 
-const hasFilterChanges = (
+export const hasFilterChanges = (
   filters: InfiniteScrollMenuGeneratedFilter[],
   pendingFilters: InfiniteScrollMenuGeneratedFilter[]
 ): boolean => {
