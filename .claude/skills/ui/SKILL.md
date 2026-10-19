@@ -106,7 +106,8 @@ class and a rule in its own `styles.css`:
 - Class names: `k-` + kebab-case, BEM-ish by suffix — `k-empty-state`,
   `k-empty-state-block`, `k-empty-state-icon`. Modifier classes are generated
   from props (`k-page-gap-${gap}`, `k-form-grid-${columns}col`).
-- CSS custom properties are `--k-` prefixed too (`--k-text-color`).
+- CSS custom properties are `--k-` prefixed too (`--k-text-color`), and so are
+  `@keyframes` names (`k-spin`, `k-fade-in`): both are global, like classes.
 
 ### Acceptable inline-style cases (rare)
 

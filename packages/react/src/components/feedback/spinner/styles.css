@@ -1,10 +1,13 @@
+/* An empty box, so as a flex item it would shrink to fit a short or narrow
+   container (an oval while a page is still laying out). */
 .k-spinner {
   border-radius: 50%;
   display: inline-block;
-  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+  animation: k-spin 0.8s linear infinite;
 }
 
-@keyframes spin {
+@keyframes k-spin {
   0% {
     transform: rotate(0deg);
   }

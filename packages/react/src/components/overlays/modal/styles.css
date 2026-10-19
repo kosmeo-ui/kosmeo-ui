@@ -1,4 +1,4 @@
-@keyframes fadeIn {
+@keyframes k-fade-in {
   from {
     opacity: 0;
   }
@@ -7,7 +7,7 @@
   }
 }
 
-@keyframes fadeOut {
+@keyframes k-fade-out {
   from {
     opacity: 1;
   }
@@ -16,7 +16,7 @@
   }
 }
 
-@keyframes scaleIn {
+@keyframes k-scale-in {
   from {
     transform: scale(0.95);
   }
@@ -25,7 +25,7 @@
   }
 }
 
-@keyframes scaleOut {
+@keyframes k-scale-out {
   from {
     transform: scale(1);
   }
@@ -45,7 +45,7 @@
   padding: 1rem;
   opacity: 1;
   pointer-events: auto;
-  animation: fadeIn 0.2s ease-out forwards;
+  animation: k-fade-in 0.2s ease-out forwards;
 }
 
 .k-modal-content {
@@ -63,7 +63,7 @@
   opacity: 1;
   transform: scale(1);
   pointer-events: auto;
-  animation: scaleIn 0.2s ease-out forwards;
+  animation: k-scale-in 0.2s ease-out forwards;
   max-height: 80vh;
   overflow: hidden;
 }
@@ -88,12 +88,12 @@
 }
 
 .k-modal-overlay.closing {
-  animation: fadeOut 0.2s ease-in forwards;
+  animation: k-fade-out 0.2s ease-in forwards;
   pointer-events: none;
 }
 
 .k-modal-content.closing {
-  animation: scaleOut 0.2s ease-in forwards;
+  animation: k-scale-out 0.2s ease-in forwards;
   pointer-events: none;
 }
 
