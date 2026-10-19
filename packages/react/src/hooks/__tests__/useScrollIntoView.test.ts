@@ -11,21 +11,32 @@ const makeItems = () =>
 
 it("scrolls the element at the index into view", () => {
   const items = makeItems();
+
+  renderHook(() => useScrollIntoView({ current: items }, 0));
+
+  expect(items[0].scrollIntoView).toHaveBeenCalledWith({ block: "nearest" });
+});
+
+it("scrolls the new element into view when the index changes", () => {
+  const items = makeItems();
   const refs = { current: items };
   const { rerender } = renderHook(
     ({ index }) => useScrollIntoView(refs, index),
     { initialProps: { index: 0 } }
   );
-  expect(items[0].scrollIntoView).toHaveBeenCalledWith({ block: "nearest" });
 
   rerender({ index: 2 });
+
   expect(items[2].scrollIntoView).toHaveBeenCalledTimes(1);
 });
 
-it("does nothing for -1 or while disabled", () => {
+it.each([
+  ["for index -1", -1, true],
+  ["while disabled", 1, false],
+])("does nothing %s", (_case, index, enabled) => {
   const items = makeItems();
-  const refs = { current: items };
-  renderHook(() => useScrollIntoView(refs, -1));
-  renderHook(() => useScrollIntoView(refs, 1, false));
+
+  renderHook(() => useScrollIntoView({ current: items }, index, enabled));
+
   for (const item of items) expect(item.scrollIntoView).not.toHaveBeenCalled();
 });

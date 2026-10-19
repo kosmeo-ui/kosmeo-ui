@@ -12,16 +12,17 @@ describe("toDateInputValue", () => {
   });
 
   it("accepts an ISO string", () => {
-    const iso = new Date(2024, 11, 31).toISOString();
-    expect(toDateInputValue(iso)).toBe("2024-12-31");
+    expect(toDateInputValue(new Date(2024, 11, 31).toISOString())).toBe(
+      "2024-12-31"
+    );
   });
 
-  it("returns an empty string for empty or invalid values", () => {
-    expect(toDateInputValue(null)).toBe("");
-    expect(toDateInputValue(undefined)).toBe("");
-    expect(toDateInputValue("")).toBe("");
-    expect(toDateInputValue("not a date")).toBe("");
-  });
+  it.each([null, undefined, "", "not a date"])(
+    "returns an empty string for %j",
+    (value) => {
+      expect(toDateInputValue(value)).toBe("");
+    }
+  );
 });
 
 describe("toDateTimeLocalValue", () => {
@@ -31,9 +32,8 @@ describe("toDateTimeLocalValue", () => {
     );
   });
 
-  it("returns an empty string for empty or invalid values", () => {
-    expect(toDateTimeLocalValue(null)).toBe("");
-    expect(toDateTimeLocalValue("nope")).toBe("");
+  it.each([null, "nope"])("returns an empty string for %j", (value) => {
+    expect(toDateTimeLocalValue(value)).toBe("");
   });
 });
 
@@ -44,9 +44,8 @@ describe("dateInputToIso", () => {
     );
   });
 
-  it("returns null for empty or invalid values", () => {
-    expect(dateInputToIso("")).toBeNull();
-    expect(dateInputToIso("2024-13-45")).toBeNull();
+  it.each(["", "2024-13-45"])("returns null for %j", (value) => {
+    expect(dateInputToIso(value)).toBeNull();
   });
 
   it("round-trips through toDateInputValue", () => {
@@ -61,8 +60,7 @@ describe("dateTimeLocalToIso", () => {
     );
   });
 
-  it("returns null for empty or invalid values", () => {
-    expect(dateTimeLocalToIso("")).toBeNull();
-    expect(dateTimeLocalToIso("garbage")).toBeNull();
+  it.each(["", "garbage"])("returns null for %j", (value) => {
+    expect(dateTimeLocalToIso(value)).toBeNull();
   });
 });

@@ -62,26 +62,18 @@ const setup = ({
       onSelect={onSelect}
     />
   );
-  const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-  return {
-    user,
-    onSelect,
-    input: screen.getByRole("combobox", { name: "City" }),
-  };
+  return { onSelect, input: screen.getByRole("combobox", { name: "City" }) };
 };
+
+type User = ReturnType<typeof userEvent.setup>;
 
 /** Runs out SearchList's 500ms search debounce. */
 const settle = () => act(() => vi.advanceTimersByTimeAsync(500));
 
 /** Types a search and waits out the debounce, so its results show. */
-const search = async (
-  user: ReturnType<typeof userEvent.setup>,
-  input: HTMLElement,
-  text: string
-) => {
+const search = async (user: User, input: HTMLElement, text: string) => {
   await user.type(input, text);
   await settle();
-  expect(screen.getByRole("listbox")).toBeInTheDocument();
 };
 
 // shouldAdvanceTime keeps the clock ticking for Testing Library's own
@@ -92,13 +84,16 @@ afterEach(() => vi.useRealTimers());
 describe("SearchList", () => {
   it("is a list-autocomplete combobox named by its label", () => {
     const { input } = setup();
+
     expect(input).toHaveAttribute("id", "city");
     expect(input).toHaveAttribute("aria-autocomplete", "list");
     expect(input).toHaveAttribute("aria-expanded", "false");
   });
 
   it("offers initial options in a listbox on focus", async () => {
-    const { user, input } = setup({ initialOptions: [cities[2]] });
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup({ initialOptions: [cities[2]] });
+
     await user.click(input);
 
     const listbox = screen.getByRole("listbox", { name: "City" });
@@ -110,8 +105,11 @@ describe("SearchList", () => {
   });
 
   it("prompts with a status when there's nothing to offer yet", async () => {
-    const { user, input } = setup();
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup();
+
     await user.click(input);
+
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Start typing to search"
@@ -119,24 +117,37 @@ describe("SearchList", () => {
   });
 
   it("lists search results", async () => {
-    const { user, input } = setup();
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup();
+
     await search(user, input, "bos");
+
     expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual([
       "Boston",
       "Bossier City",
     ]);
   });
 
-  it("picks a result from the keyboard", async () => {
-    const { user, input, onSelect } = setup();
+  it("highlights a result from the keyboard", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup();
     await search(user, input, "bos");
+
     await user.keyboard("{ArrowDown}{ArrowDown}");
 
     const bossier = screen.getByRole("option", { name: "Bossier City" });
     expect(input).toHaveAttribute("aria-activedescendant", bossier.id);
     expect(bossier).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("picks the highlighted result with Enter", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input, onSelect } = setup();
+    await search(user, input, "bos");
+    await user.keyboard("{ArrowDown}{ArrowDown}");
 
     await user.keyboard("{Enter}");
+
     expect(onSelect).toHaveBeenLastCalledWith(cities[1], undefined);
     expect(input).toHaveValue("Bossier City");
     expect(input).toHaveAttribute("aria-expanded", "false");
@@ -144,23 +155,44 @@ describe("SearchList", () => {
   });
 
   it("announces when nothing matches", async () => {
-    const { user, input } = setup();
-    await user.type(input, "zzz");
-    await settle();
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup();
+
+    await search(user, input, "zzz");
+
     expect(screen.getByRole("status")).toHaveTextContent("No results found");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
 
-  it("can't pick hidden results while loading", async () => {
-    const { user, input, onSelect } = setup({ loading: true });
-    await user.type(input, "bos");
-    // Past the debounce, the query is loading but still holds the last results.
-    await settle();
+  // Past the debounce, the query is loading but still holds the last results.
+  it("shows a loading status in place of the results while loading", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup({ loading: true });
+
+    await search(user, input, "bos");
+
     expect(screen.getByRole("status", { name: "Loading..." })).toBeVisible();
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+  });
 
-    await user.keyboard("{ArrowDown}{Enter}");
+  it("can't highlight hidden results while loading", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup({ loading: true });
+    await search(user, input, "bos");
+
+    await user.keyboard("{ArrowDown}");
+
     expect(input).not.toHaveAttribute("aria-activedescendant");
+  });
+
+  it("can't pick hidden results while loading", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input, onSelect } = setup({ loading: true });
+    await search(user, input, "bos");
+    await user.keyboard("{ArrowDown}");
+
+    await user.keyboard("{Enter}");
+
     expect(onSelect).not.toHaveBeenCalledWith(
       expect.objectContaining({ id: 1 }),
       undefined
@@ -168,21 +200,24 @@ describe("SearchList", () => {
   });
 
   it("drops the highlight when the search changes", async () => {
-    const { user, input } = setup();
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup();
     await search(user, input, "bos");
     await user.keyboard("{ArrowDown}{ArrowDown}");
-    await user.type(input, "t");
 
     // "bost" leaves one result, so the old second-row highlight is gone.
-    await settle();
-    expect(screen.getAllByRole("option")).toHaveLength(1);
+    await search(user, input, "t");
+
     expect(input).not.toHaveAttribute("aria-activedescendant");
   });
 
   it("closes on Escape", async () => {
-    const { user, input } = setup();
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    const { input } = setup();
     await search(user, input, "bos");
+
     await user.keyboard("{Escape}");
+
     expect(input).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
   });
@@ -201,15 +236,24 @@ describe("SearchList", () => {
       );
       return {
         onSelect,
-        user: userEvent.setup({ advanceTimers: vi.advanceTimersByTime }),
         input: screen.getByRole("combobox", { name: "City" }),
       };
     };
 
-    it("stays closed after a pick", async () => {
-      const { user, input, onSelect } = setupUncontrolled();
+    /** Searches "bos", picks Boston and waits out the debounce. */
+    const pickBoston = async (user: User, input: HTMLElement) => {
       await search(user, input, "bos");
       await user.keyboard("{ArrowDown}{Enter}");
+      await settle();
+    };
+
+    it("stays closed after a pick", async () => {
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const { input, onSelect } = setupUncontrolled();
+      await search(user, input, "bos");
+      await user.keyboard("{ArrowDown}");
+
+      await user.keyboard("{Enter}");
       // The picked label must not count as a new search once debounced.
       await settle();
 
@@ -219,17 +263,26 @@ describe("SearchList", () => {
       expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
     });
 
-    it("forgets the pick when the input is cleared", async () => {
-      const { user, input, onSelect } = setupUncontrolled();
-      await search(user, input, "bos");
-      await user.keyboard("{ArrowDown}{Enter}");
-      await settle();
+    it("reports no selection when the input is cleared", async () => {
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const { input, onSelect } = setupUncontrolled();
+      await pickBoston(user, input);
 
       await user.clear(input);
       await settle();
+
       expect(onSelect).toHaveBeenLastCalledWith(null);
-      // Typing the old label again is a fresh search, not the selection.
+    });
+
+    it("treats the old label as a fresh search once cleared", async () => {
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const { input } = setupUncontrolled();
+      await pickBoston(user, input);
+      await user.clear(input);
+      await settle();
+
       await search(user, input, "Boston");
+
       expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual([
         "Boston",
       ]);

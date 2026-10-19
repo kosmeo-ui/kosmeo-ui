@@ -1,46 +1,91 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import Badge from "../index.js";
+import Badge, { BadgeProps } from "../index.js";
 
 describe("Badge", () => {
-  it("renders a span with the default classes", () => {
+  it("renders plain text, not a button, without onClick", () => {
     render(<Badge>New</Badge>);
-    const badge = screen.getByText("New").parentElement!;
-    expect(badge.tagName).toBe("SPAN");
-    expect(badge).toHaveClass(
-      "k-badge",
-      "k-badge-primary",
-      "k-badge-md",
-      "k-badge-pill"
-    );
+
+    expect(screen.getByText("New")).toBeVisible();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
-  it("applies subtle and square styling", () => {
+  // The plain badge's root is a role-less span, reachable only from its text.
+  it.each<[string, Partial<BadgeProps>, string]>([
+    ["the defaults", {}, "k-badge k-badge-primary k-badge-md k-badge-pill"],
+    [
+      "subtle and square styling",
+      { pill: false, subtle: true },
+      "k-badge k-badge-primary k-badge-md k-badge-subtle",
+    ],
+  ])("maps %s to classes", (_, props, classes) => {
+    render(<Badge {...props}>New</Badge>);
+
+    expect(screen.getByText("New").parentElement).toHaveClass(classes, {
+      exact: true,
+    });
+  });
+
+  it("maps props to classes on a clickable badge", () => {
     render(
-      <Badge pill={false} subtle>
+      <Badge onClick={() => {}} ariaLabel="Filter by new" size="sm">
         New
       </Badge>
     );
-    const badge = screen.getByText("New").parentElement!;
-    expect(badge).toHaveClass("k-badge-subtle");
-    expect(badge).not.toHaveClass("k-badge-pill");
+
+    expect(screen.getByRole("button", { name: "Filter by new" })).toHaveClass(
+      "k-badge k-badge-primary k-badge-sm k-badge-pill k-badge-clickable",
+      { exact: true }
+    );
   });
 
-  it("renders as a button when clickable", async () => {
+  it("calls onClick when clicked", async () => {
+    const user = userEvent.setup();
     const onClick = vi.fn();
     render(
       <Badge onClick={onClick} ariaLabel="Filter by new">
         New
       </Badge>
     );
-    await userEvent.click(
-      screen.getByRole("button", { name: "Filter by new" })
-    );
-    expect(onClick).toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "Filter by new" }));
+
+    expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it("keeps the action and remove buttons separate when both are set", async () => {
+  it("keeps the action and remove buttons separate when both are set", () => {
+    render(
+      <Badge onClick={() => {}} onRemove={() => {}} ariaLabel="Filter by new">
+        New
+      </Badge>
+    );
+
+    // A button inside a button is invalid HTML and breaks hydration.
+    const action = screen.getByRole("button", { name: "Filter by new" });
+    const remove = screen.getByRole("button", { name: "Remove" });
+    expect(action).not.toContainElement(remove);
+    expect(remove).not.toContainElement(action);
+  });
+
+  it("puts the badge classes on the wrapper of a clickable, removable badge", () => {
+    render(
+      <Badge onClick={() => {}} onRemove={() => {}} ariaLabel="Filter by new">
+        New
+      </Badge>
+    );
+
+    // The wrapper is a role-less span, reachable only from its buttons.
+    expect(
+      screen.getByRole("button", { name: "Filter by new" }).parentElement
+    ).toHaveClass(
+      "k-badge k-badge-primary k-badge-md k-badge-pill k-badge-clickable",
+      { exact: true }
+    );
+  });
+
+  it("calls only onRemove from the remove button of a clickable badge", async () => {
+    const user = userEvent.setup();
     const onClick = vi.fn();
     const onRemove = vi.fn();
     render(
@@ -48,19 +93,27 @@ describe("Badge", () => {
         New
       </Badge>
     );
-    const action = screen.getByRole("button", { name: "Filter by new" });
-    const remove = screen.getByRole("button", { name: "Remove" });
-    // A button inside a button is invalid HTML and breaks hydration.
-    expect(action).not.toContainElement(remove);
-    expect(remove).not.toContainElement(action);
-    expect(action.parentElement).toHaveClass("k-badge", "k-badge-clickable");
 
-    await userEvent.click(remove);
-    expect(onRemove).toHaveBeenCalled();
+    await user.click(screen.getByRole("button", { name: "Remove" }));
+
+    expect(onRemove).toHaveBeenCalledTimes(1);
     expect(onClick).not.toHaveBeenCalled();
+  });
 
-    await userEvent.click(action);
+  it("calls only onClick from the action button of a removable badge", async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    const onRemove = vi.fn();
+    render(
+      <Badge onClick={onClick} onRemove={onRemove} ariaLabel="Filter by new">
+        New
+      </Badge>
+    );
+
+    await user.click(screen.getByRole("button", { name: "Filter by new" }));
+
     expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onRemove).not.toHaveBeenCalled();
   });
 
   it("colours a custom badge with contrasting text", () => {
@@ -69,6 +122,7 @@ describe("Badge", () => {
         Dark
       </Badge>
     );
+
     expect(screen.getByText("Dark").parentElement).toHaveStyle({
       backgroundColor: "#000000",
       color: "var(--text-color-light)",
@@ -77,12 +131,14 @@ describe("Badge", () => {
 
   it("throws when custom has no colour", () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
+
     expect(() => render(<Badge variant="custom">Oops</Badge>)).toThrow(
       /requires a `color` prop/
     );
   });
 
   it("keeps a remove click from reaching a clickable parent", async () => {
+    const user = userEvent.setup();
     const onRowClick = vi.fn();
     const onRemove = vi.fn();
     render(
@@ -90,8 +146,10 @@ describe("Badge", () => {
         <Badge onRemove={onRemove}>Tag</Badge>
       </div>
     );
-    await userEvent.click(screen.getByRole("button", { name: "Remove" }));
-    expect(onRemove).toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "Remove" }));
+
+    expect(onRemove).toHaveBeenCalledTimes(1);
     expect(onRowClick).not.toHaveBeenCalled();
   });
 });

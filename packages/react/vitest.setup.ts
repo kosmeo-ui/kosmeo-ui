@@ -1,6 +1,7 @@
 import { cleanup } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
-import { afterEach, beforeEach } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
+import { server } from "./src/hooks/__tests__/server.js";
 
 // jsdom doesn't lay out, so it has no scrollIntoView, and its ranges can't
 // be measured (ProseMirror measures them when RichTextEditor takes focus).
@@ -36,6 +37,12 @@ afterEach(() => {
     `Unexpected console.error: ${first.map(String).join(" ").slice(0, 300)}`
   );
 });
+
+// The fake network: an unhandled request is reported through console.error,
+// which the guard above turns into a failure.
+beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 // Testing Library only auto-cleans when the runner exposes a global afterEach.
 afterEach(() => {

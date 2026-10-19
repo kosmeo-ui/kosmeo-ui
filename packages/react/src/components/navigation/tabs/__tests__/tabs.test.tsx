@@ -10,35 +10,53 @@ const tabs: TabItem[] = [
 ];
 
 describe("Tabs", () => {
-  it("marks the active tab and shows its panel", () => {
+  it.each([
+    ["Two", "true"],
+    ["One", "false"],
+  ])("marks tab %s selected=%s when Two is active", (name, selected) => {
     render(<Tabs tabs={tabs} active="two" onChange={() => {}} />);
-    expect(screen.getByRole("tab", { name: "Two" })).toHaveAttribute(
+
+    expect(screen.getByRole("tab", { name })).toHaveAttribute(
       "aria-selected",
-      "true"
+      selected
     );
-    expect(screen.getByRole("tab", { name: "One" })).toHaveAttribute(
-      "aria-selected",
-      "false"
-    );
+  });
+
+  it("shows the active tab's panel", () => {
+    render(<Tabs tabs={tabs} active="two" onChange={() => {}} />);
+
     expect(screen.getByRole("tabpanel")).toHaveTextContent("Second panel");
   });
 
   it("reports the clicked tab", async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(<Tabs tabs={tabs} active="one" onChange={onChange} />);
-    await userEvent.click(screen.getByRole("tab", { name: "Two" }));
+
+    await user.click(screen.getByRole("tab", { name: "Two" }));
+
     expect(onChange).toHaveBeenCalledWith("two");
   });
 
+  it("disables a disabled tab", () => {
+    render(<Tabs tabs={tabs} active="one" onChange={() => {}} />);
+
+    expect(screen.getByRole("tab", { name: "Three" })).toBeDisabled();
+  });
+
   it("doesn't report a disabled tab", async () => {
+    const user = userEvent.setup();
     const onChange = vi.fn();
     render(<Tabs tabs={tabs} active="one" onChange={onChange} />);
-    await userEvent.click(screen.getByRole("tab", { name: "Three" }));
+
+    await user.click(screen.getByRole("tab", { name: "Three" }));
+
     expect(onChange).not.toHaveBeenCalled();
   });
 
   it("renders only the strip with stripOnly", () => {
     render(<Tabs tabs={tabs} active="one" onChange={() => {}} stripOnly />);
+
     expect(screen.queryByRole("tabpanel")).not.toBeInTheDocument();
   });
 });

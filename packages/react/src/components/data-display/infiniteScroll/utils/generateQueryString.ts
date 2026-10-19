@@ -47,10 +47,10 @@ const generateQueryString = (params: GenerateQueryStringParams): string => {
       queryParams.set(`filter[${key}]`, filter.value);
       queryParams.set(`filter[${key}_op]`, "contains");
     } else if (filter.type === "RANGE") {
-      if (filter.startValue !== undefined) {
+      if (filter.startValue !== undefined && filter.startValue !== "") {
         queryParams.set(`filter[${key}_gte]`, String(filter.startValue));
       }
-      if (filter.endValue !== undefined) {
+      if (filter.endValue !== undefined && filter.endValue !== "") {
         queryParams.set(`filter[${key}_lte]`, String(filter.endValue));
       }
     } else if (filter.type === "SELECT") {

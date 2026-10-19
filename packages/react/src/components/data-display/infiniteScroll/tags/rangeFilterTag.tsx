@@ -32,13 +32,13 @@ const RangeFilterTag = (props: InfiniteScrollRangeFilterTagProps) => {
 
   const tagValue = useMemo(() => {
     const value = filter[filterValue];
-    if (!value) return "";
+    if (value === undefined || value === "") return "";
     if (filter.rangeType === "DATE") {
       return DateTime.fromISO(String(value)).toFormat("D");
     } else if (filter.rangeType === "DATETIME") {
       return DateTime.fromISO(String(value)).toFormat("D ttt");
-    } else if (filter.rangeType === "NUMBER") return value;
-    else if (filter.rangeType === "STRING") return value;
+    }
+    return value;
   }, [filter, filterValue, filter.rangeType]);
 
   const handleRemove = useCallback(() => {

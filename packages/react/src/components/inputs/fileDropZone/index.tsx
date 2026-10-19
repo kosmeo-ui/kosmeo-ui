@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import "./styles.css";
 
 export interface FileDropZoneProps {
@@ -24,6 +24,7 @@ const FileDropZone = ({
   label = "Drag and drop files here",
 }: FileDropZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
+  const inputId = useId();
 
   const validateFileType = (file: File): boolean => {
     if (!accept) return true;
@@ -104,14 +105,14 @@ const FileDropZone = ({
     >
       <p>{label}</p>
       <p>or</p>
-      <label htmlFor="file-drop-zone-input" className="k-file-drop-zone-button">
+      <label htmlFor={inputId} className="k-file-drop-zone-button">
         Browse Files
       </label>
       <input
         type="file"
         accept={accept}
         multiple
-        id="file-drop-zone-input"
+        id={inputId}
         onChange={handleFileChange}
         style={{ display: "none" }}
       />

@@ -51,11 +51,13 @@ afterEach(() => {
 describe("useFloatingPosition", () => {
   it("is null while closed", () => {
     const { result } = renderHook(() => useFloatingPosition({ isOpen: false }));
+
     expect(result.current.position).toBeNull();
   });
 
   it("sits below the anchor at its width by default", () => {
     const { result } = setup("below", rect(100, 50, 200, 30), rect(0, 0, 0, 0));
+
     expect(result.current.position).toEqual({ top: 80, left: 100, width: 200 });
   });
 
@@ -68,6 +70,7 @@ describe("useFloatingPosition", () => {
     const { result } = setup(side, rect(100, 50, 200, 30), rect(0, 0, 80, 40), {
       offset: 4,
     });
+
     expect(result.current.position).toEqual({ ...expected, width: 200 });
   });
 
@@ -75,21 +78,31 @@ describe("useFloatingPosition", () => {
     const { result } = setup("top", rect(0, 0, 20, 20), rect(0, 0, 80, 40), {
       clampViewport: true,
     });
+
     expect(result.current.position).toMatchObject({ top: 8, left: 8 });
   });
 
-  it("recomputes on resize and clears on close", () => {
-    const anchor = rect(100, 50, 200, 30);
-    const { result, rerender } = setup("below", anchor, rect(0, 0, 0, 0));
-
+  it("recomputes on resize", () => {
+    const { result } = setup("below", rect(100, 50, 200, 30), rect(0, 0, 0, 0));
     result.current.anchorRef.current!.getBoundingClientRect = () =>
       rect(120, 60, 200, 30);
+
     act(() => {
       window.dispatchEvent(new Event("resize"));
     });
+
     expect(result.current.position).toEqual({ top: 90, left: 120, width: 200 });
+  });
+
+  it("clears when closed", () => {
+    const { result, rerender } = setup(
+      "below",
+      rect(100, 50, 200, 30),
+      rect(0, 0, 0, 0)
+    );
 
     rerender({ isOpen: false });
+
     expect(result.current.position).toBeNull();
   });
 
@@ -100,6 +113,7 @@ describe("useFloatingPosition", () => {
       rect(0, 0, 80, 40),
       { clampViewport: true }
     );
+
     expect(result.current.position).toMatchObject({
       left: 1000 - 80 - 8,
       top: 800 - 40 - 8,

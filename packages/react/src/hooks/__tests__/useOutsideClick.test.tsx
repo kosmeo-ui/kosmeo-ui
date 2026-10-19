@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import useOutsideClick from "../useOutsideClick.js";
 import { expect, it, vi } from "vitest";
 import { useRef } from "react";
@@ -24,21 +25,44 @@ const Harness = ({
   );
 };
 
-it("calls onOutside for a mousedown outside every ref", () => {
+it.each(["inside", "floating"])(
+  "does not call onOutside for a press on the %s element",
+  async (text) => {
+    const user = userEvent.setup();
+    const onOutside = vi.fn();
+    render(<Harness onOutside={onOutside} />);
+
+    await user.pointer({
+      keys: "[MouseLeft>]",
+      target: screen.getByText(text),
+    });
+
+    expect(onOutside).not.toHaveBeenCalled();
+  }
+);
+
+it("calls onOutside for a press outside every ref", async () => {
+  const user = userEvent.setup();
   const onOutside = vi.fn();
   render(<Harness onOutside={onOutside} />);
 
-  fireEvent.mouseDown(screen.getByText("inside"));
-  fireEvent.mouseDown(screen.getByText("floating"));
-  expect(onOutside).not.toHaveBeenCalled();
+  await user.pointer({
+    keys: "[MouseLeft>]",
+    target: screen.getByText("outside"),
+  });
 
-  fireEvent.mouseDown(screen.getByText("outside"));
   expect(onOutside).toHaveBeenCalledTimes(1);
 });
 
-it("does nothing while disabled", () => {
+it("does nothing while disabled", async () => {
+  const user = userEvent.setup();
   const onOutside = vi.fn();
   render(<Harness onOutside={onOutside} enabled={false} />);
-  fireEvent.mouseDown(screen.getByText("outside"));
+
+  await user.pointer({
+    keys: "[MouseLeft>]",
+    target: screen.getByText("outside"),
+  });
+
   expect(onOutside).not.toHaveBeenCalled();
 });

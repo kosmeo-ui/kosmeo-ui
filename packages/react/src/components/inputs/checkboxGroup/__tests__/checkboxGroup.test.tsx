@@ -1,14 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import CheckboxGroup from "../index.js";
 import { expect, it, vi } from "vitest";
+import CheckboxGroup from "../index.js";
 
 const options = [
   { value: "r", label: "Read" },
   { value: "w", label: "Write" },
 ];
 
-it("checks the selected values", () => {
+it("is named by its label", () => {
   render(
     <CheckboxGroup
       label="Access"
@@ -18,12 +18,41 @@ it("checks the selected values", () => {
       onChange={() => {}}
     />
   );
-  expect(screen.getByText("Access")).toBeInTheDocument();
-  expect(screen.getByLabelText("Read")).not.toBeChecked();
-  expect(screen.getByLabelText("Write")).toBeChecked();
+
+  expect(screen.getByRole("group", { name: "Access" })).toBeVisible();
 });
 
-it("adds and removes values", async () => {
+it("checks the selected values", () => {
+  render(
+    <CheckboxGroup
+      name="access"
+      options={options}
+      values={["w"]}
+      onChange={() => {}}
+    />
+  );
+
+  expect(screen.getByRole("checkbox", { name: "Write" })).toBeChecked();
+});
+
+it("leaves the other values unchecked", () => {
+  render(
+    <CheckboxGroup
+      name="access"
+      options={options}
+      values={["w"]}
+      onChange={() => {}}
+    />
+  );
+
+  expect(screen.getByRole("checkbox", { name: "Read" })).not.toBeChecked();
+});
+
+it.each([
+  ["adds", "Read", ["w", "r"]],
+  ["removes", "Write", []],
+])("%s %s when clicked", async (_verb, label, expected) => {
+  const user = userEvent.setup();
   const onChange = vi.fn();
   render(
     <CheckboxGroup
@@ -34,22 +63,24 @@ it("adds and removes values", async () => {
     />
   );
 
-  await userEvent.click(screen.getByLabelText("Read"));
-  expect(onChange).toHaveBeenLastCalledWith(["w", "r"]);
+  await user.click(screen.getByRole("checkbox", { name: label }));
 
-  await userEvent.click(screen.getByLabelText("Write"));
-  expect(onChange).toHaveBeenLastCalledWith([]);
+  expect(onChange).toHaveBeenCalledWith(expected);
 });
 
-it("disables every option", () => {
-  render(
-    <CheckboxGroup
-      name="access"
-      options={options}
-      values={[]}
-      onChange={() => {}}
-      disabled
-    />
-  );
-  for (const box of screen.getAllByRole("checkbox")) expect(box).toBeDisabled();
-});
+it.each(["Read", "Write"])(
+  "disables %s when the group is disabled",
+  (label) => {
+    render(
+      <CheckboxGroup
+        name="access"
+        options={options}
+        values={[]}
+        onChange={() => {}}
+        disabled
+      />
+    );
+
+    expect(screen.getByRole("checkbox", { name: label })).toBeDisabled();
+  }
+);

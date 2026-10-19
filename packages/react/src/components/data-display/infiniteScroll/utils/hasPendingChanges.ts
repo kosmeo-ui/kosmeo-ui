@@ -34,7 +34,9 @@ export const hasActiveFilters = (
 ): boolean => {
   for (const filter of pendingFilters) {
     if (filter.type === "RANGE") {
-      if (filter.startValue || filter.endValue) return true;
+      if (filter.startValue !== undefined && filter.startValue !== "")
+        return true;
+      if (filter.endValue !== undefined && filter.endValue !== "") return true;
     } else if (filter.type === "SEARCH") {
       if (filter.value) return true;
     } else if (filter.type === "LIST") {
@@ -45,6 +47,10 @@ export const hasActiveFilters = (
   }
   return false;
 };
+
+// An emptied field is "" and an untouched one undefined; both mean unset.
+const isSameValue = (a: unknown, b: unknown) =>
+  a === b || ((a === "" || a === undefined) && (b === "" || b === undefined));
 
 const hasFilterChanges = (
   filters: InfiniteScrollMenuGeneratedFilter[],
@@ -63,22 +69,12 @@ const hasFilterChanges = (
       if (!selected.every((o) => pendingSelected.some((p) => p.id === o.id)))
         return true;
     } else if (filter.type === "SEARCH" && pending.type === "SEARCH") {
-      if (filter.value !== pending.value) {
-        if (!(filter.value === "" && pending.value === undefined)) return true;
-      }
+      if (!isSameValue(filter.value, pending.value)) return true;
     } else if (filter.type === "RANGE" && pending.type === "RANGE") {
-      if (filter.startValue !== pending.startValue) {
-        if (!(filter.startValue === "" && pending.startValue === undefined))
-          return true;
-      }
-      if (filter.endValue !== pending.endValue) {
-        if (!(filter.endValue === "" && pending.endValue === undefined))
-          return true;
-      }
+      if (!isSameValue(filter.startValue, pending.startValue)) return true;
+      if (!isSameValue(filter.endValue, pending.endValue)) return true;
     } else if (filter.type === "LIST" && pending.type === "LIST") {
-      if (filter.list !== pending.list) {
-        if (!(filter.list === "" && pending.list === undefined)) return true;
-      }
+      if (!isSameValue(filter.list, pending.list)) return true;
     }
   }
   return false;

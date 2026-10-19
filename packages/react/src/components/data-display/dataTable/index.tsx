@@ -1,8 +1,8 @@
 "use client";
 
 import { TableColumn, TableLeadingColumn, TableRow } from "./types.js";
+import parseDataKey, { cellText } from "./utils/parseDataKey.js";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import parseDataKey from "./utils/parseDataKey.js";
 import { useMemo, type RefObject } from "react";
 import "../table/styles.css";
 import "./styles.css";
@@ -75,6 +75,7 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
       );
     }
     for (const c of columns) {
+      if (c.hidden) continue;
       const content = c.headerElement ? c.headerElement(c.title) : c.title;
       const alignClass = c.align ? `k-data-table-align-${c.align}` : "";
       headers.push(
@@ -105,11 +106,12 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
       );
     }
     for (const c of columns) {
+      if (c.hidden) continue;
       const alignClass = c.align ? `k-data-table-align-${c.align}` : "";
       const content = c.cellElement
         ? c.cellElement(row.data, row.index)
         : c.dataKey
-          ? parseDataKey(c.dataKey, row.data)
+          ? cellText(parseDataKey(c.dataKey, row.data))
           : undefined;
       cells.push(
         <td
@@ -124,7 +126,8 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
     return cells;
   };
 
-  const columnSpan = columns.length + (leadingColumn ? 1 : 0);
+  const columnSpan =
+    columns.filter((c) => !c.hidden).length + (leadingColumn ? 1 : 0);
 
   const body = shouldVirtualize
     ? (() => {

@@ -321,12 +321,15 @@ it (add a prop) instead of forking.
 ```sh
 cd packages/react
 npm run build    # tsc, then node scripts/copy-css.js (copies src/**/*.css to dist/)
-npm run check    # tsc --noEmit
+npm run check    # tsc --noEmit, then the tests' tsconfig.spec.json
+npm run test     # vitest run
 npm run clean    # rm -rf dist tsconfig.tsbuildinfo
 ```
 
-Or from the root: `npx nx run @kosmeo-ui/react:build`. The package has no
-tests; `npm run check`, `npm run lint` and `npm run format:check` are the gate.
+Or from the root: `npx nx run @kosmeo-ui/react:build`. `npm test`, `npm run check`,
+`npm run lint` and `npm run format:check` are the gate. A change to a component or
+hook comes with tests — the `testing` skill
+([../testing/SKILL.md](../testing/SKILL.md)) says how to write them.
 Every change to the library needs a version plan: `npm run version-plan`.
 
 ## DO
