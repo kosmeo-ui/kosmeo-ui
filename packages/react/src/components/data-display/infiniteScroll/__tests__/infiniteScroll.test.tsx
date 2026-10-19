@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { InfiniteScrollMenu } from "../types.js";
@@ -21,7 +21,7 @@ const menu: InfiniteScrollMenu = {
   ],
 };
 
-const setup = () => {
+const setup = (applyMode?: "immediate" | "manual") => {
   const onQueryChange = vi.fn();
   render(
     <InfiniteScroll
@@ -32,6 +32,7 @@ const setup = () => {
       isLoading={false}
       onQueryChange={onQueryChange}
       onReload={vi.fn()}
+      applyMode={applyMode}
     />
   );
   const lastQuery = () =>
@@ -44,9 +45,9 @@ const selectActive = async () => {
   await userEvent.click(screen.getByRole("checkbox", { name: "Active" }));
 };
 
-describe("InfiniteScroll filters", () => {
+describe("InfiniteScroll, applyMode manual", () => {
   it("shows a tag only once the filter is applied", async () => {
-    const { lastQuery } = setup();
+    const { lastQuery } = setup("manual");
     await selectActive();
     expect(screen.queryByText("Status: Active")).not.toBeInTheDocument();
     expect(lastQuery().has("filter[status]")).toBe(false);
@@ -57,7 +58,7 @@ describe("InfiniteScroll filters", () => {
   });
 
   it("applies the removal when a tag is removed", async () => {
-    const { lastQuery } = setup();
+    const { lastQuery } = setup("manual");
     await selectActive();
     await userEvent.click(screen.getByRole("button", { name: "Apply" }));
 
@@ -68,13 +69,13 @@ describe("InfiniteScroll filters", () => {
   });
 
   it("applies a search on Enter", async () => {
-    const { lastQuery } = setup();
+    const { lastQuery } = setup("manual");
     await userEvent.type(screen.getByLabelText("Name"), "Ada{Enter}");
     expect(lastQuery().get("filter[name]")).toBe("Ada");
   });
 
   it("keeps Reset available while applied filters are active", async () => {
-    const { lastQuery } = setup();
+    const { lastQuery } = setup("manual");
     await selectActive();
     await userEvent.click(screen.getByRole("button", { name: "Apply" }));
     // Unticking leaves nothing pending but the table is still filtered.
@@ -84,5 +85,36 @@ describe("InfiniteScroll filters", () => {
     expect(reset).toBeEnabled();
     await userEvent.click(reset);
     expect(lastQuery().has("filter[status]")).toBe(false);
+  });
+});
+
+describe("InfiniteScroll, applyMode immediate", () => {
+  it("is the default and has no Apply button", () => {
+    setup();
+    expect(
+      screen.queryByRole("button", { name: "Apply" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("applies a ticked option without Apply", async () => {
+    const { lastQuery } = setup();
+    await selectActive();
+    await waitFor(() =>
+      expect(lastQuery().get("filter[status]")).toBe("active")
+    );
+    expect(screen.getByText("Status: Active")).toBeInTheDocument();
+  });
+
+  it("waits for a pause in typing before searching", async () => {
+    const { lastQuery } = setup();
+    await userEvent.type(screen.getByLabelText("Name"), "Ada");
+    expect(lastQuery().has("filter[name]")).toBe(false);
+    await waitFor(() => expect(lastQuery().get("filter[name]")).toBe("Ada"));
+  });
+
+  it("searches at once on Enter", async () => {
+    const { lastQuery } = setup();
+    await userEvent.type(screen.getByLabelText("Name"), "Ada{Enter}");
+    expect(lastQuery().get("filter[name]")).toBe("Ada");
   });
 });

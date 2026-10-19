@@ -262,7 +262,7 @@ it (add a prop) instead of forking.
 
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
-| `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu`, `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
+| `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu`, `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `applyMode="immediate"|"manual"` (default immediate: filters apply as they change), `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
 | `Table` | Static table | `columns`, `rows`, `rowKey`, `onRowClick`, `emptyMessage`, `striped`, `bordered`, `hover`, `maxHeight` |
 | `DataTable` | Table with a leading (selection) column — InfiniteScroll's body | `columns`, `rows` (`TableRow<T>[]`), `leadingColumn`, `onRowClick` |
 | `StatCard` | KPI tile | `label`, `value`, `icon`, `iconVariant`, `trailing`, `href`, `onClick`, `compact` |

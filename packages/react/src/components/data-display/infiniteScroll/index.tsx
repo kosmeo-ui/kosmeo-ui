@@ -83,7 +83,16 @@ interface InfiniteScrollProps<TData> {
   hideSelectColumn?: boolean;
   /** When true, hides the "Fetch Next Page" button */
   hideNextPageButton?: boolean;
+  /**
+   * When filter, sort and page-size changes take effect. `"immediate"`
+   * (default) applies each change as it's made, waiting for a pause in typing
+   * for search and number filters. `"manual"` collects changes until Apply is
+   * clicked. In both, Enter in a filter's text box applies at once.
+   */
+  applyMode?: "immediate" | "manual";
 }
+
+const TYPING_DEBOUNCE_MS = 400;
 
 const InfiniteScroll = <TData extends object>(
   props: InfiniteScrollProps<TData>
@@ -272,6 +281,22 @@ const InfiniteScroll = <TData extends object>(
     pendingLimitOptions,
   ]);
 
+  const applyMode = props.applyMode ?? "immediate";
+
+  // Immediate mode applies pending changes on the next tick, or once typing
+  // pauses. Each keystroke changes handleApply, which restarts the timer.
+  useEffect(() => {
+    if (applyMode !== "immediate" || !hasPendingChanges) return;
+    const delay = pendingChangesUtil.hasTypedFilterChanges(
+      filters,
+      pendingFilters
+    )
+      ? TYPING_DEBOUNCE_MS
+      : 0;
+    const timer = setTimeout(handleApply, delay);
+    return () => clearTimeout(timer);
+  }, [applyMode, hasPendingChanges, handleApply, filters, pendingFilters]);
+
   // Tags show the applied filters, and removing one applies at once. The
   // pending copy of that filter follows; other pending edits are kept.
   const handleTagChange = useCallback(
@@ -336,13 +361,15 @@ const InfiniteScroll = <TData extends object>(
               >
                 Reset
               </Button>
-              <Button
-                size="sm"
-                disabled={!hasPendingChanges}
-                onClick={handleApply}
-              >
-                Apply
-              </Button>
+              {applyMode === "manual" && (
+                <Button
+                  size="sm"
+                  disabled={!hasPendingChanges}
+                  onClick={handleApply}
+                >
+                  Apply
+                </Button>
+              )}
             </Filters>
             <Tags filters={filters} handleNewFilters={handleTagChange} />
           </Col>

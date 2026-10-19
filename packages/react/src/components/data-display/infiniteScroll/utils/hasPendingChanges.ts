@@ -53,6 +53,22 @@ export const hasActiveFilters = (
   return false;
 };
 
+/**
+ * Whether a pending change is in a typed filter (search, or a number or text
+ * range): applied immediately, those wait for a pause in typing.
+ */
+export const hasTypedFilterChanges = (
+  filters: InfiniteScrollMenuGeneratedFilter[],
+  pendingFilters: InfiniteScrollMenuGeneratedFilter[]
+): boolean =>
+  filters.some((filter, i) => {
+    const typed =
+      filter.type === "SEARCH" ||
+      (filter.type === "RANGE" &&
+        (filter.rangeType === "NUMBER" || filter.rangeType === "STRING"));
+    return typed && hasFilterChanges([filter], [pendingFilters[i]]);
+  });
+
 const hasFilterChanges = (
   filters: InfiniteScrollMenuGeneratedFilter[],
   pendingFilters: InfiniteScrollMenuGeneratedFilter[]
