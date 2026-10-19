@@ -1,7 +1,10 @@
+import useInfiniteArchivableCursor from "../../../../hooks/useInfiniteArchivableCursor.js";
 import useInfiniteCursor from "../../../../hooks/useInfiniteCursor.js";
 import { act, render, screen, within } from "@testing-library/react";
+import useInfinite from "../../../../hooks/useInfinite.js";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import type { AxiosInstance } from "axios";
 import InfiniteScroll from "../index.js";
 import type { Mock } from "vitest";
 import { DateTime } from "luxon";
@@ -322,6 +325,80 @@ describe("InfiniteScroll", () => {
         expect(next).not.toHaveBeenCalled();
       });
     });
+
+    it.each([
+      [
+        "useInfinite",
+        () => ({ data: [{ id: 1, name: "Ada" }], total: 1, hasMore: false }),
+        (axios: AxiosInstance) =>
+          useInfinite<Person>({
+            axiosInstance: axios,
+            endpoint: "/people",
+            queryKey: "people",
+          }),
+      ],
+      [
+        "useInfiniteCursor",
+        () => ({
+          data: [{ id: 1, name: "Ada" }],
+          hasMore: false,
+          limit: 25,
+          nextCursor: null,
+        }),
+        (axios: AxiosInstance) =>
+          useInfiniteCursor<Person>({
+            axiosInstance: axios,
+            endpoint: "/people",
+            queryKey: "people",
+          }),
+      ],
+      [
+        "useInfiniteArchivableCursor",
+        () => ({
+          data: [{ id: 1, name: "Ada" }],
+          hasMore: false,
+          limit: 25,
+          nextCursor: null,
+        }),
+        (axios: AxiosInstance) =>
+          useInfiniteArchivableCursor<Person>({
+            axiosInstance: axios,
+            endpoint: "/people",
+            queryKey: "people",
+          }),
+      ],
+    ])(
+      "makes a single request on mount at %s's default page size",
+      async (_, respond, useList) => {
+        const axios = mockAxios(respond);
+        const List = () => {
+          const list = useList(axios.instance);
+          return (
+            <InfiniteScroll<Person>
+              menu={{ title: "People" }}
+              columns={columns}
+              data={list.data}
+              hasMore={list.hasMore}
+              isLoading={list.isLoading}
+              onQueryChange={list.onQueryChange}
+              onReload={list.reload}
+            />
+          );
+        };
+        const Wrapper = createWrapper();
+
+        render(
+          <Wrapper>
+            <List />
+          </Wrapper>
+        );
+
+        await screen.findByRole("cell", { name: "Ada" });
+        expect(axios.get).toHaveBeenCalledExactlyOnceWith(
+          expect.stringContaining("limit=25")
+        );
+      }
+    );
 
     it("requests once when the app passes menu and onReload inline", async () => {
       const axios = mockAxios(() => ({

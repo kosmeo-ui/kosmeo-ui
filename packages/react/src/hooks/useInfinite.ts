@@ -18,7 +18,7 @@ interface UseInfiniteOptions {
   queryKey: string;
   /** Organization ID to scope cache keys (prevents stale cross-org data) */
   orgId?: string | null;
-  /** Initial limit (default: 10) */
+  /** Initial limit (default: 25, InfiniteScroll's default page size) */
   initialLimit?: number;
   /** Whether or not the query should be enabled */
   enabled?: boolean;
@@ -42,7 +42,7 @@ const useInfinite = <T extends { id: number | string }>(
     endpoint,
     queryKey,
     orgId,
-    initialLimit = 10,
+    initialLimit = 25,
   } = options;
 
   const [queryString, setQueryString] = useState(

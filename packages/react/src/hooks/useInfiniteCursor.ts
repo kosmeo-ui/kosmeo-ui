@@ -20,7 +20,7 @@ interface UseInfiniteCursorOptions {
   queryKey: string;
   /** Organization ID to scope cache keys (prevents stale cross-org data). */
   orgId?: string | null;
-  /** Initial page size (default: 10). */
+  /** Initial page size (default: 25, InfiniteScroll's default). */
   initialLimit?: number;
   enabled?: boolean;
 }
@@ -41,7 +41,7 @@ const useInfiniteCursor = <T extends { id: number | string }>(
     endpoint,
     queryKey,
     orgId,
-    initialLimit = 10,
+    initialLimit = 25,
     enabled = true,
   } = options;
 
