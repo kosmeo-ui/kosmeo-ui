@@ -1,10 +1,16 @@
 "use client";
 
-import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
 import useFocusTrap from "../../../hooks/useFocusTrap.js";
 import Button from "../../buttons/button/index.js";
 import Portal from "../portal/index.js";
 import "./styles.css";
+import React, {
+  PropsWithChildren,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 export type ModalSize = "sm" | "md" | "lg" | "full";
 
@@ -33,6 +39,7 @@ const Modal = (props: ModalProps) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const pressStartedOnOverlay = useRef(false);
+  const titleId = useId();
 
   useEffect(() => {
     if (props.show) {
@@ -85,8 +92,13 @@ const Modal = (props: ModalProps) => {
           className={`k-modal-content ${isAnimating ? "closing" : ""} ${size}`}
           role="dialog"
           aria-modal="true"
+          aria-labelledby={props.title ? titleId : undefined}
         >
-          {props.title && <div className="k-modal-header">{props.title}</div>}
+          {props.title && (
+            <div id={titleId} className="k-modal-header">
+              {props.title}
+            </div>
+          )}
           <div className="k-modal-body">{props.children}</div>
           <div className="k-modal-footer">
             {props.footerButtons ? (
