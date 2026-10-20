@@ -1,3 +1,14 @@
+## 1.0.1 (2026-10-20)
+
+### 🩹 Fixes
+
+- Escape in an open MultiSelect, Typeahead, SearchList or SearchSelect list now closes only the list, not an enclosing Modal. A Modal with a `title` is named by it (`aria-labelledby`), so screen readers announce the title with the dialog. ([#10](https://github.com/kosmeo-ui/kosmeo-ui/pull/10))
+
+### ❤️ Thank You
+
+- Cameron Perera @cameronperera-vivo
+- Claude Opus 5.5
+
 # 1.0.0 (2026-10-19)
 
 ### 🚀 Features
