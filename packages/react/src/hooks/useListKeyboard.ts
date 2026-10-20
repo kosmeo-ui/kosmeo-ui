@@ -49,6 +49,10 @@ const useListKeyboard = ({
           }
           break;
         case "Escape":
+          // Keep the press from also reaching an enclosing Modal's document
+          // listener, which would close the dialog along with the list.
+          e.preventDefault();
+          e.stopPropagation();
           onClose();
           setHighlightedIndex(-1);
           break;

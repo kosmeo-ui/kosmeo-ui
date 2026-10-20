@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import MultiSelect from "../../../inputs/multiSelect/index.js";
 import { act, render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import Button from "../../../buttons/button/index.js";
@@ -18,6 +19,12 @@ describe("Modal", () => {
     render(<Modal show onClose={() => {}} />);
 
     expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
+  });
+
+  it("is named by its title", () => {
+    render(<Modal show onClose={() => {}} title="Settings" />);
+
+    expect(screen.getByRole("dialog", { name: "Settings" })).toBeVisible();
   });
 
   it("maps size to a class", () => {
@@ -73,6 +80,42 @@ describe("Modal", () => {
     await user.keyboard("{Escape}");
 
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  describe("with a dropdown inside", () => {
+    const options = [{ name: "Created" }, { name: "Deleted" }];
+
+    it("closes only the open list on Escape", async () => {
+      const user = userEvent.setup();
+      const onClose = vi.fn();
+      render(
+        <Modal show onClose={onClose}>
+          <MultiSelect label="Events" options={options} labelKey="name" />
+        </Modal>
+      );
+      await user.click(screen.getByRole("combobox", { name: "Events" }));
+
+      await user.keyboard("{Escape}");
+
+      expect(screen.queryByRole("listbox")).not.toBeInTheDocument();
+      expect(onClose).not.toHaveBeenCalled();
+    });
+
+    it("closes on Escape while the list is closed", async () => {
+      const user = userEvent.setup();
+      const onClose = vi.fn();
+      render(
+        <Modal show onClose={onClose}>
+          <MultiSelect label="Events" options={options} labelKey="name" />
+        </Modal>
+      );
+      await user.click(screen.getByRole("combobox", { name: "Events" }));
+      await user.keyboard("{Escape}");
+
+      await user.keyboard("{Escape}");
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
   });
 
   it("closes on a backdrop click", async () => {
