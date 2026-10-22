@@ -52,6 +52,7 @@ export { default as Spinner } from "./feedback/spinner/index.js";
 export { default as Table } from "./data-display/table/index.js";
 export { default as FormGrid } from "./forms/formGrid/index.js";
 export { default as Portal } from "./overlays/portal/index.js";
+export { default as ThemeProvider } from "./theme/themeProvider/index.js";
 export { default as InfoRow } from "./forms/infoRow/index.js";
 export type { CountryCode } from "libphonenumber-js";
 export { default as Button } from "./buttons/button/index.js";
@@ -123,6 +124,12 @@ export type {
   AddressBlockAddress,
 } from "./data-display/addressBlock/index.js";
 export type { PaginationProps } from "./navigation/pagination/index.js";
+export type {
+  Theme,
+  ThemeToken,
+  ThemeTokens,
+  ThemeProviderProps,
+} from "./theme/themeProvider/index.js";
 export type { TableFiltersProps } from "./data-display/tableFilters/index.js";
 export type {
   StepperProps,

@@ -138,7 +138,11 @@ h6 {
   --k-border-color-hover: #999;
   --k-border-color-disabled: #e0e0e0;
   --k-border-color-active: var(--k-primary-color);
-  --k-border-shadow-color-active: rgba(23, 37, 125, 0.2);
+  --k-border-shadow-color-active: color-mix(
+    in srgb,
+    var(--k-primary-color) 20%,
+    transparent
+  );
 
   /* Shadow Colors */
   --k-shadow-color: rgba(0, 0, 0, 0.1);
@@ -228,7 +232,11 @@ h6 {
   --k-border-color-hover: #6e7480;
   --k-border-color-disabled: #3a3f4a;
   --k-border-color-active: var(--k-primary-color);
-  --k-border-shadow-color-active: rgba(74, 95, 181, 0.35);
+  --k-border-shadow-color-active: color-mix(
+    in srgb,
+    var(--k-primary-color) 35%,
+    transparent
+  );
 
   /* Shadow Colors — stronger on dark */
   --k-shadow-color: rgba(0, 0, 0, 0.5);
