@@ -45,17 +45,20 @@ const useInfiniteCursor = <T extends { id: number | string }>(
     enabled = true,
   } = options;
 
-  const [queryString, setQueryString] = useState(`limit=${initialLimit}`);
-  const lastQueryRef = useRef(queryString);
+  const defaultQuery = `limit=${initialLimit}`;
+  // Null until the first onQueryChange: fetching the default first would be
+  // thrown away when InfiniteScroll applies its menu's sort and filters.
+  const [queryString, setQueryString] = useState<string | null>(null);
+  const lastQueryRef = useRef<string | null>(null);
 
   const query = useInfiniteQuery<CursorPageResponse<T>, Error>({
     queryKey: [`${queryKey}-infinite`, orgId ?? null, queryString],
-    enabled,
+    enabled: enabled && queryString !== null,
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (last) =>
       last.hasMore && last.nextCursor ? last.nextCursor : undefined,
     queryFn: async ({ pageParam }) => {
-      const params = new URLSearchParams(queryString);
+      const params = new URLSearchParams(queryString ?? defaultQuery);
       // Cursor mode never uses offset — strip it if a caller leaks one in.
       params.delete("offset");
       if (pageParam) params.set("cursor", pageParam as string);
@@ -90,6 +93,12 @@ const useInfiniteCursor = <T extends { id: number | string }>(
     setQueryString(normalized);
   }, []);
 
+  // InfiniteScroll sends its menu's query from an effect, and a child's effects
+  // run before this one. Nothing sent one? Load the default page.
+  useEffect(() => {
+    if (lastQueryRef.current === null) onQueryChange(defaultQuery);
+  }, [defaultQuery, onQueryChange]);
+
   const reload = useCallback(() => {
     queryRef.current.refetch();
   }, []);
@@ -120,7 +129,7 @@ const useInfiniteCursor = <T extends { id: number | string }>(
   return {
     data: allData,
     hasMore,
-    isLoading: query.isLoading,
+    isLoading: query.isLoading || (enabled && queryString === null),
     isReloading: query.isRefetching && allData.length > 0,
     error: query.error,
     total: 0,

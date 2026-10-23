@@ -47,33 +47,34 @@ const useInfinite = <T extends { id: number | string }>(
     initialLimit = 25,
   } = options;
 
-  const [queryString, setQueryString] = useState(
-    `limit=${initialLimit}&offset=0`
-  );
+  const defaultQuery = `limit=${initialLimit}&offset=0`;
+  // Null until the first onQueryChange: fetching the default first would be
+  // thrown away when InfiniteScroll applies its menu's sort and filters.
+  const [queryString, setQueryString] = useState<string | null>(null);
   const [allData, setAllData] = useState<T[]>([]);
   const [reloadKey, setReloadKey] = useState(0);
   const isNextPageRef = useRef(false);
-  const lastQueryStringRef = useRef(queryString);
+  const lastQueryStringRef = useRef<string | null>(null);
   const queryStringRef = useRef(queryString);
 
-  // Keep ref in sync with state
   queryStringRef.current = queryString;
 
   const queryFn = async (): Promise<InfiniteResponse<T>> => {
-    const res = await axiosInstance.get(`${endpoint}?${queryString}`);
+    const res = await axiosInstance.get(
+      `${endpoint}?${queryString ?? defaultQuery}`
+    );
     return res.data;
   };
 
   const query = useQuery({
     queryKey: [`${queryKey}-infinite`, orgId ?? null, queryString, reloadKey],
     queryFn,
+    enabled: queryString !== null,
     staleTime: 0,
     gcTime: 0,
   });
 
-  // Handle query change from InfiniteScroll
   const handleQueryChange = useCallback((newQueryString: string) => {
-    // Prevent unnecessary updates if query string hasn't changed
     if (newQueryString === lastQueryStringRef.current) return;
     lastQueryStringRef.current = newQueryString;
 
@@ -81,20 +82,23 @@ const useInfinite = <T extends { id: number | string }>(
     const offset = parseInt(params.get("offset") || "0", 10);
 
     if (offset === 0) {
-      // Fresh fetch - reset data only if we have data
       setAllData((prev) => (prev.length > 0 ? [] : prev));
       isNextPageRef.current = false;
     } else {
-      // Next page fetch
       isNextPageRef.current = true;
     }
 
     setQueryString(newQueryString);
   }, []);
 
-  // Reload from the beginning (reset offset to 0)
+  // InfiniteScroll sends its menu's query from an effect, and a child's effects
+  // run before this one. Nothing sent one? Load the default page.
+  useEffect(() => {
+    if (lastQueryStringRef.current === null) handleQueryChange(defaultQuery);
+  }, [defaultQuery, handleQueryChange]);
+
   const reload = useCallback(() => {
-    const params = new URLSearchParams(queryStringRef.current);
+    const params = new URLSearchParams(queryStringRef.current ?? defaultQuery);
     params.set("offset", "0");
     const newQueryString = params.toString();
 
@@ -105,9 +109,8 @@ const useInfinite = <T extends { id: number | string }>(
     setAllData([]);
     setReloadKey((k) => k + 1);
     setQueryString(newQueryString);
-  }, []);
+  }, [defaultQuery]);
 
-  // Merge data when query succeeds
   useEffect(() => {
     if (!query.data) return;
 
@@ -115,7 +118,6 @@ const useInfinite = <T extends { id: number | string }>(
     if (!newData) return;
 
     if (isNextPageRef.current) {
-      // Append new data for next page
       setAllData((prev) => {
         const existingIds = new Set(prev.map((item) => item.id));
         const uniqueNewData = newData.filter(
@@ -126,7 +128,6 @@ const useInfinite = <T extends { id: number | string }>(
       });
       isNextPageRef.current = false;
     } else {
-      // Replace data for fresh fetch - only update if different
       setAllData((prev) => {
         if (
           prev.length === newData.length &&
@@ -143,7 +144,7 @@ const useInfinite = <T extends { id: number | string }>(
     data: allData,
     // After a failure, stop offering pages: reload() retries.
     hasMore: query.isError ? false : (query.data?.hasMore ?? true),
-    isLoading: query.isLoading,
+    isLoading: query.isLoading || queryString === null,
     isReloading: query.isFetching && allData.length > 0,
     error: query.error,
     total: query.data?.total ?? 0,

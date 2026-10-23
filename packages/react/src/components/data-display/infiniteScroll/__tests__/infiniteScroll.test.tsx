@@ -243,6 +243,12 @@ describe("InfiniteScroll", () => {
       });
     });
 
+    it("reports a menu with preset filters once on mount", () => {
+      const { onQueryChange } = setup(withFilters(status([2])));
+
+      expect(onQueryChange).toHaveBeenCalledTimes(1);
+    });
+
     it("reports the first page again when reloadData changes", () => {
       const { onQueryChange, rerender } = setup({ reloadData: false });
       onQueryChange.mockClear();

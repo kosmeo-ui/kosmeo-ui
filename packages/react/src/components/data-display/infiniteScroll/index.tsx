@@ -34,6 +34,11 @@ const DEFAULT_LIMIT_OPTIONS: InfiniteScrollMenuLimitOption[] = [
 
 const SCROLL_THRESHOLD = 50;
 
+const menuFilters = (
+  menu: InfiniteScrollMenu
+): InfiniteScrollMenuGeneratedFilter[] =>
+  (menu.filters ?? []).map((f, i) => ({ ...f, filterId: `${f.dataKey}-${i}` }));
+
 interface InfiniteScrollProps<TData> {
   menu: InfiniteScrollMenu;
   /** The data array to be rendered in the infinite scroll */
@@ -105,12 +110,8 @@ const InfiniteScroll = <TData extends object>(
   }
 
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
-  const [filters, setFilters] = useState<InfiniteScrollMenuGeneratedFilter[]>(
-    []
-  );
-  const [pendingFilters, setPendingFilters] = useState<
-    InfiniteScrollMenuGeneratedFilter[]
-  >([]);
+  const [filters, setFilters] = useState(() => menuFilters(props.menu));
+  const [pendingFilters, setPendingFilters] = useState(filters);
   const [sortBy, setSortBy] = useState(props.menu.sort?.sortDataKeys || []);
   const [pendingSortBy, setPendingSortBy] = useState(
     props.menu.sort?.sortDataKeys || []
@@ -208,12 +209,14 @@ const InfiniteScroll = <TData extends object>(
   ]);
   const onReloadRef = useRef(props.onReload);
   onReloadRef.current = props.onReload;
-  const menuApplied = useRef(false);
+  // The state starts from the mounting menu: applying it again would send a
+  // second query, replacing the first one's request.
+  const appliedMenuKey = useRef(menuKey);
 
   useEffect(() => {
-    const generatedFilters = (props.menu.filters ?? []).map((f, i) => {
-      return { ...f, filterId: `${f.dataKey}-${i}` };
-    });
+    if (menuKey === appliedMenuKey.current) return;
+    appliedMenuKey.current = menuKey;
+    const generatedFilters = menuFilters(props.menu);
     setFilters(generatedFilters);
     setPendingFilters(generatedFilters);
     const sortDataKeys = props.menu.sort?.sortDataKeys || [];
@@ -225,9 +228,7 @@ const InfiniteScroll = <TData extends object>(
     const limits = props.menu.limitOptions || DEFAULT_LIMIT_OPTIONS;
     setLimitOptions(limits);
     setPendingLimitOptions(limits);
-    // On mount the first query already loads the data.
-    if (menuApplied.current) onReloadRef.current();
-    menuApplied.current = true;
+    onReloadRef.current();
   }, [menuKey]);
 
   useEffect(() => {
