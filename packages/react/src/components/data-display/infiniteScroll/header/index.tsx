@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {
   SortDirection as SortDirectionType,
+  InfiniteScrollMenu,
   InfiniteScrollMenuLimitOption,
   InfiniteScrollMenuSortDataKey,
   TableRow,
@@ -22,6 +23,7 @@ import {
 
 interface HeaderProps<TData> {
   title: string;
+  titleAs: NonNullable<InfiniteScrollMenu["titleAs"]>;
   optionsDropdown?: React.ReactNode;
   onDownload?: () => void;
   limitOptions: InfiniteScrollMenuLimitOption[];
@@ -39,10 +41,11 @@ interface HeaderProps<TData> {
 }
 
 const Header = <TData extends object>(props: HeaderProps<TData>) => {
+  const Title = props.titleAs;
   return (
     <div className="k-infinite-scroll-header">
       <div className="k-infinite-scroll-header-buttons-container">
-        <p className="k-infinite-scroll-header-title">{props.title}</p>
+        <Title className="k-infinite-scroll-header-title">{props.title}</Title>
         <IconButton
           size="sm"
           variant="secondary"
