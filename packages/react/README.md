@@ -53,7 +53,7 @@ import "@kosmeo-ui/react/styles.css";
 
 **Feedback**: `Alert`, `Badge`, `Spinner`, `LoadingOverlay`, `ProgressBar`, `EmptyState`, `Tooltip`
 
-**Data display**: `InfiniteScroll`, `Table`, `DataTable`, `StatCard`, `SummaryRow`, `ListCard`,
+**Data display**: `InfiniteScroll`, `Table` (with `TableCellLink`, `TableCellButton`), `DataTable`, `StatCard`, `SummaryRow`, `ListCard`,
 `ListRow`, `TagCard`, `ImagePreview`, `ColorSwatch`, `AddressBlock`, `RecoveryCodeGrid`,
 `SecretDisplay`
 

@@ -49,7 +49,11 @@ export { default as Dropdown } from "./inputs/dropdown/index.js";
 export { default as TextArea } from "./inputs/textArea/index.js";
 export { default as Tooltip } from "./feedback/tooltip/index.js";
 export { default as Spinner } from "./feedback/spinner/index.js";
-export { default as Table } from "./data-display/table/index.js";
+export {
+  TableCellLink,
+  TableCellButton,
+  default as Table,
+} from "./data-display/table/index.js";
 export { default as FormGrid } from "./forms/formGrid/index.js";
 export { default as Portal } from "./overlays/portal/index.js";
 export { default as ThemeProvider } from "./theme/themeProvider/index.js";
@@ -119,6 +123,10 @@ export type {
   TableRow,
   TableLeadingColumn,
 } from "./data-display/dataTable/index.js";
+export type {
+  TableCellLinkProps,
+  TableCellButtonProps,
+} from "./data-display/table/index.js";
 export type {
   AddressBlockProps,
   AddressBlockAddress,

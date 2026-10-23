@@ -1,7 +1,14 @@
+import { Link, MemoryRouter, Route, Routes } from "react-router";
 import { render, screen, within } from "@testing-library/react";
-import Table, { TableColumn, TableProps } from "../index.js";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { ReactNode } from "react";
+import Table, {
+  TableCellButton,
+  TableCellLink,
+  TableColumn,
+  TableProps,
+} from "../index.js";
 
 interface Person {
   name: string;
@@ -38,6 +45,31 @@ const setup = (props: Partial<TableProps<Person>> = {}) =>
   render(<Table<Person> columns={columns} rows={[ada, alan]} {...props} />);
 
 const bodyRow = (name: RegExp) => screen.getByRole("row", { name });
+
+/** A Name column whose cells are `cell(row)`, beside the City column. */
+const withNameCell = (
+  cell: (row: Person) => ReactNode
+): TableColumn<Person>[] => [
+  { title: "Name", cellElement: cell },
+  { title: "City", dataKey: "city" },
+];
+
+const routerLinkColumns = withNameCell((row) => (
+  <TableCellLink as={Link} to={`/people/${row.name}`}>
+    {row.name}
+  </TableCellLink>
+));
+
+/** Plays an app with a route for each person, the table on "/". */
+const renderRouted = (table: ReactNode) =>
+  render(
+    <MemoryRouter>
+      <Routes>
+        <Route path="/" element={table} />
+        <Route path="/people/:name" element={<h1>Person page</h1>} />
+      </Routes>
+    </MemoryRouter>
+  );
 
 describe("Table", () => {
   it("renders a header for each column, in order", () => {
@@ -239,6 +271,121 @@ describe("Table", () => {
     expect(onDelete).toHaveBeenCalledExactlyOnceWith(ada);
   });
 
+  it("reaches a TableCellLink with Tab", async () => {
+    const user = userEvent.setup();
+    renderRouted(
+      <Table<Person>
+        columns={routerLinkColumns}
+        rows={[ada, alan]}
+        onRowClick={() => {}}
+      />
+    );
+
+    await user.tab();
+
+    expect(screen.getByRole("link", { name: "Ada" })).toHaveFocus();
+  });
+
+  it("follows a TableCellLink on Enter", async () => {
+    const user = userEvent.setup();
+    renderRouted(
+      <Table<Person>
+        columns={routerLinkColumns}
+        rows={[ada, alan]}
+        onRowClick={() => {}}
+      />
+    );
+    await user.tab();
+
+    await user.keyboard("{Enter}");
+
+    expect(screen.getByRole("heading", { name: "Person page" })).toBeVisible();
+  });
+
+  it("does not call onRowClick when Enter follows a TableCellLink", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    renderRouted(
+      <Table<Person>
+        columns={routerLinkColumns}
+        rows={[ada, alan]}
+        onRowClick={onRowClick}
+      />
+    );
+    await user.tab();
+
+    await user.keyboard("{Enter}");
+
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+
+  it.each<[string, TableColumn<Person>[], { name: string; role: string }]>([
+    [
+      "a TableCellLink",
+      withNameCell((row) => (
+        <TableCellLink href={`#${row.name}`}>{row.name}</TableCellLink>
+      )),
+      { role: "link", name: "Ada" },
+    ],
+    [
+      "a TableCellButton",
+      withNameCell((row) => (
+        <TableCellButton onClick={() => {}}>{row.name}</TableCellButton>
+      )),
+      { role: "button", name: "Ada" },
+    ],
+    [
+      "a plain button",
+      withNameCell((row) => <button>Open {row.name}</button>),
+      { role: "button", name: "Open Ada" },
+    ],
+  ])(
+    "does not call onRowClick on a click on %s in a cell",
+    async (_, cellColumns, target) => {
+      const user = userEvent.setup();
+      const onRowClick = vi.fn();
+      setup({ onRowClick, columns: cellColumns });
+
+      await user.click(screen.getByRole(target.role, { name: target.name }));
+
+      expect(onRowClick).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(["Meta", "Control"])(
+    "does not call onRowClick on a %s-click on a link in a cell",
+    async (modifier) => {
+      const user = userEvent.setup();
+      const onRowClick = vi.fn();
+      setup({
+        onRowClick,
+        columns: withNameCell((row) => (
+          <TableCellLink href={`#${row.name}`}>{row.name}</TableCellLink>
+        )),
+      });
+
+      await user.keyboard(`{${modifier}>}`);
+      await user.click(screen.getByRole("link", { name: "Ada" }));
+
+      expect(onRowClick).not.toHaveBeenCalled();
+    }
+  );
+
+  it("calls onRowClick once on a click on plain text in a row with a link", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    setup({
+      onRowClick,
+      columns: withNameCell((row) => (
+        <TableCellLink href={`#${row.name}`}>{row.name}</TableCellLink>
+      )),
+    });
+
+    await user.click(screen.getByRole("cell", { name: "Wilmslow" }));
+
+    expect(onRowClick).toHaveBeenCalledExactlyOnceWith(alan, 1);
+  });
+
   it("marks the rows isRowSelected picks", () => {
     setup({ isRowSelected: (row) => row.name === "Alan" });
 
@@ -373,5 +520,61 @@ describe("Table", () => {
     setup({ maxHeight: 300, style: { marginTop: "4px" } });
 
     expect(screen.getByRole("table")).not.toHaveAttribute("style");
+  });
+});
+
+describe("TableCellLink", () => {
+  it("renders the href of a react-router Link's to", () => {
+    render(
+      <MemoryRouter>
+        <TableCellLink as={Link} to="/users/1">
+          Ada
+        </TableCellLink>
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("link", { name: "Ada" })).toHaveAttribute(
+      "href",
+      "/users/1"
+    );
+  });
+
+  it("renders a plain anchor with its href by default", () => {
+    render(<TableCellLink href="/users/1">Ada</TableCellLink>);
+
+    expect(screen.getByRole("link", { name: "Ada" })).toHaveAttribute(
+      "href",
+      "/users/1"
+    );
+  });
+});
+
+describe("TableCellButton", () => {
+  it.each([
+    ["Enter", "{Enter}"],
+    ["Space", " "],
+  ])("calls onClick on %s", async (_, key) => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    render(<TableCellButton onClick={onClick}>Ada</TableCellButton>);
+    await user.tab();
+
+    await user.keyboard(key);
+
+    expect(onClick).toHaveBeenCalledOnce();
+  });
+
+  it("does not submit a surrounding form", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault());
+    render(
+      <form onSubmit={onSubmit}>
+        <TableCellButton>Ada</TableCellButton>
+      </form>
+    );
+
+    await user.click(screen.getByRole("button", { name: "Ada" }));
+
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 });

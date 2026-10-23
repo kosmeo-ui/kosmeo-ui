@@ -1,7 +1,7 @@
 import { useRecentCustomers } from "../api/get-recent-customers";
 import { PLAN_LABELS, STATUS_VARIANTS } from "../utils/labels";
+import { Link, useNavigate } from "react-router";
 import type { Customer } from "@/types/api";
-import { useNavigate } from "react-router";
 import { currency } from "@/utils/format";
 import { paths } from "@/config/paths";
 import {
@@ -9,11 +9,19 @@ import {
   Card,
   EmptyState,
   Table,
+  TableCellLink,
   type TableColumn,
 } from "@kosmeo-ui/react";
 
 const columns: TableColumn<Customer>[] = [
-  { title: "Customer", dataKey: "name" },
+  {
+    title: "Customer",
+    cellElement: (c) => (
+      <TableCellLink as={Link} to={paths.app.customer.getHref(c.id)}>
+        {c.name}
+      </TableCellLink>
+    ),
+  },
   { title: "Company", dataKey: "company" },
   { title: "Plan", width: "8rem", cellElement: (c) => PLAN_LABELS[c.plan] },
   {
