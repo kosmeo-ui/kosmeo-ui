@@ -1,3 +1,19 @@
+## 1.1.0 (2026-10-23)
+
+### 🚀 Features
+
+- `ThemeProvider` lets an app set its own values for the theme tokens, light and dark, by typed camelCased name (`primaryColor` for `--k-primary-color`). A family color given without its hover and active shades gets them mixed from it. `--k-border-shadow-color-active` now follows `--k-primary-color` instead of a fixed color, so focus rings match a custom primary. ([#12](https://github.com/kosmeo-ui/kosmeo-ui/pull/12), [#6](https://github.com/kosmeo-ui/kosmeo-ui/issues/6), [#7](https://github.com/kosmeo-ui/kosmeo-ui/issues/7))
+- `InfiniteScroll`'s title is now a heading, so screen readers' heading navigation finds it. It renders as an `<h2>` by default instead of a `<p>`, and `menu.titleAs` (`"h1" | "h2" | "h3" | "h4" | "p"`) picks the element: `"h1"` when the list is the page's main content, or `"p"` to keep the old markup. It looks the same at every level. ([#16](https://github.com/kosmeo-ui/kosmeo-ui/pull/16))
+
+### 🩹 Fixes
+
+- A list whose `InfiniteScroll` menu has a default sort or pre-selected filters now makes one request on mount instead of two or three. `useInfinite`, `useInfiniteCursor` and `useInfiniteArchivableCursor` wait for the first `onQueryChange` before fetching, and fetch their default page (`limit=…`) on their own when nothing sends one; they report `isLoading` until then, so the list shows its loading state rather than "No results found". `InfiniteScroll` sends its menu's sort and filters in its first query. ([#17](https://github.com/kosmeo-ui/kosmeo-ui/pull/17), [#14](https://github.com/kosmeo-ui/kosmeo-ui/issues/14))
+
+### ❤️ Thank You
+
+- Cameron Perera @cameronperera-vivo
+- Claude Opus 5.5
+
 ## 1.0.1 (2026-10-20)
 
 ### 🩹 Fixes
