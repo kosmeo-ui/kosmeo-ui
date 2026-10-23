@@ -42,7 +42,7 @@ src/
 ```
 
 Buckets: `layout/`, `forms/`, `inputs/`, `buttons/`, `overlays/`, `feedback/`,
-`data-display/`, `navigation/`. Folder names are camelCase (`borderedSection/`,
+`data-display/`, `navigation/`, `theme/`. Folder names are camelCase (`borderedSection/`,
 `infiniteScroll/`).
 
 ## Editing components
@@ -129,8 +129,13 @@ Everything else: **add a class, add a rule, use a var**.
 **All colors come from CSS variables defined in `src/styles.css`.** Never write
 hex/rgb/hsl literals or named colors (`white`) in component CSS or inline styles.
 Themes swap by setting `data-theme="dark"` on `<html>` — the consuming app does
-that; the library only defines both token sets. `color-mix(in srgb, var(--k-x) 15%,
-var(--k-background-color))` is fine for tints (Badge `subtle` does it).
+that; the library only defines both token sets. An app overrides tokens with
+`ThemeProvider` (`theme={{ light, dark }}`, camelCased token names), which writes them on
+`:root:not([data-theme="dark"])` and `:root[data-theme="dark"]` so they outrank `styles.css`;
+`theme/themeProvider/tokens.ts` lists every token, and a test keeps it in step with `styles.css`.
+`color-mix(in srgb, var(--k-x) 15%, var(--k-background-color))` is fine for tints (Badge
+`subtle` does it), and for a token derived from another (`--k-border-shadow-color-active`
+follows `--k-primary-color`).
 
 ### Token families
 
@@ -245,6 +250,12 @@ it (add a prop) instead of forking.
 | `Modal` | Standard modal (focus trap, Escape closes) | `show`, `onClose`, `title`, `footerButtons=[…]`, `size="sm"\|"md"\|"lg"\|"full"` |
 | `ConfirmationModal` | Confirm/cancel dialog with a danger button | `show`, `handleHide`, `handleConfirm`, `title`, `body` (string), `confirmButtonText`, `cancelButtonText`, `isLoading` |
 | `Portal` | Render into `document.body` | Building block for Modal, Tooltip, Typeahead, SearchList, SearchSelect |
+
+### Theme — `theme/`
+
+| Component | Purpose | Key props |
+|-----------|---------|-----------|
+| `ThemeProvider` | App-defined token values for light and dark | `theme={{ light, dark }}` — `ThemeTokens` by camelCased name; missing `…Hover`/`…Active` shades are mixed from the family color |
 
 ### Feedback — `feedback/`
 

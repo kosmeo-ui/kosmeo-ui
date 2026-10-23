@@ -29,8 +29,9 @@ src/
 │   ├── data-display/           # Table, DataTable, InfiniteScroll, TableFilters, ListCard, ListRow,
 │   │                           # TagCard, ImagePreview, ColorSwatch, AddressBlock,
 │   │                           # RecoveryCodeGrid, SecretDisplay, StatCard, SummaryRow
-│   └── navigation/             # Tabs, TabButton, Breadcrumbs, Stepper, Pagination,
-│                               # Sidebar (+ SidebarNavGroup, SidebarNavLink)
+│   ├── navigation/             # Tabs, TabButton, Breadcrumbs, Stepper, Pagination,
+│   │                           # Sidebar (+ SidebarNavGroup, SidebarNavLink)
+│   └── theme/                  # ThemeProvider (+ tokens.ts, every theme token)
 └── hooks/
     ├── useInfinite.ts          # Infinite scroll data fetching (React Query)
     ├── useInfiniteCursor.ts    # Cursor-based infinite scroll
@@ -70,6 +71,8 @@ import "@kosmeo-ui/react/styles.css";
 
 **Overlays**: `Modal`, `ConfirmationModal`, `Portal`
 
+**Theme**: `ThemeProvider`
+
 **Feedback**: `Alert`, `Badge`, `Spinner`, `LoadingOverlay`, `ProgressBar`, `EmptyState`, `Tooltip`
 
 **Data display**: `Table`, `DataTable`, `InfiniteScroll`, `TableFilters`, `ListCard`, `ListRow`, `TagCard`, `ImagePreview`, `ColorSwatch`, `AddressBlock`, `RecoveryCodeGrid`, `SecretDisplay`, `StatCard`, `SummaryRow`
@@ -91,7 +94,7 @@ type FlexJustify = "start" | "center" | "end" | "between" | "around";
 
 ## CSS Convention
 
-All CSS classes use `k-` prefix: `k-button`, `k-button-primary`, `k-button-sm`. CSS variables use a `--k-` prefix: `--k-primary-color`, `--k-text-size-sm`. Theme tokens are defined in `styles.css` on `:root` (light) and `[data-theme="dark"]`. Consuming apps set `document.documentElement.dataset.theme = "dark"` to switch themes; persisting the choice and falling back to `prefers-color-scheme` is the app's job.
+All CSS classes use `k-` prefix: `k-button`, `k-button-primary`, `k-button-sm`. CSS variables use a `--k-` prefix: `--k-primary-color`, `--k-text-size-sm`. Theme tokens are defined in `styles.css` on `:root` (light) and `[data-theme="dark"]`. Consuming apps set `document.documentElement.dataset.theme = "dark"` to switch themes; persisting the choice and falling back to `prefers-color-scheme` is the app's job. `ThemeProvider` overrides tokens with the app's own values for either theme; a token added to `styles.css` also goes in `theme/themeProvider/tokens.ts` (a test fails until it does).
 
 ## Build
 

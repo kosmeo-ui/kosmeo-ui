@@ -76,6 +76,28 @@ Theme tokens are defined in `src/styles.css` on `:root` (light) and `[data-theme
 is `--k-` prefixed (`--k-primary-color`, `--k-text-color`) so it can't collide with your app's own
 variables.
 
+`ThemeProvider` does the overriding from React, with each token named in camelCase
+(`primaryColor` for `--k-primary-color`) and typed:
+
+```tsx
+import { ThemeProvider, type Theme } from "@kosmeo-ui/react";
+
+const theme: Theme = {
+  light: { primaryColor: "#0f766e", primaryColorText: "#0f766e", backgroundColor: "#f6faf9" },
+  dark: { primaryColor: "#2dd4bf", primaryColorText: "#5eead4", backgroundColor: "#0b1513" },
+};
+
+<ThemeProvider theme={theme}>
+  <App />
+</ThemeProvider>;
+```
+
+Its rules outrank `styles.css` whatever order the CSS loads in. Tokens you leave out keep the
+library's values. A `primaryColor`, `secondaryColor`, `warningColor`, `dangerColor` or
+`successColor` without its `…Hover`/`…Active` shades gets them mixed from it. The `…Text` tokens
+are tuned for contrast against the page, so set them yourself when you change a family's color.
+Switching between light and dark is still `data-theme` on `<html>`.
+
 `styles.css` is a global base, not only tokens: it also resets `html`, `body`, headings, links,
 form-control fonts and scrollbars. Import it once, in the app's entry point.
 
