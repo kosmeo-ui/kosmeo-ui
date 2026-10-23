@@ -75,7 +75,13 @@ interface InfiniteScrollProps<TData> {
   onDownload?: () => void;
   loadingDataMessage?: string;
   emptyMessage?: string;
-  /** Function called when a row is clicked. Receives the row data. */
+  /**
+   * Function called when a row is clicked. Receives the row data. A mouse
+   * convenience only: rows can't be focused. Put a `TableCellLink` or
+   * `TableCellButton` in the row's primary cell (name, email) so the record
+   * is reachable by keyboard. Clicks on a link, button or other control in a
+   * cell don't fire this.
+   */
   onRowClick?: (data: TData) => void;
   /** When true, hides the header, filters, and tags while keeping infinite scroll functionality */
   hideFilters?: boolean;

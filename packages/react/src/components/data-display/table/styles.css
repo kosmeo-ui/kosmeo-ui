@@ -53,6 +53,26 @@
   cursor: pointer;
 }
 
+/* ===== Links and buttons in a cell ===== */
+.k-table-cell-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.k-table-cell-link:hover,
+.k-table-cell-link:focus-visible {
+  text-decoration: underline;
+}
+
+button.k-table-cell-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
 /* ===== Row selection (caller marks rows with data-selected="true") ===== */
 .k-table tbody tr[data-selected="true"] {
   background-color: var(--k-primary-color-background-light);

@@ -277,6 +277,7 @@ it (add a prop) instead of forking.
 | `TableFilters` | InfiniteScroll's filter bar on its own, for paged or other tables | `filters` (as `menu.filters`), `onChange(params)` (spread into `usePaginated`'s `params`), `applyMode` |
 | `Table` | Static table | `columns`, `rows`, `rowKey`, `onRowClick`, `emptyMessage`, `striped`, `bordered`, `hover`, `maxHeight` |
 | `DataTable` | Table with a leading (selection) column — InfiniteScroll's body | `columns`, `rows` (`TableRow<T>[]`), `leadingColumn`, `onRowClick` |
+| `TableCellLink` / `TableCellButton` | Keyboard-reachable link or button in a row's primary cell (Table, DataTable, InfiniteScroll) | `TableCellLink as={Link} to` — `as` defaults to `a`; `TableCellButton onClick` |
 | `StatCard` | KPI tile | `label`, `value`, `icon`, `iconVariant`, `trailing`, `href`, `onClick`, `compact` |
 | `SummaryRow` | Strip of label/value metrics | `items: SummaryRowItem[]` |
 | `ListCard` | Card of label/value items | `listTitle`, `items`, `headerActions`, `footerButtons` |
@@ -290,6 +291,11 @@ it (add a prop) instead of forking.
 
 `TableColumn<T>`: `title`, `dataKey`, `width`/`minWidth`/`maxWidth`, `align`,
 `hidden`, `disableRowClick`, `headerElement`, `cellElement(row, index)`.
+
+`onRowClick` is a mouse convenience — rows are not focusable. Give a clickable table a
+`TableCellLink` (or `TableCellButton`, for a dialog) in the row's primary cell, with badges
+and other extras outside it. Row click ignores clicks on any link, button or control in a
+cell, so those need neither `stopPropagation` nor `disableRowClick`.
 
 ### Navigation — `navigation/`
 

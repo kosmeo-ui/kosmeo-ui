@@ -3,6 +3,7 @@
 import { TableColumn, TableLeadingColumn, TableRow } from "./types.js";
 import parseDataKey, { cellText } from "./utils/parseDataKey.js";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import handleRowClick from "./utils/rowClick.js";
 import { useMemo, type RefObject } from "react";
 import "../table/styles.css";
 import "./styles.css";
@@ -12,7 +13,12 @@ export interface DataTableProps<TData> {
   rows: TableRow<TData>[];
   /** Optional leading column (used by InfiniteScroll for checkbox). */
   leadingColumn?: TableLeadingColumn<TData>;
-  /** Row click handler. Receives the row data. */
+  /**
+   * Row click handler. Receives the row data. A mouse convenience only: rows
+   * can't be focused. Put a `TableCellLink` or `TableCellButton` in the row's
+   * primary cell (name, email) so the record is reachable by keyboard. Clicks
+   * on a link, button or other control in a cell don't fire this.
+   */
   onRowClick?: (data: TData) => void;
   /**
    * Scroll container to virtualize against. When set AND the row count
@@ -158,7 +164,11 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
                   data-index={vr.index}
                   ref={virtualizer.measureElement}
                   className={onRowClick ? "k-data-table-row-clickable" : ""}
-                  onClick={() => onRowClick?.(row.data)}
+                  onClick={
+                    onRowClick
+                      ? (e) => handleRowClick(e, () => onRowClick(row.data))
+                      : undefined
+                  }
                 >
                   {renderRow(row)}
                 </tr>
@@ -180,7 +190,11 @@ const DataTable = <TData extends object>(props: DataTableProps<TData>) => {
         <tr
           key={row.index}
           className={onRowClick ? "k-data-table-row-clickable" : ""}
-          onClick={() => onRowClick?.(row.data)}
+          onClick={
+            onRowClick
+              ? (e) => handleRowClick(e, () => onRowClick(row.data))
+              : undefined
+          }
         >
           {renderRow(row)}
         </tr>
