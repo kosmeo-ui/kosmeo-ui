@@ -335,6 +335,7 @@ const InfiniteScroll = <TData extends object>(
           <Col size="sm">
             <Header<TData>
               title={props.menu.title}
+              titleAs={props.menu.titleAs ?? "h2"}
               limitOptions={pendingLimitOptions}
               sortBy={pendingSortBy}
               sortDirection={pendingSortDirection}

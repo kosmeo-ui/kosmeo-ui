@@ -1444,6 +1444,39 @@ describe("InfiniteScroll", () => {
       expect(screen.getByText("People")).toBeVisible();
     });
 
+    it("shows the title as a level 2 heading by default", () => {
+      setup();
+
+      expect(
+        screen.getByRole("heading", { level: 2, name: "People" })
+      ).toBeVisible();
+    });
+
+    it.each([
+      ["h1", 1],
+      ["h2", 2],
+      ["h3", 3],
+      ["h4", 4],
+    ] as const)("shows the title as an %s with titleAs", (titleAs, level) => {
+      setup({ menu: { title: "People", titleAs } });
+
+      expect(
+        screen.getByRole("heading", { level, name: "People" })
+      ).toBeVisible();
+    });
+
+    it('shows the title as no heading with titleAs "p"', () => {
+      setup({ menu: { title: "People", titleAs: "p" } });
+
+      expect(screen.queryByRole("heading")).not.toBeInTheDocument();
+    });
+
+    it('still shows the title with titleAs "p"', () => {
+      setup({ menu: { title: "People", titleAs: "p" } });
+
+      expect(screen.getByText("People")).toBeVisible();
+    });
+
     it("calls onReload on Refresh", async () => {
       const user = userEvent.setup();
       const { onReload } = setup();

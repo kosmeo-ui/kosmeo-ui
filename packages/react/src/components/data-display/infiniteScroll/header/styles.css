@@ -18,6 +18,9 @@
   font-size: 1.25rem;
   font-weight: bold;
   margin: 0;
+  /* Undo the global h1-h6 rule, so every titleAs looks like the <p>. */
+  line-height: inherit;
+  color: inherit;
 }
 
 .k-infinite-scroll-header-limit-sort-container {

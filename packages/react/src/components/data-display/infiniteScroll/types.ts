@@ -13,6 +13,8 @@ export type SortDirection = "asc" | "desc";
 
 export interface InfiniteScrollMenu {
   title: string;
+  /** Element for the title. Defaults to `h2`; `p` makes it not a heading. */
+  titleAs?: "h1" | "h2" | "h3" | "h4" | "p";
   limitOptions?: InfiniteScrollMenuLimitOption[];
   filters?: InfiniteScrollMenuFilter[];
   sort?: InfiniteScrollMenuSort;

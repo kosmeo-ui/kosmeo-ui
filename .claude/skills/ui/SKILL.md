@@ -273,7 +273,7 @@ it (add a prop) instead of forking.
 
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
-| `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu`, `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `applyMode="immediate"|"manual"` (default immediate: filters apply as they change), `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
+| `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu` (`menu.titleAs="h1"|"h2"|"h3"|"h4"|"p"` sets the title's element, default `h2`; `h1` when the list is the page, so no separate `SectionHeader` is needed), `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `applyMode="immediate"|"manual"` (default immediate: filters apply as they change), `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
 | `TableFilters` | InfiniteScroll's filter bar on its own, for paged or other tables | `filters` (as `menu.filters`), `onChange(params)` (spread into `usePaginated`'s `params`), `applyMode` |
 | `Table` | Static table | `columns`, `rows`, `rowKey`, `onRowClick`, `emptyMessage`, `striped`, `bordered`, `hover`, `maxHeight` |
 | `DataTable` | Table with a leading (selection) column — InfiniteScroll's body | `columns`, `rows` (`TableRow<T>[]`), `leadingColumn`, `onRowClick` |
