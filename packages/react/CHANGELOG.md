@@ -1,3 +1,24 @@
+## 1.1.0 (2026-10-26)
+
+### 🚀 Features
+
+- `TableCellLink` and `TableCellButton` give a clickable `Table`, `DataTable` or `InfiniteScroll` a keyboard- and screen-reader-reachable way to open a row: put one in the row's primary cell. `TableCellLink` is polymorphic (`as={Link} to="/users/1"`, or a plain `href`), so middle-click, open in new tab and copy link work too. Row click is now a mouse convenience that ignores clicks on any link, button or other control inside the row, so those no longer need `stopPropagation` or `disableRowClick`, and a router link in a cell no longer navigates twice. A control in a leading cell with `disableRowClick: false` no longer fires the row click; a click on the cell around it still does. ([#18](https://github.com/kosmeo-ui/kosmeo-ui/pull/18))
+- `Form` checks each field with the browser's own validation (`pattern`, `minLength`, `type`, `min`/`max`) as well as `required`, and marks only the fields that fail, with `aria-invalid`: fields that pass are no longer outlined in green, which read as "accepted" for values the server could still reject. After the first submit a field is checked again as it's edited, focus moves to the first invalid field, and the message is a banner at the top of the form instead of a toast, which a `Modal`'s overlay covered. A new `error` prop shows the app's own form-level error (such as the server's reason for a 400) in the same place. `Input` takes `pattern`, `minLength` and `maxLength`, and its `error` now marks it `aria-invalid` with a red border and describes it, as `helperText` does. The `k-input-valid`, `k-input-invalid` and `k-form-validating` classes are gone, and so is the `react-toastify` dependency. ([#19](https://github.com/kosmeo-ui/kosmeo-ui/pull/19))
+
+  Below 640px, `InfiniteScroll`'s and `TableFilters`' filter bar folds behind a "Filters" toggle that counts the filters that are set, and opens one filter to a row, so the table is no longer pushed below the fold on a phone.
+
+- `ThemeProvider` lets an app set its own values for the theme tokens, light and dark, by typed camelCased name (`primaryColor` for `--k-primary-color`). A family color given without its hover and active shades gets them mixed from it. `--k-border-shadow-color-active` now follows `--k-primary-color` instead of a fixed color, so focus rings match a custom primary. ([#12](https://github.com/kosmeo-ui/kosmeo-ui/pull/12), [#6](https://github.com/kosmeo-ui/kosmeo-ui/issues/6), [#7](https://github.com/kosmeo-ui/kosmeo-ui/issues/7))
+- `InfiniteScroll`'s title is now a heading, so screen readers' heading navigation finds it. It renders as an `<h2>` by default instead of a `<p>`, and `menu.titleAs` (`"h1" | "h2" | "h3" | "h4" | "p"`) picks the element: `"h1"` when the list is the page's main content, or `"p"` to keep the old markup. It looks the same at every level. ([#16](https://github.com/kosmeo-ui/kosmeo-ui/pull/16))
+
+### 🩹 Fixes
+
+- A list whose `InfiniteScroll` menu has a default sort or pre-selected filters now makes one request on mount instead of two or three. `useInfinite`, `useInfiniteCursor` and `useInfiniteArchivableCursor` wait for the first `onQueryChange` before fetching, and fetch their default page (`limit=…`) on their own when nothing sends one; they report `isLoading` until then, so the list shows its loading state rather than "No results found". `InfiniteScroll` sends its menu's sort and filters in its first query. ([#17](https://github.com/kosmeo-ui/kosmeo-ui/pull/17), [#14](https://github.com/kosmeo-ui/kosmeo-ui/issues/14))
+
+### ❤️ Thank You
+
+- Cameron Perera @cameronperera-vivo
+- Claude Opus 5.5
+
 ## 1.0.1 (2026-10-20)
 
 ### 🩹 Fixes
