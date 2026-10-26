@@ -1,7 +1,9 @@
+import { TableCellButton, TableCellLink } from "../../table/index.js";
+import { Link, MemoryRouter, Route, Routes } from "react-router";
 import { render, screen, within } from "@testing-library/react";
+import { ComponentProps, ReactNode, useRef } from "react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { useRef } from "react";
 import DataTable, {
   DataTableProps,
   TableColumn,
@@ -62,16 +64,66 @@ const people = (count: number) =>
   );
 
 /** Plays an app that hands DataTable its scroll container. */
-const Scrolling = ({ rows }: { rows: TableRow<Person>[] }) => {
+const Scrolling = ({
+  rows,
+  ...props
+}: { rows: TableRow<Person>[] } & Partial<DataTableProps<Person>>) => {
   const ref = useRef<HTMLDivElement>(null);
   return (
     <div ref={ref}>
-      <DataTable<Person> columns={columns} rows={rows} scrollParentRef={ref} />
+      <DataTable<Person>
+        columns={columns}
+        rows={rows}
+        scrollParentRef={ref}
+        {...props}
+      />
     </div>
   );
 };
 
 const bodyRow = (name: RegExp) => screen.getByRole("row", { name });
+
+/**
+ * Gives every element a height, so the virtualizer sees a viewport and
+ * renders a window of rows; jsdom has no layout and reports 0.
+ */
+const stubLayout = () =>
+  vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockReturnValue(400);
+
+/**
+ * Renders twice, as an app re-renders when its data arrives: the scroll
+ * container's ref is attached only after DataTable's first layout effect,
+ * so the virtualizer finds it on the second render.
+ */
+const renderVirtualized = (props: ComponentProps<typeof Scrolling>) => {
+  const { rerender } = render(<Scrolling {...props} />);
+  rerender(<Scrolling {...props} />);
+};
+
+/** A Name column whose cells are `cell(data)`, beside the City column. */
+const withNameCell = (
+  cell: (data: Person) => ReactNode
+): TableColumn<Person>[] => [
+  { title: "Name", cellElement: cell },
+  { title: "City", dataKey: "city" },
+];
+
+const routerLinkColumns = withNameCell((data) => (
+  <TableCellLink as={Link} to={`/people/${data.name}`}>
+    {data.name}
+  </TableCellLink>
+));
+
+/** Plays an app with a route for each person, the table on "/". */
+const renderRouted = (table: ReactNode) =>
+  render(
+    <MemoryRouter>
+      <Routes>
+        <Route path="/" element={table} />
+        <Route path="/people/:name" element={<h1>Person page</h1>} />
+      </Routes>
+    </MemoryRouter>
+  );
 
 describe("DataTable", () => {
   it("renders a header for each column, in order", () => {
@@ -239,9 +291,170 @@ describe("DataTable", () => {
       leadingColumn: { ...selectColumn, disableRowClick: false },
     });
 
-    await user.click(screen.getByRole("checkbox", { name: "Select row 1" }));
+    await user.click(within(bodyRow(/Ada/)).getAllByRole("cell")[0]);
 
     expect(onRowClick).toHaveBeenCalledExactlyOnceWith(ada);
+  });
+
+  it("does not call onRowClick from the leading cell's checkbox when its disableRowClick is false", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    setup({
+      onRowClick,
+      leadingColumn: { ...selectColumn, disableRowClick: false },
+    });
+
+    await user.click(screen.getByRole("checkbox", { name: "Select row 1" }));
+
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+
+  it("reaches a TableCellLink with Tab", async () => {
+    const user = userEvent.setup();
+    renderRouted(
+      <DataTable<Person>
+        columns={routerLinkColumns}
+        rows={toRows([ada, alan])}
+        onRowClick={() => {}}
+      />
+    );
+
+    await user.tab();
+
+    expect(screen.getByRole("link", { name: "Ada" })).toHaveFocus();
+  });
+
+  it("follows a TableCellLink on Enter", async () => {
+    const user = userEvent.setup();
+    renderRouted(
+      <DataTable<Person>
+        columns={routerLinkColumns}
+        rows={toRows([ada, alan])}
+        onRowClick={() => {}}
+      />
+    );
+    await user.tab();
+
+    await user.keyboard("{Enter}");
+
+    expect(screen.getByRole("heading", { name: "Person page" })).toBeVisible();
+  });
+
+  it("does not call onRowClick when Enter follows a TableCellLink", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    renderRouted(
+      <DataTable<Person>
+        columns={routerLinkColumns}
+        rows={toRows([ada, alan])}
+        onRowClick={onRowClick}
+      />
+    );
+    await user.tab();
+
+    await user.keyboard("{Enter}");
+
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+
+  it.each<[string, TableColumn<Person>[], { name: string; role: string }]>([
+    [
+      "a TableCellLink",
+      withNameCell((data) => (
+        <TableCellLink href={`#${data.name}`}>{data.name}</TableCellLink>
+      )),
+      { role: "link", name: "Ada" },
+    ],
+    [
+      "a TableCellButton",
+      withNameCell((data) => (
+        <TableCellButton onClick={() => {}}>{data.name}</TableCellButton>
+      )),
+      { role: "button", name: "Ada" },
+    ],
+    [
+      "a plain button",
+      withNameCell((data) => <button>Open {data.name}</button>),
+      { role: "button", name: "Open Ada" },
+    ],
+  ])(
+    "does not call onRowClick on a click on %s in a cell",
+    async (_, cellColumns, target) => {
+      const user = userEvent.setup();
+      const onRowClick = vi.fn();
+      setup({ onRowClick, columns: cellColumns });
+
+      await user.click(screen.getByRole(target.role, { name: target.name }));
+
+      expect(onRowClick).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(["Meta", "Control"])(
+    "does not call onRowClick on a %s-click on a link in a cell",
+    async (modifier) => {
+      const user = userEvent.setup();
+      const onRowClick = vi.fn();
+      setup({
+        onRowClick,
+        columns: withNameCell((data) => (
+          <TableCellLink href={`#${data.name}`}>{data.name}</TableCellLink>
+        )),
+      });
+
+      await user.keyboard(`{${modifier}>}`);
+      await user.click(screen.getByRole("link", { name: "Ada" }));
+
+      expect(onRowClick).not.toHaveBeenCalled();
+    }
+  );
+
+  it("calls onRowClick once on a click on plain text in a row with a link", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    setup({
+      onRowClick,
+      columns: withNameCell((data) => (
+        <TableCellLink href={`#${data.name}`}>{data.name}</TableCellLink>
+      )),
+    });
+
+    await user.click(screen.getByRole("cell", { name: "Wilmslow" }));
+
+    expect(onRowClick).toHaveBeenCalledExactlyOnceWith(alan);
+  });
+
+  it("does not call onRowClick on a click on a button in a virtualized row", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    stubLayout();
+    renderVirtualized({
+      rows: people(101),
+      onRowClick,
+      columns: withNameCell((data) => <button>Open {data.name}</button>),
+    });
+
+    await user.click(screen.getByRole("button", { name: "Open Person 0" }));
+
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+
+  it("calls onRowClick once on a click on plain text in a virtualized row", async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    stubLayout();
+    const rows = people(101);
+    renderVirtualized({
+      rows,
+      onRowClick,
+      columns: withNameCell((data) => <button>Open {data.name}</button>),
+    });
+
+    await user.click(
+      within(bodyRow(/Person 0/)).getByRole("cell", { name: "London" })
+    );
+
+    expect(onRowClick).toHaveBeenCalledExactlyOnceWith(rows[0].data);
   });
 
   it.each<[string, Partial<DataTableProps<Person>>, string]>([

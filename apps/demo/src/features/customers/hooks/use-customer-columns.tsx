@@ -1,8 +1,8 @@
 import { faEnvelope, faEye } from "@fortawesome/free-solid-svg-icons";
 import { PLAN_LABELS, STATUS_VARIANTS } from "../utils/labels";
 import { currency, formatDate } from "@/utils/format";
+import { Link, useNavigate } from "react-router";
 import type { Customer } from "@/types/api";
-import { useNavigate } from "react-router";
 import { paths } from "@/config/paths";
 import { toast } from "react-toastify";
 import { useMemo } from "react";
@@ -10,6 +10,7 @@ import {
   Badge,
   IconButton,
   RowActions,
+  TableCellLink,
   Tooltip,
   type TableColumn,
 } from "@kosmeo-ui/react";
@@ -20,7 +21,17 @@ export const useCustomerColumns = (): TableColumn<Customer>[] => {
 
   return useMemo(
     () => [
-      { title: "Name", dataKey: "name", minWidth: "10rem" },
+      {
+        title: "Name",
+        minWidth: "10rem",
+        // Row click is mouse-only; the link makes each customer reachable by
+        // keyboard, and opens in a new tab on a middle click.
+        cellElement: (c) => (
+          <TableCellLink as={Link} to={paths.app.customer.getHref(c.id)}>
+            {c.name}
+          </TableCellLink>
+        ),
+      },
       { title: "Company", dataKey: "company", minWidth: "10rem" },
       {
         title: "Plan",

@@ -2,8 +2,14 @@
 
 import parseDataKey, { cellText } from "../dataTable/utils/parseDataKey.js";
 import type { TableColumn, TableRow } from "../dataTable/types.js";
-import { ReactNode } from "react";
+import handleRowClick from "../dataTable/utils/rowClick.js";
 import "./styles.css";
+import {
+  ButtonHTMLAttributes,
+  ComponentPropsWithoutRef,
+  ElementType,
+  ReactNode,
+} from "react";
 
 export interface TableProps<TData> {
   columns: TableColumn<TData>[];
@@ -14,8 +20,11 @@ export interface TableProps<TData> {
    */
   rowKey?: (row: TData, index: number) => string | number;
   /**
-   * Row click handler. Cells with `disableRowClick` on their column won't
-   * fire this. When set, rows render `cursor: pointer` automatically.
+   * Row click handler, a mouse convenience only: rows can't be focused. Put
+   * a `TableCellLink` or `TableCellButton` in the row's primary cell (name,
+   * email) so the record is reachable by keyboard. Clicks on a link, button
+   * or other control in a cell, and on cells with `disableRowClick` on their
+   * column, don't fire this. When set, rows render `cursor: pointer`.
    */
   onRowClick?: (row: TData, index: number) => void;
   /**
@@ -98,7 +107,11 @@ const Table = <TData,>({
             return (
               <tr
                 key={key}
-                onClick={onRowClick ? () => onRowClick(row, i) : undefined}
+                onClick={
+                  onRowClick
+                    ? (e) => handleRowClick(e, () => onRowClick(row, i))
+                    : undefined
+                }
                 data-selected={
                   isRowSelected && isRowSelected(row, i) ? "true" : undefined
                 }
@@ -150,6 +163,45 @@ const Table = <TData,>({
     </div>
   );
 };
+
+type TableCellLinkOwnProps<E extends ElementType> = {
+  /** Element type used for the link. Pass `Link` from react-router. Defaults to `a`. */
+  as?: E;
+  children: ReactNode;
+};
+
+export type TableCellLinkProps<E extends ElementType = "a"> =
+  TableCellLinkOwnProps<E> &
+    Omit<ComponentPropsWithoutRef<E>, keyof TableCellLinkOwnProps<E>>;
+
+/**
+ * A link to the row's record, for its primary cell. Keep badges and other
+ * extras outside it, so its accessible name is just the record's name.
+ */
+export const TableCellLink = <E extends ElementType = "a">(
+  props: TableCellLinkProps<E>
+) => {
+  const { as, children, ...rest } = props as {
+    as?: ElementType;
+    children: ReactNode;
+  } & Record<string, unknown>;
+  const Component: ElementType = as ?? "a";
+  return (
+    <Component {...rest} className="k-table-cell-link">
+      {children}
+    </Component>
+  );
+};
+
+export type TableCellButtonProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "type"
+>;
+
+/** `TableCellLink` for a row that opens a dialog rather than a page. */
+export const TableCellButton = (props: TableCellButtonProps) => (
+  <button {...props} type="button" className="k-table-cell-link" />
+);
 
 export default Table;
 export type { TableColumn, TableRow };

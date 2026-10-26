@@ -43,7 +43,9 @@ export interface TableColumn<TData> {
   /** Text alignment for the column content. Defaults to 'left' */
   align?: "left" | "center" | "right";
   /**
-   * When true, clicking on cells in this column will not trigger the row click handler
+   * When true, clicking anywhere in this column's cells will not trigger the
+   * row click handler. Links, buttons and other controls in any cell already
+   * don't, so this is only needed to stop clicks on a cell's plain content.
    */
   disableRowClick?: boolean;
   /**
