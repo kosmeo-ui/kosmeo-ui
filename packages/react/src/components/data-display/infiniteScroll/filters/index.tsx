@@ -1,7 +1,10 @@
 "use client";
 
+import { ReactNode, SetStateAction, useCallback, useId, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { InfiniteScrollMenuGeneratedFilter } from "../types.js";
-import { ReactNode, SetStateAction, useCallback } from "react";
+import { filterParams } from "../utils/generateQueryString.js";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import SelectFilter from "./selectFilter.js";
 import SearchFilter from "./searchFilter.js";
 import RangeFilter from "./rangeFilter.js";
@@ -27,6 +30,12 @@ const isTextEntry = (target: EventTarget) =>
   !["checkbox", "radio", "button", "submit"].includes(target.type);
 
 const Filters = (props: InfiniteScrollMenuFiltersProps) => {
+  const [open, setOpen] = useState(false);
+  const filtersId = useId();
+  const setCount = props.pendingFilters.filter(
+    (f) => Object.keys(filterParams([f])).length > 0
+  ).length;
+
   const handleFilterChange = useCallback(
     (filter: InfiniteScrollMenuGeneratedFilter) => {
       props.handleNewPendingFilters((prevFilters) =>
@@ -80,8 +89,22 @@ const Filters = (props: InfiniteScrollMenuFiltersProps) => {
   };
 
   return (
-    <div className="k-menu-filters-container" onKeyDown={handleKeyDown}>
-      <div className="k-menu-filters">
+    <div
+      className={`k-menu-filters-container${open ? " k-menu-filters-open" : ""}`}
+      onKeyDown={handleKeyDown}
+    >
+      {/* Shown only on narrow screens, where the filters start hidden. */}
+      <button
+        type="button"
+        className="k-menu-filters-toggle"
+        aria-expanded={open}
+        aria-controls={filtersId}
+        onClick={() => setOpen(!open)}
+      >
+        <FontAwesomeIcon icon={faFilter} />
+        {setCount > 0 ? `Filters (${setCount})` : "Filters"}
+      </button>
+      <div id={filtersId} className="k-menu-filters">
         {props.pendingFilters.map(getFilter)}
       </div>
       {props.children && (

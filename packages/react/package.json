@@ -69,8 +69,7 @@
     "@tiptap/react": "^3.26.0",
     "@tiptap/starter-kit": "^3.26.0",
     "libphonenumber-js": "^1.13.6",
-    "luxon": "^3.7.2",
-    "react-toastify": "^11.1.0"
+    "luxon": "^3.7.2"
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.104.2",

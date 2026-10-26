@@ -19,6 +19,8 @@ interface FieldShellProps {
   error?: ReactNode;
   /** Optional helper text rendered below the input (hidden when `error` is set). */
   helperText?: ReactNode;
+  /** Id for the error or helper text, for the control's `aria-describedby`. */
+  messageId?: string;
   /** The input element itself. */
   children: ReactNode;
   /** Internal-only: additional class for sibling ui-component shells to apply field-type modifiers. */
@@ -34,6 +36,7 @@ const FieldShell = ({
   labelAside,
   error,
   helperText,
+  messageId,
   children,
   className = "",
 }: FieldShellProps) => (
@@ -59,9 +62,13 @@ const FieldShell = ({
     )}
     {children}
     {error ? (
-      <div className="k-field-shell-error">{error}</div>
+      <div id={messageId} className="k-field-shell-error">
+        {error}
+      </div>
     ) : helperText ? (
-      <div className="k-field-shell-helper">{helperText}</div>
+      <div id={messageId} className="k-field-shell-helper">
+        {helperText}
+      </div>
     ) : null}
   </div>
 );

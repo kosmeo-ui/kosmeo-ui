@@ -49,6 +49,12 @@ interface InputProps extends PropsWithSize {
   max?: string | number;
   /** **_Optional_** minimum value for the input */
   min?: string | number;
+  /** **_Optional_** a regular expression the whole value must match; Form checks it on submit */
+  pattern?: string;
+  /** **_Optional_** fewest characters the value may have; Form checks it on submit */
+  minLength?: number;
+  /** **_Optional_** most characters the value may have */
+  maxLength?: number;
   /** **_Optional_** whether to show character count */
   showCharCount?: boolean;
   /** **_Optional_** whether the input should be focused when it first loads */
@@ -61,7 +67,7 @@ interface InputProps extends PropsWithSize {
   prefix?: ReactNode;
   /** **_Optional_** inline addon rendered on the right (unit suffix, currency code). */
   suffix?: ReactNode;
-  /** **_Optional_** error message rendered below the input (replaces helperText if both set). */
+  /** **_Optional_** error message rendered below the input (replaces helperText if both set); marks the input invalid. */
   error?: ReactNode;
   /** **_Optional_** helper text rendered below the input (hidden when `error` is set). */
   helperText?: ReactNode;
@@ -130,6 +136,8 @@ const Input = (props: InputProps) => {
 
   const generatedId = useId();
   const inputId = props.id || `input-${generatedId}`;
+  const messageId = `${inputId}-message`;
+  const hasMessage = !!props.error || !!props.helperText;
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -178,6 +186,7 @@ const Input = (props: InputProps) => {
       labelAside={charCount}
       error={props.error}
       helperText={props.helperText}
+      messageId={messageId}
     >
       <div
         className={`k-input-wrapper${hasAddon ? " k-input-wrapper-addon" : ""}`}
@@ -192,6 +201,9 @@ const Input = (props: InputProps) => {
           value={props.value}
           max={props.max}
           min={props.min}
+          pattern={props.pattern}
+          minLength={props.minLength}
+          maxLength={props.maxLength}
           required={required}
           autoFocus={props.autoFocus}
           autoComplete={props.autoComplete}
@@ -208,6 +220,8 @@ const Input = (props: InputProps) => {
           aria-label={props["aria-label"]}
           aria-controls={props["aria-controls"]}
           aria-activedescendant={props["aria-activedescendant"]}
+          aria-invalid={props.error ? true : undefined}
+          aria-describedby={hasMessage ? messageId : undefined}
           className={inputClasses}
         />
         {showClear && (
