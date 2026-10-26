@@ -68,6 +68,11 @@ export { default as Modal } from "./overlays/modal/index.js";
 export { default as Tabs } from "./navigation/tabs/index.js";
 export { default as Input } from "./inputs/input/index.js";
 export { default as Page } from "./layout/page/index.js";
+export { default as SectionLayout } from "./layout/sectionLayout/index.js";
+export {
+  AppTopBarLink,
+  default as AppTopBar,
+} from "./layout/appTopBar/index.js";
 export { default as Card } from "./layout/card/index.js";
 export { default as Form } from "./forms/form/index.js";
 export { default as Row } from "./layout/row/index.js";
@@ -104,6 +109,11 @@ export type { DetailFieldProps } from "./forms/detailField/index.js";
 export type { FormActionsProps } from "./forms/formActions/index.js";
 export type { ListRowProps } from "./data-display/listRow/index.js";
 export type { AuthPageProps } from "./layout/authPage/index.js";
+export type { SectionLayoutProps } from "./layout/sectionLayout/index.js";
+export type {
+  AppTopBarProps,
+  AppTopBarLinkProps,
+} from "./layout/appTopBar/index.js";
 export type { FormGridProps } from "./forms/formGrid/index.js";
 export type { InfoRowProps } from "./forms/infoRow/index.js";
 export type {

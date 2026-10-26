@@ -1,0 +1,137 @@
+.k-app-top-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 3rem;
+  padding: 0 1rem;
+  background-color: var(--k-primary-color);
+  color: var(--k-text-color-light);
+}
+
+.k-app-top-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 2rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.k-app-top-bar-brand > img {
+  width: auto;
+  height: 1.75rem;
+}
+
+.k-app-top-bar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* The class's display would otherwise override the attribute. */
+.k-app-top-bar-nav[hidden] {
+  display: none;
+}
+
+.k-app-top-bar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  height: 3rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 2px solid transparent;
+  color: var(--k-text-color-light);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.k-app-top-bar-link:hover {
+  background-color: var(--k-overlay-light-weak);
+  color: var(--k-text-color-light);
+}
+
+/* Browser default focus rings can vanish on the primary background. */
+.k-app-top-bar-link:focus-visible,
+.k-app-top-bar-menu-button:focus-visible {
+  outline: 2px solid var(--k-text-color-light);
+  outline-offset: -2px;
+}
+
+.k-app-top-bar-link.active {
+  border-bottom-color: var(--k-text-color-light);
+  background-color: var(--k-overlay-light-weak);
+}
+
+.k-app-top-bar-link > svg {
+  width: 1rem;
+}
+
+.k-app-top-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+/* ===== Narrow screens (NARROW_SCREEN in hooks/useMediaQuery.ts) ===== */
+.k-app-top-bar-narrow {
+  padding: 0 0.5rem;
+}
+
+.k-app-top-bar-narrow .k-app-top-bar-brand {
+  margin-right: 0.5rem;
+}
+
+.k-app-top-bar-menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--k-text-color-light);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.k-app-top-bar-menu-button:hover {
+  background-color: var(--k-overlay-light-weak);
+}
+
+/* Above SectionLayout's drawer (150) and its backdrop. */
+.k-app-top-bar-nav-menu {
+  position: absolute;
+  top: 3rem;
+  left: 0;
+  right: 0;
+  z-index: 190;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0.25rem 0;
+  background-color: var(--k-primary-color-dark);
+  box-shadow: 0 0.5rem 1rem var(--k-shadow-color-hover);
+}
+
+.k-app-top-bar-nav-menu .k-app-top-bar-link {
+  height: auto;
+  padding: 0.75rem 1.25rem;
+  border-bottom: none;
+  border-left: 3px solid transparent;
+}
+
+.k-app-top-bar-nav-menu .k-app-top-bar-link.active {
+  border-left-color: var(--k-text-color-light);
+}

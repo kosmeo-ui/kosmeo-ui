@@ -29,6 +29,10 @@ export const GALLERY_CATEGORIES: GalleryCategory[] = [
       { file: "section-headers", title: "SectionHeader, BorderedSection" },
       { file: "cards", title: "Card" },
       { file: "auth-page", title: "AuthPage" },
+      {
+        file: "app-shell",
+        title: "AppTopBar, AppTopBarLink, SectionLayout",
+      },
     ],
   },
   {

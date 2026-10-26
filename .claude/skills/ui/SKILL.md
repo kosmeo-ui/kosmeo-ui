@@ -200,6 +200,8 @@ it (add a prop) instead of forking.
 | `SectionHeader` | Heading with extras | `title`, `subtitle`, `badges`, `preface`, `center`, `actions`, `leading`, `as="h1"…"h4"` (default `h3`), `dense`, `divider` |
 | `Centered` | Center a child in available space | — |
 | `Row` / `Col` | Flex row / column | `size` (gap), `align`, `justify`, `wrap`; `Row` `inline`; `Col` `span="full"`, `divider="solid-top"` |
+| `AppTopBar` / `AppTopBarLink` | The app's top bar | `brand`, `actions` (theme toggle, user menu), `navLabel`; children are `AppTopBarLink as={NavLink} to icon` (`as` defaults to `a`, so an external `href` mixes in). At `NARROW_SCREEN` (≤768px) the links fold behind a menu button that closes on a link or Escape |
+| `SectionLayout` | Sidebar + content for a section, inside the app's body below the top bar | `title`, `sidebar` (a `Sidebar`), `children` (the `<Outlet />`), `collapsedStorageKey` (remembers the collapse; pass an app's old key to keep users' choice). At `NARROW_SCREEN` the sidebar is a drawer with a backdrop, closed on a link or Escape and `inert` while closed. Its parent must be a flex container of bounded height |
 
 ### Forms — `forms/`
 
@@ -323,6 +325,7 @@ cell, so those need neither `stopPropagation` nor `disableRowClick`.
 | `useScrollIntoView` | Scroll the highlighted item into view |
 | `useDebouncedValue` | Debounce a value by N ms |
 | `useFocusTrap` | Trap Tab focus in a container (Modal) |
+| `useMediaQuery` | Whether a media query matches, live; `false` on the server and while hydrating. `NARROW_SCREEN` is the breakpoint `AppTopBar` and `SectionLayout` fold at |
 
 ## When to extend vs. build new
 
