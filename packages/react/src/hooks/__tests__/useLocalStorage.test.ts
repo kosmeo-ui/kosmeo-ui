@@ -1,6 +1,8 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import useLocalStorage from "../useLocalStorage.js";
-import { describe, expect, it } from "vitest";
+import { renderToString } from "react-dom/server";
+import { createElement } from "react";
 
 /** Another tab changing a key: no user action in this tab can cause it. */
 const otherTabSets = (key: string, newValue: string | null) =>
@@ -15,6 +17,8 @@ const otherTabSets = (key: string, newValue: string | null) =>
   });
 
 describe("useLocalStorage", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
   it("returns the initial value when the key is unset", () => {
     const { result } = renderHook(() => useLocalStorage("k", { a: 1 }));
 
@@ -77,6 +81,14 @@ describe("useLocalStorage", () => {
     otherTabSets("k", newValue);
 
     expect(result.current[0]).toBe(expected);
+  });
+
+  it("renders the initial value where there is no localStorage, as on a server", () => {
+    localStorage.setItem("k", '"stored"');
+    vi.stubGlobal("localStorage", undefined);
+    const Probe = () => useLocalStorage("k", "initial")[0];
+
+    expect(renderToString(createElement(Probe))).toBe("initial");
   });
 
   it("ignores other tabs' changes to other keys", () => {
