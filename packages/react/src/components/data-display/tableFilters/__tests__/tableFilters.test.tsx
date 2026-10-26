@@ -174,6 +174,32 @@ describe("TableFilters", () => {
     expect(last(onChange)).toEqual({});
   });
 
+  describe("narrow-screen toggle", () => {
+    it("starts closed", () => {
+      setup();
+
+      expect(button("Filters")).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("opens on click", async () => {
+      const u = user();
+      setup();
+
+      await u.click(button("Filters"));
+
+      expect(button("Filters")).toHaveAttribute("aria-expanded", "true");
+    });
+
+    it("counts the filters that are set", async () => {
+      const u = user();
+      setup({ filters: [...preset, filters[0]] });
+
+      await u.type(nameBox(), "Ada");
+
+      expect(button("Filters (2)")).toBeVisible();
+    });
+  });
+
   describe('applyMode="manual"', () => {
     // Immediate mode would apply these edits on its own a tick later; manual
     // mode shows that removing a tag and Reset apply by themselves.

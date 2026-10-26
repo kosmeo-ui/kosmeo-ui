@@ -54,6 +54,47 @@ describe("Input", () => {
     expect(screen.queryByText("Help")).not.toBeInTheDocument();
   });
 
+  it("marks the input invalid while there is an error", () => {
+    render(<Input label="Name" error="Bad" />);
+
+    expect(screen.getByRole("textbox", { name: "Name" })).toHaveAttribute(
+      "aria-invalid",
+      "true"
+    );
+  });
+
+  it("is not marked invalid without an error", () => {
+    render(<Input label="Name" />);
+
+    expect(screen.getByRole("textbox", { name: "Name" })).not.toHaveAttribute(
+      "aria-invalid"
+    );
+  });
+
+  it.each([
+    ["error", { error: "Bad" }, "Bad"],
+    ["helper text", { helperText: "Letters only" }, "Letters only"],
+  ])("is described by its %s", (_case, props, description) => {
+    render(<Input label="Name" {...props} />);
+
+    expect(
+      screen.getByRole("textbox", { name: "Name" })
+    ).toHaveAccessibleDescription(description);
+  });
+
+  it.each([
+    ["pattern", { pattern: "[a-z]+" }, "[a-z]+"],
+    ["minlength", { minLength: 2 }, "2"],
+    ["maxlength", { maxLength: 8 }, "8"],
+  ])("passes %s to the input", (attribute, props, value) => {
+    render(<Input label="Name" {...props} />);
+
+    expect(screen.getByRole("textbox", { name: "Name" })).toHaveAttribute(
+      attribute,
+      value
+    );
+  });
+
   describe("password", () => {
     it("is masked by default", () => {
       render(<Input label="Password" type="password" />);

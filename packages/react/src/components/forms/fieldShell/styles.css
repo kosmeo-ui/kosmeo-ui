@@ -36,3 +36,14 @@
   font-size: 0.8125rem;
   color: var(--k-text-color-secondary);
 }
+
+/* :hover too, to outrank each control's own hover border. */
+.k-field-shell [aria-invalid="true"],
+.k-field-shell [aria-invalid="true"]:hover {
+  border-color: var(--k-danger-color);
+}
+
+.k-field-shell [aria-invalid="true"]:focus {
+  border-color: var(--k-danger-color);
+  box-shadow: 0 0 0 0.1875rem var(--k-shadow-color-hover);
+}

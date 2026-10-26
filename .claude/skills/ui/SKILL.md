@@ -205,7 +205,7 @@ it (add a prop) instead of forking.
 
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
-| `Form` | `<form>` wrapper | `onSubmit`, `id`, `noValidate` |
+| `Form` | `<form>` wrapper that checks its fields on submit | `onSubmit` (only once every field passes `required`, `pattern`, `minLength`, `type`, `min`/`max`), `error` (form-level banner, e.g. the server's 400), `id`, `noValidate` |
 | `FormGrid` | Responsive grid of fields or detail labels | `columns={1\|2\|3\|4}` (default 2), `gap="sm"\|"md"\|"lg"` |
 | `FormActions` | Footer row of buttons outside a Modal | `align="right"\|"between"\|"center"\|"left"\|"fill"`, `spacing` |
 | `FormError` | Form-level error block | `children` |
@@ -216,7 +216,7 @@ it (add a prop) instead of forking.
 
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
-| `Input` | Text/number/email/… | `type`, `label`, `required`, `placeholder`, `prefix`, `suffix`, `error`, `helperText`, `showCharCount`, `size` |
+| `Input` | Text/number/email/… | `type`, `label`, `required`, `pattern`, `minLength`, `maxLength`, `placeholder`, `prefix`, `suffix`, `error` (also marks it `aria-invalid`), `helperText`, `showCharCount`, `size` |
 | `TextArea` | Multi-line text | Same shell props as `Input` |
 | `Select` | Value-typed dropdown | `options=[{value, label}]`, `value`, `onChange(value \| undefined)`, `placeholder` |
 | `MultiSelect` | Multi-value chips | `options`, `value`, `labelKey`, `onChange(values)` |
@@ -247,7 +247,7 @@ it (add a prop) instead of forking.
 
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
-| `Modal` | Standard modal (focus trap, Escape closes) | `show`, `onClose`, `title`, `footerButtons=[…]`, `size="sm"\|"md"\|"lg"\|"full"` |
+| `Modal` | Standard modal (focus trap, Escape closes) | `show`, `onClose`, `title`, `footerButtons=[…]`, `size="sm"\|"md"\|"lg"\|"full"` — its overlay is `z-index: 9999`, so an app's toasts need a higher one (react-toastify: `--toastify-z-index`) |
 | `ConfirmationModal` | Confirm/cancel dialog with a danger button | `show`, `handleHide`, `handleConfirm`, `title`, `body` (string), `confirmButtonText`, `cancelButtonText`, `isLoading` |
 | `Portal` | Render into `document.body` | Building block for Modal, Tooltip, Typeahead, SearchList, SearchSelect |
 
@@ -274,7 +274,7 @@ it (add a prop) instead of forking.
 | Component | Purpose | Key props |
 |-----------|---------|-----------|
 | `InfiniteScroll` | List-page workhorse: filters, sort, selection, load-more | `menu` (`menu.titleAs="h1"|"h2"|"h3"|"h4"|"p"` sets the title's element, default `h2`; `h1` when the list is the page, so no separate `SectionHeader` is needed), `columns`, `data`, `hasMore`, `isLoading`, `onQueryChange`, `onReload`, `applyMode="immediate"|"manual"` (default immediate: filters apply as they change), `onRowClick`, `onAddNew`, `onDelete`, `onDownload`, `hideFilters`, `hideSelectColumn` |
-| `TableFilters` | InfiniteScroll's filter bar on its own, for paged or other tables | `filters` (as `menu.filters`), `onChange(params)` (spread into `usePaginated`'s `params`), `applyMode` |
+| `TableFilters` | InfiniteScroll's filter bar on its own, for paged or other tables | `filters` (as `menu.filters`), `onChange(params)` (spread into `usePaginated`'s `params`), `applyMode`. Below 640px both fold the filters behind a "Filters (n)" toggle |
 | `Table` | Static table | `columns`, `rows`, `rowKey`, `onRowClick`, `emptyMessage`, `striped`, `bordered`, `hover`, `maxHeight` |
 | `DataTable` | Table with a leading (selection) column — InfiniteScroll's body | `columns`, `rows` (`TableRow<T>[]`), `leadingColumn`, `onRowClick` |
 | `TableCellLink` / `TableCellButton` | Keyboard-reachable link or button in a row's primary cell (Table, DataTable, InfiniteScroll) | `TableCellLink as={Link} to` — `as` defaults to `a`; `TableCellButton onClick` |

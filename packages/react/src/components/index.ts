@@ -92,6 +92,7 @@ export type { SecretDisplayProps } from "./data-display/secretDisplay/index.js";
 export type { PageProps, PageGap, PageMaxWidth } from "./layout/page/index.js";
 export type { BorderedSectionProps } from "./layout/borderedSection/index.js";
 export type { FormErrorProps } from "./forms/formActions/formError.js";
+export type { FormProps } from "./forms/form/index.js";
 export type { ColorSwatchProps } from "./data-display/colorSwatch/index.js";
 export type { SectionHeaderProps } from "./layout/sectionHeader/index.js";
 export type { LanguageOption } from "./inputs/languageSelect/index.js";
