@@ -1,3 +1,23 @@
+## 1.2.0 (2026-10-27)
+
+### 🚀 Features
+
+- The app shell tereo and vanquished each kept a copy of, now shared: ([#20](https://github.com/kosmeo-ui/kosmeo-ui/pull/20), [#40](https://github.com/kosmeo-ui/kosmeo-ui/issues/40))
+
+  - `AppTopBar` — the top bar, with a `brand` slot at the left, an `actions` slot at the right and `AppTopBarLink` children between. `AppTopBarLink` takes `as` (react-router's `NavLink` for active styling; a plain `href` link otherwise), like `SidebarNavLink`. At 768px and below the links fold behind a menu button; the brand and actions stay in the bar. The menu closes on a link or on Escape, which returns focus to the button.
+  - `SectionLayout` — a section's sidebar beside its content (`title`, `sidebar`, `children`). The sidebar collapses to icons, remembered in localStorage under `collapsedStorageKey`. At 768px and below it becomes a drawer opened from a bar naming the section; it closes on a link, the backdrop or Escape, and is `inert` while closed, so its links are out of the tab order.
+  - `useMediaQuery(query)` — whether a media query matches, kept up to date; `false` on the server and while hydrating. `NARROW_SCREEN` is the breakpoint the two components fold at.
+
+
+### 🩹 Fixes
+
+- `useLocalStorage` returns its initial value when there is no usable `localStorage`, instead of throwing: on a server (so a component using it can be server-rendered by Next.js), on Node 25, whose `localStorage` has no methods, and in a browser that blocks storage. ([#20](https://github.com/kosmeo-ui/kosmeo-ui/pull/20), [#40](https://github.com/kosmeo-ui/kosmeo-ui/issues/40))
+
+### ❤️ Thank You
+
+- Cameron Perera
+- Claude Opus 5.5
+
 ## 1.1.0 (2026-10-26)
 
 ### 🚀 Features
