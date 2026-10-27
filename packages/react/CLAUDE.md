@@ -14,7 +14,8 @@ src/
 │   ├── index.ts                # Flat component barrel — public API
 │   ├── types.ts                # Variant, Size, FlexAlign, FlexJustify shared types
 │   ├── layout/                 # Page, AuthPage, BorderedSection, SectionHeader, Card,
-│   │                           # Centered, Row, Col
+│   │                           # Centered, Row, Col, AppTopBar (+ AppTopBarLink),
+│   │                           # SectionLayout
 │   ├── forms/                  # Form, FormGrid, FormActions (+ FormError), DetailField,
 │   │                           # InfoRow, FieldShell, OptionsGroup, RequiredAsterisk
 │   ├── inputs/                 # Input, TextArea, Select, MultiSelect, Checkbox,
@@ -42,7 +43,8 @@ src/
     ├── useListKeyboard.ts      # Arrow/Enter/Escape keyboard nav for dropdown lists
     ├── useScrollIntoView.ts    # Scrolls highlighted ref into view
     ├── useDebouncedValue.ts    # Debounce a value by N ms
-    └── useFocusTrap.ts         # Trap Tab focus inside a container (Modal)
+    ├── useFocusTrap.ts         # Trap Tab focus inside a container (Modal)
+    └── useMediaQuery.ts        # Live media query match (+ NARROW_SCREEN)
 ```
 
 Components are grouped into subfolders by category, but the public barrel
@@ -61,7 +63,7 @@ import "@kosmeo-ui/react/styles.css";
 
 ## Components
 
-**Layout**: `Row`, `Col`, `Card`, `Centered`, `Page`, `AuthPage`, `BorderedSection`, `SectionHeader`
+**Layout**: `Row`, `Col`, `Card`, `Centered`, `Page`, `AuthPage`, `BorderedSection`, `SectionHeader`, `AppTopBar` (with `AppTopBarLink`), `SectionLayout`
 
 **Forms**: `Form`, `FormGrid`, `FormActions`, `FormError`, `DetailField`, `InfoRow`
 

@@ -19,10 +19,11 @@ function useLocalStorage<T>(
   initialValue: T | null = null
 ): [T | null, (value: T | null) => void, () => void] {
   const [storedValue, setStoredValue] = useState<T | null>(() => {
-    const item = localStorage.getItem(key);
-    if (!item) return initialValue;
+    // The catch also covers there being no usable localStorage: on a server,
+    // where Node 25's has no methods, or where the browser blocks storage.
     try {
-      return JSON.parse(item) as T;
+      const item = localStorage.getItem(key);
+      return item ? (JSON.parse(item) as T) : initialValue;
     } catch {
       return initialValue;
     }

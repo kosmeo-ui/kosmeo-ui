@@ -14,6 +14,7 @@ export { default as useOutsideClick } from "./useOutsideClick.js";
 export { default as useListKeyboard } from "./useListKeyboard.js";
 export { default as useLocalStorage } from "./useLocalStorage.js";
 export { default as useFocusTrap } from "./useFocusTrap.js";
+export { default as useMediaQuery, NARROW_SCREEN } from "./useMediaQuery.js";
 export {
   default as useFloatingPosition,
   type FloatingPosition,
