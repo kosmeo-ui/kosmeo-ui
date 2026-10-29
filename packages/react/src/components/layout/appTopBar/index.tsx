@@ -11,6 +11,7 @@ import {
   ReactNode,
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -18,13 +19,26 @@ import {
 export interface AppTopBarProps {
   /** The app's mark and name, at the left. */
   brand: ReactNode;
-  /** `AppTopBarLink`s. On narrow screens they fold behind a menu button. */
+  /**
+   * `AppTopBarLink`s. They fold behind a menu button on narrow screens, and
+   * whenever they don't fit between the brand and the actions.
+   */
   children?: ReactNode;
-  /** At the right, and kept in the bar on narrow screens: a theme toggle, the user menu. */
+  /** At the right, and kept in the bar when the links fold: a theme toggle, the user menu. */
   actions?: ReactNode;
   /** Names the links' nav and the menu button that opens it. */
   navLabel?: string;
 }
+
+const outerWidth = (el: HTMLElement | null) => {
+  if (!el) return 0;
+  const style = getComputedStyle(el);
+  return (
+    el.getBoundingClientRect().width +
+    (parseFloat(style.marginLeft) || 0) +
+    (parseFloat(style.marginRight) || 0)
+  );
+};
 
 const AppTopBar = ({
   brand,
@@ -33,11 +47,57 @@ const AppTopBar = ({
   navLabel = "Menu",
 }: AppTopBarProps) => {
   const narrow = useMediaQuery(NARROW_SCREEN);
+  // The links' width when they last overflowed, or null while they fit.
+  const [neededWidth, setNeededWidth] = useState<number | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const navId = useId();
+  const slotRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const open = narrow && menuOpen;
+  const folded = narrow || neededWidth !== null;
+  const open = folded && menuOpen;
+
+  useLayoutEffect(() => {
+    const slot = slotRef.current;
+    const nav = navRef.current;
+    if (narrow || !slot || !nav) return;
+    const measure = () => {
+      const room = slot.getBoundingClientRect().width;
+      if (neededWidth === null) {
+        const width = nav.getBoundingClientRect().width;
+        // The slack keeps sub-pixel rounding from folding links that just fit.
+        if (width > room + 0.5) setNeededWidth(width);
+        return;
+      }
+      // Folded, the links aren't laid out, so unfold only once the room they
+      // needed is there; the menu button's space comes back with them.
+      if (room + outerWidth(buttonRef.current) >= neededWidth) {
+        setNeededWidth(null);
+      }
+    };
+    measure();
+    // Optional: jsdom, where apps run their tests, has no ResizeObserver.
+    const resizes =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(measure);
+    resizes?.observe(slot);
+    resizes?.observe(nav);
+    // Links that change while folded can't be measured: unfold to measure them.
+    const mutations =
+      neededWidth === null
+        ? null
+        : new MutationObserver(() => setNeededWidth(null));
+    mutations?.observe(nav, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+    return () => {
+      resizes?.disconnect();
+      mutations?.disconnect();
+    };
+  }, [narrow, neededWidth]);
 
   useEffect(() => {
     if (!open) return;
@@ -53,13 +113,13 @@ const AppTopBar = ({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
-  const navClasses = ["k-app-top-bar-nav", narrow && "k-app-top-bar-nav-menu"]
+  const navClasses = ["k-app-top-bar-nav", folded && "k-app-top-bar-nav-menu"]
     .filter(Boolean)
     .join(" ");
 
   return (
     <header className={`k-app-top-bar${narrow ? " k-app-top-bar-narrow" : ""}`}>
-      {narrow && (
+      {folded && (
         <button
           ref={buttonRef}
           type="button"
@@ -73,18 +133,21 @@ const AppTopBar = ({
         </button>
       )}
       <div className="k-app-top-bar-brand">{brand}</div>
-      <nav
-        ref={navRef}
-        id={navId}
-        aria-label={navLabel}
-        className={navClasses}
-        hidden={narrow && !open}
-        onClick={(e) => {
-          if ((e.target as Element).closest("a")) setMenuOpen(false);
-        }}
-      >
-        {children}
-      </nav>
+      {/* The room between the brand and the actions, measured even while the links are folded. */}
+      <div ref={slotRef} className="k-app-top-bar-nav-slot">
+        <nav
+          ref={navRef}
+          id={navId}
+          aria-label={navLabel}
+          className={navClasses}
+          hidden={folded && !open}
+          onClick={(e) => {
+            if ((e.target as Element).closest("a")) setMenuOpen(false);
+          }}
+        >
+          {children}
+        </nav>
+      </div>
       {actions && <div className="k-app-top-bar-actions">{actions}</div>}
     </header>
   );

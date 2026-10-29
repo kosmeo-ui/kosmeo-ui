@@ -38,7 +38,7 @@ import "@kosmeo-ui/react/styles.css";
 
 ## Components
 
-**Layout**: `Page`, `AuthPage`, `Card`, `BorderedSection`, `SectionHeader`, `Centered`, `Row`, `Col`
+**Layout**: `Page`, `AuthPage`, `Card`, `BorderedSection`, `SectionHeader`, `Centered`, `Row`, `Col`, `AppTopBar` (its links fold into a menu when they don't fit), `SectionLayout`
 
 **Forms**: `Form`, `FormGrid`, `FormActions`, `FormError`, `DetailField`, `InfoRow`
 

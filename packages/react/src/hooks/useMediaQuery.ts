@@ -2,7 +2,7 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 
-/** Below this width `AppTopBar` folds its links into a menu and `SectionLayout`'s sidebar is a drawer. */
+/** Below this width `AppTopBar` always folds its links into a menu, and `SectionLayout`'s sidebar is a drawer. */
 export const NARROW_SCREEN = "(max-width: 768px)";
 
 /**
