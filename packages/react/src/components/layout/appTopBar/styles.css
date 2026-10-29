@@ -25,12 +25,18 @@
   height: 1.75rem;
 }
 
-.k-app-top-bar-nav {
+.k-app-top-bar-nav-slot {
   display: flex;
-  align-items: center;
-  gap: 0.25rem;
   flex: 1;
   min-width: 0;
+}
+
+/* At its natural width inside the slot, so overflow shows as the two widths differing. */
+.k-app-top-bar-nav {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 /* The class's display would otherwise override the attribute. */
@@ -79,6 +85,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  min-width: 0;
   margin-left: auto;
 }
 
@@ -91,8 +98,10 @@
   margin-right: 0.5rem;
 }
 
+/* ===== Folded links: on narrow screens, or when they don't fit ===== */
 .k-app-top-bar-menu-button {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 2.25rem;

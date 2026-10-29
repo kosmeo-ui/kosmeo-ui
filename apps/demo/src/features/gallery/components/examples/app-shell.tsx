@@ -1,8 +1,11 @@
 import { useState, type ComponentProps } from "react";
 import {
   faBook,
+  faChartLine,
+  faCreditCard,
   faGear,
   faInbox,
+  faPlug,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -29,7 +32,8 @@ const PAGES = [
   { key: "settings", label: "Settings", icon: faGear },
 ];
 
-// Narrower than 768px, the links fold into a menu and the sidebar becomes a drawer.
+// The links fold into a menu when they don't fit beside the brand and the
+// actions, and always below 768px, where the sidebar also becomes a drawer.
 export const AppShellExample = () => {
   const [page, setPage] = useState("users");
   const current = PAGES.find((p) => p.key === page)!;
@@ -48,6 +52,15 @@ export const AppShellExample = () => {
       >
         <AppTopBarLink as={DemoLink} href="#" icon={faUsers} active>
           Admin
+        </AppTopBarLink>
+        <AppTopBarLink href="#" icon={faChartLine}>
+          Reports
+        </AppTopBarLink>
+        <AppTopBarLink href="#" icon={faCreditCard}>
+          Billing
+        </AppTopBarLink>
+        <AppTopBarLink href="#" icon={faPlug}>
+          Integrations
         </AppTopBarLink>
         <AppTopBarLink href="#" icon={faBook}>
           Docs
