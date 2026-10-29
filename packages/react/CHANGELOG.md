@@ -1,3 +1,14 @@
+## 1.2.1 (2026-10-29)
+
+### 🩹 Fixes
+
+- `AppTopBar` folds its links into the menu whenever they don't fit between the brand and the actions, not only at 768px and below, so the last links no longer slip under the actions where they can't be clicked. It measures the links as they or the actions change size, and unfolds once there is room for the width they needed. The menu button no longer shrinks when the actions are wide, and the actions can shrink: an action that should truncate rather than overflow sets its own `min-width: 0`. ([#22](https://github.com/kosmeo-ui/kosmeo-ui/pull/22))
+
+### ❤️ Thank You
+
+- Cameron Perera
+- Claude Opus 5.5
+
 ## 1.2.0 (2026-10-27)
 
 ### 🚀 Features
